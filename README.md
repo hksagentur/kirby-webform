@@ -1,4 +1,4 @@
-# Kirby Wevfirns
+# Kirby Webforms
 
 Easily create and manage webforms in Kirby
 
