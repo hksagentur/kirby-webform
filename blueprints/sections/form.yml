@@ -1,0 +1,5 @@
+type: fields
+label:
+  *: hksagentur.webform.form.label
+fields:
+  form: fields/form

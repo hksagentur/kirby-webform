@@ -1,0 +1,35 @@
+type: group
+fields:
+  template:
+    type: select
+    label:
+      *: hksagentur.webform.template.label
+    help:
+      *: hksagentur.webform.template.help
+    required: true
+    options:
+      type: query
+      query: kirby.collection('forms')
+      text: "{{ item.label }}"
+      value: "{{ item.id }}"
+  subject:
+    type: text
+    label:
+      *: hksagentur.webform.subject.label
+    help:
+      *: hksagentur.webform.subject.help
+    required: true
+  recipient:
+    type: email
+    label:
+      *: hksagentur.webform.recipient.label
+    help:
+      *: hksagentur.webform.recipient.help
+    required: false
+  sender:
+    type: email
+    label:
+      *: hksagentur.webform.sender.label
+    help:
+      *: hksagentur.webform.sender.help
+    required: false

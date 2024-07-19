@@ -1,0 +1,31 @@
+{
+  "name": "hksagentur/kirby-webform",
+  "description": "Easily create and manage webforms in Kirby",
+  "type": "kirby-plugin",
+  "license": "ISC",
+  "authors": [
+    {
+      "name": "Daniel Weidner",
+      "email": "d.weidner@hks-agentur.de",
+      "homepage": "https://hks-agentur.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Webform\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "require": {
+    "getkirby/composer-installer": "^1.1",
+    "mzur/kirby-uniform": "^5.6"
+  },
+  "config": {
+    "optimize-autoloader": true
+  },
+  "extra": {
+    "installer-name": "webform"
+  }
+}
