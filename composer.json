@@ -15,7 +15,7 @@
       "Webform\\": "src/"
     },
     "files": [
-      "src/helpers.php"
+      "src/Toolkit/helpers.php"
     ]
   },
   "require": {
