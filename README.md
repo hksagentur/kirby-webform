@@ -122,9 +122,8 @@ snippet('header');
   </h1>
 
   <?php
-    snippet("forms/{$page->config()->path()}", [
+    snippet("forms/{$page->form()->value()}", [
       'method' => 'POST'
-      'id' => $page->config()->id(),
       'action' => $page->url(),
       'form' => $form,
     ])
