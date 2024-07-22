@@ -1,13 +1,9 @@
 <?php
 
 Kirby::plugin('hksagentur/webform', [
-    'config' => [
-        'guard' => [
-            'default' => 'honeypot',
-        ],
-        'logging' => [
-            'default' => 'null',
-        ],
+    'options' => [
+        'driver' => 'email',
+        'guard' => 'honeypot',
     ],
     'blueprints' => [
         'fields/form' => __DIR__ . '/blueprints/fields/form.yml',
@@ -23,14 +19,15 @@ Kirby::plugin('hksagentur/webform', [
     'commands' => [
         'make:webform' => require __DIR__ . '/commands/make.php',
     ],
-    'components' => [
-        'form' => require __DIR__ . '/components/form.php',
-    ],
     'controllers' => [
         'form' => require __DIR__ . '/controllers/form.php',
     ],
     'pageModels' => [
         'form' => Webform\Cms\FormPage::class,
+    ],
+    'templates' => [
+        'emails/webform/submission.text' => __DIR__ . '/templates/submission.text.php',
+        'emails/webform/submission.html' => __DIR__ . '/templates/submission.html.php',
     ],
     'translations' => [
         'en' => require __DIR__ . '/translations/en.php',

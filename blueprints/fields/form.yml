@@ -1,16 +1,16 @@
 type: group
 fields:
-  template:
+  form:
     type: select
     label:
-      *: hksagentur.webform.template.label
+      *: hksagentur.webform.form.label
     help:
-      *: hksagentur.webform.template.help
+      *: hksagentur.webform.form.help
     required: true
     options:
       type: query
       query: kirby.collection('forms')
-      text: "{{ item.label }}"
+      text: "{{ item.label }} ({{ item.id }})"
       value: "{{ item.id }}"
   subject:
     type: text
@@ -18,18 +18,15 @@ fields:
       *: hksagentur.webform.subject.label
     help:
       *: hksagentur.webform.subject.help
-    required: true
   recipient:
     type: email
     label:
       *: hksagentur.webform.recipient.label
     help:
       *: hksagentur.webform.recipient.help
-    required: false
   sender:
     type: email
     label:
       *: hksagentur.webform.sender.label
     help:
       *: hksagentur.webform.sender.help
-    required: false

@@ -13,10 +13,7 @@
   "autoload": {
     "psr-4": {
       "Webform\\": "src/"
-    },
-    "files": [
-      "src/Toolkit/helpers.php"
-    ]
+    }
   },
   "require": {
     "getkirby/composer-installer": "^1.1",
