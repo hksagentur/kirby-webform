@@ -160,7 +160,7 @@ This allows you to add a separate snippet for each form utilized by your site. Y
       <?= t('form.field.email', 'E-Mail') ?>
     </label>
 
-    <input type="text" id="email" name="email" autocomplete="email" required <?= $form->error('email') ? attr([
+    <input type="email" id="email" name="email" autocomplete="email" required <?= $form->error('email') ? attr([
       'aria-invalid' => 'true',
       'aria-describedby' => 'error-email',
     ]) : '' ?>>
