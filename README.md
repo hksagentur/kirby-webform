@@ -111,9 +111,9 @@ return [
 You can add a custom template for form pages and embed different snippets dependent on the selected form:
 
 ```php
-<?php // site/templates/form.php
+<?php // site/templates/form.php ?>
 
-snippet('header');
+<?php snippet('header'); ?>
 
 <main>
   <h1>
@@ -129,7 +129,7 @@ snippet('header');
   ?>
 </main>
 
-snippet('footer');
+<?php snippet('footer'); ?>
 
 ```
 This allows you to add a separate snippet for each form utilized by your site. You could then go on and add your form logic:
