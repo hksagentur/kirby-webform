@@ -28,12 +28,12 @@ This plugin provides a new blueprint for form pages. Users can use this blueprin
 
 ## Configuration
 
-Add a configuration file for a new form in `site/forms`. In the example we create a simple contact form (`site/forms/contact.php`). You can also use the custom CLI command to generate a file to start from (`kirby webform:make`).
+Add a configuration file for a new form in `site/forms`. You can also use the custom CLI command to generate a file to start from (`kirby webform:make`).
 
 Each form should at least provide a display name:
 
 ```php
-<?php
+<?php // site/forms/contact.php
 
 return [
   'label' => 'Contact Form',
@@ -45,7 +45,7 @@ Once the configuration file is saved, users can select the form in any page that
 Depending on your use case you may want to specify custom validation rules for the form. These rules should follow the following structure:
 
 ```php
-<?php
+<?php // site/forms/contact.php
 
 return [
   'label' => 'Contact Form',
@@ -71,7 +71,7 @@ Kirby provides a predefined set of validators that can be further extended (see 
 You can further customize the settings of the email that will be generated for each form submission:
 
 ```php
-<?php
+<?php // site/forms/contact.php
 
 return [
   'label' => 'Contact Form',
@@ -91,7 +91,7 @@ return [
 In addition you can provide an email preset to use for each form submission. See the [Kirby configuration](https://getkirby.com/docs/guide/emails#presets) for further information about this feature.
 
 ```php
-<?php
+<?php // site/forms/contact.php
 
 return [
   'label' => 'Contact Form',
@@ -111,8 +111,7 @@ return [
 You can add a custom template for form pages and embed different snippets dependent on the selected form:
 
 ```php
-<?php
-// site/templates/form.php
+<?php // site/templates/form.php
 
 snippet('header');
 
@@ -133,7 +132,68 @@ snippet('header');
 snippet('footer');
 
 ```
-This allows you to add a separate snippet for each form utilized by your size. The controller associated with every form page will validate the user submission and dispatch the email with the corresponding submission data on each POST-request.
+This allows you to add a separate snippet for each form utilized by your site. You could then go on and add your form logic:
+
+```php
+<?php // site/snippets/forms/contact.php ?>
+
+<form id="contact-form" method="<?= $method ?? 'POST' ?>" action="<?= $url ?? $page->url() ?>" novalidate>
+  <div class="field">
+    <label for="name">
+      <?= t('form.field.name', 'Name') ?>
+    </label>
+
+    <input type="text" id="name" name="name" autocomplete="name" value="<?= $form->old('name') ?>" required <?= $form->error('name') ? attr([
+      'aria-invalid' => 'true',
+      'aria-describedby' => 'error-name',
+    ]) : '' ?>>
+
+    <?php if ($form->error('name')) : ?>
+      <div id="error-name" class="hint">
+        <?= implode(', ', $form->error('name')) ?>
+      </div>
+    <?php endif ?>
+  </div>
+
+  <div class="field">
+    <label for="email">
+      <?= t('form.field.email', 'E-Mail') ?>
+    </label>
+
+    <input type="text" id="email" name="email" autocomplete="email" required <?= $form->error('email') ? attr([
+      'aria-invalid' => 'true',
+      'aria-describedby' => 'error-email',
+    ]) : '' ?>>
+
+    <?php if ($form->error('email')) : ?>
+      <div id="error-email" class="hint">
+        <?= implode(', ', $form->error('email')) ?>
+      </div>
+    <?php endif ?>
+  </div>
+
+  <div class="field">
+    <label for="message">
+      <?= t('form.field.message', 'Message') ?>
+    </label>
+
+    <textarea id="message" name="message" rows="8" <?= $form->error('message') ? attr([
+      'aria-invalid' => 'true',
+      'aria-describedby' => 'error-message',
+    ]) : '' ?>><?= $form->old('message') ?></textarea>
+
+    <?php if ($form->error('message')) : ?>
+      <div id="error-message" class="hint">
+        <?= implode(', ', $form->error('message')) ?>
+      </div>
+    <?php endif ?>
+  </div>
+
+  <button type="submit" class="button">
+    Submit Contact Form
+  </button>
+</form>
+```
 </details>
 
 <details>
@@ -173,6 +233,7 @@ columns:
 The default template used for each form submission provides some variables that can be used to customize the text of each email. You can use a [kirby hook](https://getkirby.com/docs/reference/plugins/extensions/hooks) to inject data for these variables:
 
 ```php
+<?php // site/plugins/example-hook/index.php
 
 use Uniform\Form;
 use Webform\Cms\FormPage;
@@ -196,9 +257,8 @@ Kirby::plugin('webform/example-hook', [
 If you want to fully customize the email template you can overwrite the template used, either in your email preset or in your form configuration:
 
 ```php
-<?php
+<?php // site/forms/contact.php
 
-// site/forms/contact.php
 return [
   'label' => 'Contact Form',
   'email' => [
@@ -218,7 +278,7 @@ Place your new template in the dedicated directory for [email templates](https:/
 You can provide a custom directory via Kirby’s `roots` structure. Open the `index.php` and adjust the initialization of the kirby core:
 
 ```php
-<?php
+<?php // index.php
 
 require __DIR__ . '/kirby/bootstrap.php';
 
