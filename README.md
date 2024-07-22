@@ -190,7 +190,7 @@ This allows you to add a separate snippet for each form utilized by your site. Y
   </div>
 
   <button type="submit" class="button">
-    Submit Contact Form
+    <?= t('form.action.submit', 'Submit Form') ?>
   </button>
 </form>
 ```
