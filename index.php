@@ -25,6 +25,21 @@ Kirby::plugin('hksagentur/webform', [
     'pageModels' => [
         'form' => Webform\Cms\FormPage::class,
     ],
+    'snippets' => [
+        'webform/form' => __DIR__ . '/snippets/form.php',
+        'webform/field' => __DIR__ . '/snippets/field.php',
+        'webform/button' => __DIR__ . '/snippets/button.php',
+        'webform/label' => __DIR__ . '/snippets/label.php',
+        'webform/input' => __DIR__ . '/snippets/input.php',
+        'webform/textarea' => __DIR__ . '/snippets/textarea.php',
+        'webform/select' => __DIR__ . '/snippets/select.php',
+        'webform/checkbox' => __DIR__ . '/snippets/checkbox.php',
+        'webform/checkbox-group' => __DIR__ . '/snippets/checkbox-group.php',
+        'webform/radio' => __DIR__ . '/snippets/radio.php',
+        'webform/radio-group' => __DIR__ . '/snippets/radio-group.php',
+        'webform/error-summary' => __DIR__ . '/snippets/error-summary.php',
+        'webform/inline-error' => __DIR__ . '/snippets/inline-error.php',
+    ],
     'templates' => [
         'emails/webform/submission.text' => __DIR__ . '/templates/submission.text.php',
         'emails/webform/submission.html' => __DIR__ . '/templates/submission.html.php',

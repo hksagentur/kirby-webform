@@ -23,9 +23,6 @@ Download the project archive and copy the files to the plugin directory of your 
 
 This plugin provides a new blueprint for form pages. Users can use this blueprint to create new form pages and select one of multiple predefined forms. These forms are controlled by configuration files in a custom directory (`site/forms` by default). The configuration files can be used to specify the e-mail address to which submissions should be sent, as well as the validation criteria for individual fields.
 
-> [!NOTE]
-> The plugin does not yet provide any snippets to help generate the actual HTML code for the form. This has so far been left to the respective themes.
-
 ## Configuration
 
 Add a configuration file for a new form in `site/forms`. You can also use the custom CLI command to generate a file to start from (`kirby webform:make`).
@@ -194,6 +191,52 @@ This allows you to add a separate snippet for each form utilized by your site. Y
   </button>
 </form>
 ```
+
+If you prefer you can use the snippets provided by the plugin for the most common form controls:
+
+```php
+<?php // site/snippets/forms/contact.php ?>
+
+<?php snippet('webform/form', slots: true) ?>
+  <?php snippet('webform/field', slots: true) ?>
+    <?php snippet('webform/input', [
+      'type' => 'text',
+      'name' => 'name',
+      'autocomplete' => 'name',
+      'required' => true,
+    ], slots: true) ?>
+      <?= t('form.field.name', 'Name') ?>
+    <?php endsnippet() ?>
+  <?php endsnippet() ?>
+
+  <?php snippet('webform/field', slots: true) ?>
+    <?php snippet('webform/input', [
+      'type' => 'email',
+      'name' => 'email',
+      'autocomplete' => 'email',
+      'required' => true,
+    ], slots: true) ?>
+      <?= t('form.field.email', 'E-Mail') ?>
+    <?php endsnippet() ?>
+  <?php endsnippet() ?>
+
+  <?php snippet('webform/field', slots: true) ?>
+    <?php snippet('webform/textarea', [
+      'name' => 'message',
+      'rows' => 8,
+      'required' => true,
+    ], slots: true) ?>
+      <?= t('form.field.message', 'Message') ?>
+    <?php endsnippet() ?>
+  <?php endsnippet() ?>
+
+  <?php snippet('webform/button', ['type' => 'submit'], slots: true) ?>
+    <?= t('form.action.submit', 'Submit Form') ?>
+  <?php endsnippet() ?>
+<?php endsnippet() ?>
+```
+
+The following form controls area supported: `button`, `input`, `textarea`, `select`, `radio`, `radio-group`, `checkbox`, 'checkbox-group`.
 </details>
 
 <details>

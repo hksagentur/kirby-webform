@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Webform\Cms\FormConfigCollection;
+use Webform\Form\FormConfigCollection;
 
 return function (App $kirby): FormConfigCollection {
     return FormConfigCollection::fromDirectory(

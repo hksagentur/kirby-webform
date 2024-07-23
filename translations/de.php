@@ -9,4 +9,6 @@ return [
     'hksagentur.webform.recipient.help' => 'Der Empfänger der individuellen Einsendungen. Wird dieses Feld leer gelassen, wird der Standard-Empfänger aus der Seitenkonfiguration verwendet.',
     'hksagentur.webform.sender.label' => 'Absender',
     'hksagentur.webform.sender.help' => 'Der Absender von jeder Einsendungen. Wird dieses Feld leer gelassen, wird der Standard-Empfänger aus der Seitenkonfiguration verwendet. Es sollte zwingend eine Absender Adresse verwendet werden, die der aktuellen Domain entspricht.',
+    'hksagentur.webform.summary.label' => 'Es gibt ein Problem',
+    'hksagentur.webform.summary.help' => 'Einige der Formularfelder enthalten unerwartete Eingaben. Bitte überprüfen Sie die folgenden Felder auf mögliche Fehler:',
 ];

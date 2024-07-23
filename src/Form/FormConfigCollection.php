@@ -1,8 +1,8 @@
 <?php
 
-namespace Webform\Cms;
+namespace Webform\Form;
 
-use Kirby\Cms\Collection;
+use Kirby\Toolkit\Collection;
 
 class FormConfigCollection extends Collection
 {
@@ -11,10 +11,12 @@ class FormConfigCollection extends Collection
         $collection = new static();
 
         foreach (glob($directory . '/*.php') as $file) {
-            $collection->add(new FormConfig(
-                path: basename($file, '.php'),
-                root: $directory,
-            ));
+            $path = basename($file, '.php');
+
+            $collection->set(
+                $path,
+                new FormConfig($path, $directory)
+            );
         }
 
         return $collection;

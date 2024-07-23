@@ -3,10 +3,11 @@
 namespace Webform\Cms;
 
 use Kirby\Cms\Field;
+use Webform\Form\FormConfig;
 
 trait HasForm
 {
-    protected ?FormConfig $form;
+    protected ?FormConfig $formConfig;
 
     public function isSubmitted(): bool
     {
@@ -15,7 +16,7 @@ trait HasForm
 
     public function config(): FormConfig
     {
-        return $this->form ??= new FormConfig(
+        return $this->formConfig ??= new FormConfig(
             path: $this->content()->form()->value(),
             root: $this->kirby()->root('webforms') ?? $this->kirby()->root('site') . '/forms',
         );

@@ -6,6 +6,7 @@ use Uniform\Actions\EmailAction;
 use Uniform\Actions\LogAction;
 use Uniform\Actions\WebhookAction;
 use Uniform\Form;
+use Uniform\Guards\CalcGuard;
 use Uniform\Guards\HoneypotGuard;
 use Uniform\Guards\HoneytimeGuard;
 
@@ -21,6 +22,11 @@ return function (FormPage $page, App $kirby): array {
         $guard = $plugin->option('guard');
 
         switch ($guard) {
+            case 'captcha':
+                $form->guard(CalcGuard::class, [
+                    'field' => $plugin->option('captcha.field') ?? CalcGuard::FIELD_NAME,
+                ]);
+                break;
             case 'honeypot':
                 $form->guard(HoneypotGuard::class, [
                     'field' => $plugin->option('honeypot.field') ?? HoneypotGuard::FIELD_NAME,

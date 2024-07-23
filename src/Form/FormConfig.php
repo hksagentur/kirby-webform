@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Cms;
+namespace Webform\Form;
 
 use JsonSerializable;
 use Kirby\Cms\App;
