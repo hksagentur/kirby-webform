@@ -1,0 +1,16 @@
+type: group
+when:
+  handler: email
+fields:
+  emailSubject:
+    type: text
+    label:
+      *: hksagentur.webform.subject.label
+  emailRecipient:
+    type: email
+    label:
+      *: hksagentur.webform.recipient.label
+  emailSender:
+    type: email
+    label:
+      *: hksagentur.webform.sender.label

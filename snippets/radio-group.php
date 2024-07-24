@@ -12,22 +12,22 @@
     'aria-disabled' => !empty($disabled) ? 'true' : null,
     'aria-required' => !empty($required) ? 'true' : null,
     'aria-invalid' => $form->error($name) ? 'true' : null,
-    'aria-labelledby' => A::join(array_filter([
-        $slots->label() ? 'label-'.$id : null,
-    ]), ' '),
-    'aria-describedby' => A::join(array_filter([
-        $form->error($name) ? 'error-'.$id : null,
-        $slots->help() ? 'help-'.$id : null,
-    ]), ' '),
+    'aria-labelledby' => array_filter([
+        $slots->label() ? $id.'-label' : null,
+    ]),
+    'aria-describedby' => array_filter([
+        $form->error($name) ? $id.'-error' : null,
+        $slots->help() ? $id.'-help' : null,
+    ]),
 ]) ?>>
     <?php if ($label = $slots->label() ?: $slot) : ?>
-        <legend id="<?= 'label-'.$id ?>" class="radio-group__label">
+        <legend id="<?= $id.'-label' ?>" class="radio-group__label">
             <span><?= $label ?></span>
         </legend>
     <?php endif ?>
 
     <?php if ($help = $slots->help()) : ?>
-        <div id="<?= 'help-'.$id ?>" class="radio-group__help">
+        <div id="<?= $id.'-help' ?>" class="radio-group__help">
             <?= $help ?>
         </div>
     <?php endif ?>
@@ -50,7 +50,7 @@
 
     <?php snippet('webform/inline-error', [
         'for' => $name,
-        'id' => 'error-'.$id,
+        'id' => $id.'-error',
         'class' => 'radio-group__error',
     ]) ?>
 </fieldset>

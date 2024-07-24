@@ -3,7 +3,7 @@
 use Kirby\CLI\CLI;
 use Kirby\Data\PHP;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
+use Kirby\Toolkit\A;
 
 return [
     'description' => 'Create the configuration file for a new webform',
@@ -17,46 +17,36 @@ return [
             'required' => false,
         ],
     ],
-    'command' => static function (CLI $cli): int {
-        $id = $cli->argOrPrompt('id', 'Please enter the unique ID of the webform');
-        $name = $cli->argOrPrompt('name', 'Please enter a display name for the webform');
+    'command' => static function (CLI $cli): void {
+        $plugin = $cli->kirby()->plugin('hksagentur/webform');
 
-        $root = $cli->root('webforms') ?? $cli->root('site') . '/forms';
-        $file = $root . '/' . $id . '.php';
+        $formId = $cli->argOrPrompt('id', 'Please enter the unique ID of the webform:');
+        $formName = $cli->argOrPrompt('name', 'Please enter a display name for the webform:');
 
-        if (F::exists($file) && Str::lower($cli->prompt('Do you want to overwrite the existing file (Y/n)?')) !== 'y') {
-            $cli->error('A configuration for a webform with the ID "' . $id . '" already exists.');
-            return 1;
+        $projectRoot = $cli->root('base');
+        $configRoot = $cli->root('webforms') ?? $cli->root('site') . '/forms';
+        $snippetRoot = $cli->root('snippets') ?? $cli->root('site') . '/snippets';
+
+        $configFile = $configRoot . '/' . $formId . '.php';
+        $snippetFile = $snippetRoot . '/forms/' . $formId . '.php';
+
+        // Copy the example configuration if it does not exist
+        $config = A::merge(PHP::read($plugin->root() . '/stubs/config.php'), [
+            'id' => $formId,
+            'name' => $formName,
+        ]);
+
+        if (! F::exists($configFile) && PHP::write($configFile, $config)) {
+            $cli->success('Created form config (.' . F::relativepath($configFile, $projectRoot) . ')');
+        } else {
+            $cli->error('Could not create form config (.' . F::relativepath($configFile, $projectRoot) . '). File already exists.');
         }
 
-        $configuration = [
-            'id' => $id,
-            'name' => $name,
-            'fields' => [
-                'name' => [
-                    'rules' => ['required'],
-                    'message' => ['Your name is required'],
-                ],
-                'email' => [
-                    'rules' => ['required', 'email'],
-                    'message' => ['Your email address is required', 'Please enter a valid email address'],
-                ],
-            ],
-        ];
-
-        if (! PHP::write($file, $configuration)) {
-            $cli->error('Could not write to "' . $file . '"');
-            return 1;
+        // Copy the example snippet if it does not exist
+        if (! F::exists($snippetFile) && F::copy($plugin->root() . '/stubs/snippet.php', $snippetFile)) {
+            $cli->success('Created form snippet (.' . F::relativepath($snippetFile, $projectRoot) . ')');
+        } else {
+            $cli->error('Could not create form snippet (.' . F::relativepath($snippetFile, $projectRoot) . '). File already exists.');
         }
-
-        $cli->success('Created a new configuration file "' . $file . '"');
-
-        $cli->bold('What to do next:');
-        $cli->out('1. Add a snippet that renders your webform and embed it in your page');
-        $cli->out('2. Add an email template for your form submissions');
-        $cli->out('3. Add a preset to the email configuration for your webform');
-        $cli->out('4. Adjust the validation rules in your form configuration');
-
-        return 0;
     },
 ];

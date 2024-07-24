@@ -1,27 +1,27 @@
 <?php
 
 use Kirby\Cms\App;
-use Uniform\Actions\DumpAction;
 use Uniform\Actions\EmailAction;
-use Uniform\Actions\LogAction;
 use Uniform\Actions\WebhookAction;
 use Uniform\Form;
 use Uniform\Guards\CalcGuard;
 use Uniform\Guards\HoneypotGuard;
 use Uniform\Guards\HoneytimeGuard;
+use Webform\Cms\FormPage;
+use Webform\Form\Actions\DatabaseAction;
 
 return function (FormPage $page, App $kirby): array {
     $plugin = $kirby->plugin('hksagentur/webform');
 
+    $config = $page->formConfig();
+
     $form = new Form(
-        rules: $page->config()->fields(),
-        sessionKey: $page->config()->id()
+        rules: $config->fields(),
+        sessionKey: $config->id(),
     );
 
     if ($page->isSubmitted()) {
-        $guard = $plugin->option('guard');
-
-        switch ($guard) {
+        switch ($plugin->option('guard')) {
             case 'captcha':
                 $form->guard(CalcGuard::class, [
                     'field' => $plugin->option('captcha.field') ?? CalcGuard::FIELD_NAME,
@@ -41,39 +41,35 @@ return function (FormPage $page, App $kirby): array {
                 break;
         }
 
-        $driver = $plugin->option('driver');
-
-        switch ($driver) {
-            case 'dump':
-                $form->action(DumpAction::class);
-                die();
-                break;
-            case 'log':
-                $form->action(LogAction::class, [
-                    'file' => $kirby->root('logs') . '/webform.log',
+        switch ($page->formHandler()) {
+            case 'database':
+                $form->action(DatabaseAction::class, [
+                    'table' => $page->databaseTable()->or($config->databaseTable())->value(),
                 ]);
                 break;
             case 'email':
                 $form->action(EmailAction::class, [
-                    'preset' => $page->config()->emailPreset(),
-                    'template' => $page->config()->emailTemplate() ?? 'webform/submission',
-                    'subject' => $page->subject()->value(),
-                    'from' => $page->recipient()->value(),
-                    'to' => $page->sender()->value(),
+                    'preset' => $config->emailPreset(),
+                    'template' => $config->emailTemplate() ?? 'webform/submission',
+                    'subject' => $page->emailSubject()->or($config->emailSubject())->value(),
+                    'from' => $page->emailRecipient()->or($config->emailRecipient())->value(),
+                    'to' => $page->emailSender()->or($config->emailSender())->value(),
                     'data' => $kirby->apply('webform.emailSubmission:before', [
                         'page' => $page,
                         'form' => $form,
+                        'config' => $config,
                         'data' => ['submission' => $form->data()],
                     ], 'data'),
                 ]);
                 break;
             case 'webhook':
                 $form->action(WebhookAction::class, [
-                    'url' => $page->config()->webhookUrl(),
-                    'json' => $page->config()->webhookType() === 'json',
+                    'url' => $page->webhookUrl()->or($config->webhookUrl())->value(),
+                    'json' => $page->webhookFormat()->or($config->webhookFormat())->value() === 'json',
                     'params' => $kirby->apply('webform.webhookSubmission:before', [
                         'page' => $page,
                         'form' => $form,
+                        'config' => $config,
                         'params' => [],
                     ], 'params'),
                 ]);

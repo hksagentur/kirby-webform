@@ -1,0 +1,9 @@
+type: group
+when:
+  handler: database
+fields:
+  databaseTable:
+    type: text
+    label:
+      *: hksagentur.webform.databaseTable.label
+    default: submissions

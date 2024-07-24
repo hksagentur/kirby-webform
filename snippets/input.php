@@ -26,9 +26,9 @@
     'readonly' => $readonly ?? null,
     'tabindex' => $tabindex ?? null,
     'aria-invalid' => $form->error($name) ? 'true' : null,
-    'aria-describedby' => $form->error($name) ? 'error-'.$id : null,
+    'aria-describedby' => $form->error($name) ? $id.'-error' : null,
     'aria-required' => !empty($required) ? 'true' : null,
     'aria-disabled' => !empty($disabled) ? 'true' : null,
 ]) ?>>
 
-<?php snippet('webform/inline-error', ['id' => 'error-'.$id, 'for' => $name]) ?>
+<?php snippet('webform/inline-error', ['id' => $id.'-error', 'for' => $name]) ?>

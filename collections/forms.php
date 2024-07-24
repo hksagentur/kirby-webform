@@ -1,10 +1,10 @@
 <?php
 
 use Kirby\Cms\App;
-use Webform\Form\FormConfigCollection;
+use Webform\Form\ConfigCollection;
 
-return function (App $kirby): FormConfigCollection {
-    return FormConfigCollection::fromDirectory(
+return function (App $kirby): ConfigCollection {
+    return ConfigCollection::fromDirectory(
         $kirby->root('webforms') ?? $kirby->root('site') . '/forms'
     );
 };

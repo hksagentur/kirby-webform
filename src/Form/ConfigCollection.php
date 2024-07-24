@@ -4,7 +4,7 @@ namespace Webform\Form;
 
 use Kirby\Toolkit\Collection;
 
-class FormConfigCollection extends Collection
+class ConfigCollection extends Collection
 {
     public static function fromDirectory(string $directory): static
     {

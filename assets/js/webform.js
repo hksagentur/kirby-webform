@@ -26,8 +26,15 @@
   }
 
   function enhanceSummaryItem(element) {
-    const fields = Array.from(document.getElementsByName(element.getAttribute(ATTR_FIELD_NAME)));
-    const field = fields.find((field) => field.hasAttribute('id'));
+    const name = element.getAttribute(ATTR_FIELD_NAME);
+
+    if (! name) {
+      return;
+    }
+
+    const field = Array.from(document.getElementsByName(name)).find((field) => (
+      field.hasAttribute('id')
+    ));
 
     if (! field) {
       return;

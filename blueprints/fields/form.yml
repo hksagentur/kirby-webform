@@ -10,23 +10,26 @@ fields:
     options:
       type: query
       query: kirby.collection('forms')
-      text: "{{ item.label }} ({{ item.id }})"
+      text: "{{ item.name }} ({{ item.id }})"
       value: "{{ item.id }}"
-  subject:
-    type: text
+  handler:
+    type: toggles
     label:
-      *: hksagentur.webform.subject.label
+      *: hksagentur.webform.handler.label
     help:
-      *: hksagentur.webform.subject.help
-  recipient:
-    type: email
-    label:
-      *: hksagentur.webform.recipient.label
-    help:
-      *: hksagentur.webform.recipient.help
-  sender:
-    type: email
-    label:
-      *: hksagentur.webform.sender.label
-    help:
-      *: hksagentur.webform.sender.help
+      *: hksagentur.webform.handler.help
+    default: email
+    required: true
+    options:
+      - value: email
+        icon: email
+        text:
+          *: hksagentur.webform.handler.email
+      - value: webhook
+        icon: bell
+        text:
+          *: hksagentur.webform.handler.webhook
+      - value: database
+        icon: server
+        text:
+          *: hksagentur.webform.handler.database

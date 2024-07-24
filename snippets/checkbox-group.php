@@ -10,22 +10,22 @@
     'role' => 'group',
     'disabled' => $disabled ?? null,
     'aria-disabled' => !empty($disabled) ? 'true' : null,
-    'aria-labelledby' => A::join(array_filter([
-        $slots->label() ? 'label-'.$id : null,
-    ]), ' '),
-    'aria-describedby' => A::join(array_filter([
-        $form->error($name) ? 'error-'.$id : null,
-        $slots->help() ? 'help-'.$id : null,
-    ]), ' '),
+    'aria-labelledby' => array_filter([
+        $slots->label() ? $id.'-label' : null,
+    ]),
+    'aria-describedby' => array_filter([
+        $form->error($name) ? $id.'-error' : null,
+        $slots->help() ? $id.'-help' : null,
+    ]),
 ]) ?>>
     <?php if ($label = $slots->label() ?: $slot) : ?>
-        <legend id="<?= 'label-'.$id ?>" class="checkbox-group__label">
+        <legend id="<?= $id.'-label' ?>" class="checkbox-group__label">
             <span><?= $label ?></span>
         </legend>
     <?php endif ?>
 
     <?php if ($help = $slots->help()) : ?>
-        <div id="<?= 'help-'.$id ?>" class="checkbox-group__help">
+        <div id="<?= $id.'-help' ?>" class="checkbox-group__help">
             <?= $help ?>
         </div>
     <?php endif ?>
@@ -49,7 +49,7 @@
 
     <?php snippet('webform/inline-error', [
         'for' => $name,
-        'id' => 'error-'.$id,
+        'id' => $id.'-error',
         'class' => 'checkbox-group__error',
     ]) ?>
 </fieldset>

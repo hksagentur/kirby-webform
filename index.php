@@ -2,16 +2,15 @@
 
 Kirby::plugin('hksagentur/webform', [
     'options' => [
-        'driver' => 'email',
         'guard' => 'honeypot',
     ],
     'blueprints' => [
-        'fields/form' => __DIR__ . '/blueprints/fields/form.yml',
-        'pages/form' => __DIR__ . '/blueprints/pages/form.yml',
-        'sections/form' => __DIR__ . '/blueprints/sections/form.yml',
-        '@hksagentur/webform/fields/form' => __DIR__ . '/blueprints/fields/form.yml',
         '@hksagentur/webform/pages/form' => __DIR__ . '/blueprints/pages/form.yml',
-        '@hksagentur/webform/sections/form' => __DIR__ . '/blueprints/sections/form.yml',
+        '@hksagentur/webform/fields/form' => __DIR__ . '/blueprints/fields/form.yml',
+        '@hksagentur/webform/fields/email' => __DIR__ . '/blueprints/fields/email.yml',
+        '@hksagentur/webform/fields/webhook' => __DIR__ . '/blueprints/fields/webhook.yml',
+        '@hksagentur/webform/fields/database' => __DIR__ . '/blueprints/fields/database.yml',
+        'pages/form' => __DIR__ . '/blueprints/pages/form.yml',
     ],
     'collections' => [
         'forms' => require __DIR__ . '/collections/forms.php',
@@ -37,6 +36,7 @@ Kirby::plugin('hksagentur/webform', [
         'webform/checkbox-group' => __DIR__ . '/snippets/checkbox-group.php',
         'webform/radio' => __DIR__ . '/snippets/radio.php',
         'webform/radio-group' => __DIR__ . '/snippets/radio-group.php',
+        'webform/status-message' => __DIR__ . '/snippets/status-message.php',
         'webform/error-summary' => __DIR__ . '/snippets/error-summary.php',
         'webform/inline-error' => __DIR__ . '/snippets/inline-error.php',
     ],

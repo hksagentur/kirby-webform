@@ -2,9 +2,16 @@
 
 return [
     'hksagentur.webform.form.label' => 'Form',
-    'hksagentur.webform.subject.label' => 'Subject',
-    'hksagentur.webform.recipient.label' => 'Recipient',
-    'hksagentur.webform.semder.label' => 'Sender',
-    'hksagentur.webform.summary.label' => 'There is a problem',
-    'hksagentur.webform.summary.help' => 'Some of the form controls contain unexpected inputs. Please check the following fields for possible errors:',
+    'hksagentur.webform.handler.label' => 'Handler',
+    'hksagentur.webform.handler.email' => 'E-Mail',
+    'hksagentur.webform.handler.webhook' => 'Webhook',
+    'hksagentur.webform.handler.database' => 'Database',
+    'hksagentur.webform.subject.label' => 'E-Mail Subject',
+    'hksagentur.webform.recipient.label' => 'E-Mail Recipient',
+    'hksagentur.webform.sender.label' => 'E-Mail Sender',
+    'hksagentur.webform.webhookUrl.label' => 'Webhook URL',
+    'hksagentur.webform.webhookFormat.label' => 'Webhook Format',
+    'hksagentur.webform.webhookFormat.form' => 'Form Encoded',
+    'hksagentur.webform.webhookFormat.json' => 'JSON Encoded',
+    'hksagentur.webform.databaseTable.label' => 'Database Table',
 ];

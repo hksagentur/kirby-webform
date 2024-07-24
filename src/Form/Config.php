@@ -10,7 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 
-class FormConfig implements JsonSerializable
+class Config implements JsonSerializable
 {
     public static App $kirby;
 
@@ -65,14 +65,24 @@ class FormConfig implements JsonSerializable
         return A::get($this->data(), $key, $default);
     }
 
-    public function label(): string
+    public function name(): string
     {
-        return $this->get('label', $this->id);
+        return $this->get('name', $this->id);
     }
 
     public function fields(): array
     {
         return $this->get('fields', []);
+    }
+
+    public function databaseOption(string $key, mixed $default = null): mixed
+    {
+        return $this->get("database.{$key}", $default);
+    }
+
+    public function databaseTable(): ?string
+    {
+        return $this->databaseOption('table');
     }
 
     public function emailOption(string $key, mixed $default = null): mixed
@@ -114,7 +124,7 @@ class FormConfig implements JsonSerializable
 
     public function emailSubject(): ?string
     {
-        return $this->emailOption('subject', $this->label());
+        return $this->emailOption('subject', $this->name());
     }
 
     public function webhookOption(string $key, mixed $default = null): mixed
@@ -122,9 +132,9 @@ class FormConfig implements JsonSerializable
         return $this->get("webhook.{$key}", $default);
     }
 
-    public function webhookType(): ?string
+    public function webhookFormat(): ?string
     {
-        return $this->webhookOption('type');
+        return $this->webhookOption('format');
     }
 
     public function webhookUrl(): ?string

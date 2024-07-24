@@ -1,0 +1,18 @@
+type: group
+when:
+  handler: webhook
+fields:
+  webhookUrl:
+    type: url
+    label:
+      *: hksagentur.webform.webhookUrl.label
+  webhookFormat:
+    type: select
+    label:
+      *: hksagentur.webform.webhookFormat.label
+    default: form
+    options:
+      form:
+        *: hksagentur.webform.webhookFormat.form
+      json:
+        *: hksagentur.webform.webhookFormat.json

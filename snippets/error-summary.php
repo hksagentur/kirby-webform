@@ -1,27 +1,28 @@
 <?php $id ??= 'error-summary-'.Str::uuid() ?>
+<?php $errors ??= $form->errors() ?>
 
-<?php if ($errors = $form->errors()) : ?>
+<?php if (! empty($errors)) : ?>
     <div <?= Html::attr([
         'class' => A::merge(A::wrap($class ?? []), ['error-summary']),
         'role' => 'alert',
-        'aria-labelledby' => 'label-'.$id,
-        'aria-describedby' => 'help-'.$id,
+        'aria-labelledby' => array_filter([
+            $slots->title() ? $id.'-label' : null,
+        ]),
+        'aria-describedby' => array_filter([
+            $slots->help() ? $id.'-help' : null,
+        ]),
     ]) ?>>
-        <h2 id="<?= 'label-'.$id ?>"class="error-summary__title">
-            <?php if ($title = $slots->title()) : ?>
+        <?php if ($title = $slots->title()) : ?>
+            <h2 id="<?= $id.'-label' ?>" class="error-summary__title">
                 <?= $title ?>
-            <?php else : ?>
-                <?= t('hksagentur.webform.summary.label') ?>
-            <?php endif ?>
-        </h2>
+            </h2>
+        <?php endif ?>
 
-        <p id="<?= 'help-'.$id ?>" class="error-summary__help">
-            <?php if ($help = $slots->help()) : ?>
+        <?php if ($help = $slots->help()) : ?>
+            <p id="<?= $id.'-help' ?>" class="error-summary__help">
                 <?= $help ?>
-            <?php else : ?>
-                <?= t('hksagentur.webform.summary.help') ?>
-            <?php endif ?>
-        </p>
+            </p>
+        <?php endif ?>
 
         <ul class="error-summary__list">
             <?php foreach ($errors as $field => $messages) : ?>

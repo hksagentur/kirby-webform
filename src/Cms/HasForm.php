@@ -2,38 +2,34 @@
 
 namespace Webform\Cms;
 
-use Kirby\Cms\Field;
-use Webform\Form\FormConfig;
+use Webform\Form\Config;
 
 trait HasForm
 {
-    protected ?FormConfig $formConfig;
+    protected ?Config $formConfig;
 
     public function isSubmitted(): bool
     {
         return $this->kirby()->request()->is('POST');
     }
 
-    public function config(): FormConfig
+    public function formRoot(): string
     {
-        return $this->formConfig ??= new FormConfig(
-            path: $this->content()->form()->value(),
-            root: $this->kirby()->root('webforms') ?? $this->kirby()->root('site') . '/forms',
-        );
+        return $this->kirby()->root('webforms') ?? $this->kirby()->root('site') . '/forms';
     }
 
-    public function subject(): Field
+    public function formPath(): string
     {
-        return $this->content()->subject()->or($this->config()->emailSubject());
+        return $this->content()->form()->value();
     }
 
-    public function sender(): Field
+    public function formHandler(): string
     {
-        return $this->content()->sender()->or($this->config()->emailSender());
+        return $this->content()->handler()->value();
     }
 
-    public function recipient(): Field
+    public function formConfig(): Config
     {
-        return $this->content()->recipient()->or($this->config()->emailRecipient());
+        return $this->formConfig ??= new Config($this->formPath(), $this->formRoot());
     }
 }
