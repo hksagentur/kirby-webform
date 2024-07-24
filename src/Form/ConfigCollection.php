@@ -15,7 +15,7 @@ class ConfigCollection extends Collection
 
             $collection->set(
                 $path,
-                new FormConfig($path, $directory)
+                new Config($path, $directory)
             );
         }
 
