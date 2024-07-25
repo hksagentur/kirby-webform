@@ -1,4 +1,6 @@
 <?php $id ??= 'checkbox-'.Str::uuid() ?>
+
+<?php $multiple ??= in_array($context ?? null, ['checkbox-group']) ?>
 <?php $checked ??= $value === $form->old($name, new stdClass()) ?>
 
 <label <?= Html::attr([
@@ -18,6 +20,7 @@
         'aria-required' => !empty($required) ? 'true' : null,
         'aria-disabled' => !empty($disabled) ? 'true' : null,
         'aria-describedby' => array_filter([
+            !$multiple && $form->error($name) ? $id.'-error' : null,
             $slots->help() ? $id.'-help' : null,
         ]),
     ]) ?>>
@@ -31,4 +34,8 @@
     <?php snippet('webform/help', ['id' => $id.'-help', 'for' => $id], slots: true) ?>
         <?= $help ?>
     <?php endsnippet() ?>
+<?php endif ?>
+
+<?php if (!$multiple) : ?>
+    <?php snippet('webform/inline-error', ['id' => $id.'-error', 'for' => $name]) ?>
 <?php endif ?>

@@ -42,6 +42,7 @@
                 'name' => $name,
                 'value' => $value,
                 'checked' => $checked === $value,
+                'context' => 'radio-group',
             ], slots: true) ?>
                 <?= $label ?>
             <?php endsnippet() ?>

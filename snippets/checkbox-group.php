@@ -41,6 +41,7 @@
                 'value' => $value,
                 'disabled' => $disabled ?? null,
                 'checked' => A::has($checked, $value),
+                'context' => 'checkbox-group',
             ], slots: true) ?>
                 <?= $label ?>
             <?php endsnippet() ?>
