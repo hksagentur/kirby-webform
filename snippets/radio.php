@@ -24,7 +24,7 @@
     ]) ?>>
 
     <span class="checkbox__label">
-        <?= $slot ?>
+        <?= $slots->label() ?: $slot ?>
     </span>
 </label>
 
