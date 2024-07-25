@@ -5,6 +5,3 @@ icon: chat
 
 fields:
   form: '@hksagentur/webform/fields/form'
-  email: '@hksagentur/webform/fields/email'
-  webhook: '@hksagentur/webform/fields/webhook'
-  database: '@hksagentur/webform/fields/database'

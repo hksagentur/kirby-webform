@@ -36,7 +36,7 @@
                             <tbody style="width:100%">
                                 <tr style="width:100%">
                                     <td align="left">
-                                        <img src="<?= $logo ?>" title="<?= site()->title() ?>" alt="<?= site()->title() ?>" style="display:block;outline:none;border:none;text-decoration:none;width:48px;height:48px" />
+                                        <img src="<?= $logo ?>" title="<?= site()->title() ?>" alt="<?= site()->title() ?>" style="display:block;outline:none;border:none;text-decoration:none;width:64px;height:64px" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -63,22 +63,6 @@
                         <?php endforeach ?>
                     <?php endif ?>
 
-                    <?php if (! empty($actionText)) : ?>
-                        <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:100%;text-align:left;">
-                            <tbody>
-                                <tr style="width:100%">
-                                    <td>
-                                        <a href="<?= $actionUrl ?? site()->url() ?>" style="color:#ffffff;background-color:#141313;border-color:#141313;padding:12px 34px 12px 34px;border-width:2px;border-style:solid;text-decoration:none;font-size:14px;font-weight:500;border-radius:9999px;line-height:100%;display:inline-block;max-width:100%" target="_blank">
-                                            <span><!--[if mso]><i style="letter-spacing: 34px;mso-font-width:-100%;mso-text-raise:18" hidden>&nbsp;</i><![endif]--></span>
-                                            <span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px"><?= $actionText ?></span>
-                                            <span><!--[if mso]><i style="letter-spacing: 34px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    <?php endif ?>
-
                     <?php if (! empty($submission)) : ?>
                         <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" style="max-width:100%;margin:16px 0px">
                             <tbody style="width:100%">
@@ -92,6 +76,22 @@
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    <?php endif ?>
+
+                    <?php if (! empty($actionText)) : ?>
+                        <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:100%;text-align:left;">
+                            <tbody>
+                                <tr style="width:100%">
+                                    <td>
+                                        <a href="<?= $actionUrl ?? site()->url() ?>" style="color:#ffffff;background-color:#141313;border-color:#141313;padding:12px 34px 12px 34px;border-width:2px;border-style:solid;text-decoration:none;font-size:14px;font-weight:500;border-radius:9999px;line-height:100%;display:inline-block;max-width:100%" target="_blank">
+                                            <span><!--[if mso]><i style="letter-spacing: 34px;mso-font-width:-100%;mso-text-raise:18" hidden>&nbsp;</i><![endif]--></span>
+                                            <span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px"><?= $actionText ?></span>
+                                            <span><!--[if mso]><i style="letter-spacing: 34px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span>
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     <?php endif ?>

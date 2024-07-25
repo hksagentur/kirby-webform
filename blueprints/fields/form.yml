@@ -1,35 +1,11 @@
-type: group
-fields:
-  form:
-    type: select
-    label:
-      *: hksagentur.webform.form.label
-    help:
-      *: hksagentur.webform.form.help
-    required: true
-    options:
-      type: query
-      query: kirby.collection('forms')
-      text: "{{ item.name }} ({{ item.id }})"
-      value: "{{ item.id }}"
-  handler:
-    type: toggles
-    label:
-      *: hksagentur.webform.handler.label
-    help:
-      *: hksagentur.webform.handler.help
-    default: email
-    required: true
-    options:
-      - value: email
-        icon: email
-        text:
-          *: hksagentur.webform.handler.email
-      - value: webhook
-        icon: bell
-        text:
-          *: hksagentur.webform.handler.webhook
-      - value: database
-        icon: server
-        text:
-          *: hksagentur.webform.handler.database
+type: select
+label:
+  *: hksagentur.webform.form.label
+help:
+  *: hksagentur.webform.form.help
+required: true
+options:
+  type: query
+  query: kirby.collection('forms')
+  text: "{{ item.name }} ({{ item.id }})"
+  value: "{{ item.id }}"

@@ -1,8 +1,26 @@
 <?php
 
+use Uniform\Actions\EmailAction;
+use Uniform\Guards\HoneypotGuard;
+use Webform\Form\Actions\DatabaseAction;
+
 return [
-    'id' => 'contact',
     'name' => 'Contact Form',
+    'guards' => [
+        HoneypotGuard::class,
+    ],
+    'actions' => [
+        EmailAction::class,
+        DatabaseAction::class,
+    ],
+    'email' => [
+        'subject' => 'Contact Form Submission: {{ name }}',
+        'to' => 'info@example.org',
+        'from' => 'info@example.org',
+    ],
+    'database' => [
+        'table' => 'submissions',
+    ],
     'fields' => [
         'name' => [
             'rules' => ['required'],

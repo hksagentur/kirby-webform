@@ -19,13 +19,9 @@ composer require hksagentur/kirby-webform
 
 Download the project archive and copy the files to the plugin directory of your kirby installation. By default this directory is located at `/site/plugins`.
 
-## Usage
-
-This plugin provides a new blueprint for form pages. Users can use this blueprint to create new form pages and select one of multiple predefined forms. These forms are controlled by configuration files in a custom directory (`site/forms` by default). The configuration files can be used to specify the e-mail address to which submissions should be sent, as well as the validation criteria for individual fields.
-
 ## Configuration
 
-Add a configuration file for a new form in `site/forms`. You can also use the custom CLI command to generate a file to start from (`kirby webform:make`).
+Add a configuration file for a new form in `site/forms`. You can also use a custom CLI command to generate the required files (`kirby make:webform`).
 
 Each form should at least provide a display name:
 
@@ -33,11 +29,13 @@ Each form should at least provide a display name:
 <?php // site/forms/contact.php
 
 return [
-  'label' => 'Contact Form',
+  'name' => 'Contact Form',
 ];
 ```
 
-Once the configuration file is saved, users can select the form in any page that uses the form blueprint.
+### Form Validation
+
+Once the configuration file is saved, users can select the form in any page that uses the custom form blueprint.
 
 Depending on your use case you may want to specify custom validation rules for the form. These rules should follow the following structure:
 
@@ -45,7 +43,7 @@ Depending on your use case you may want to specify custom validation rules for t
 <?php // site/forms/contact.php
 
 return [
-  'label' => 'Contact Form',
+  'name' => 'Contact Form',
   'fields' => [
         'name' => [
             'rules' => ['required'],
@@ -65,41 +63,50 @@ return [
 
 Kirby provides a predefined set of validators that can be further extended (see <https://getkirby.com/docs/reference/system/validators>).
 
-You can further customize the settings of the email that will be generated for each form submission:
+### Form Actions
+
+In addition you can tell the plugin which actions you want to perform once a form submission passes your validation criteria. Multiple actions are available. You could for example save the submission in a database and send an email notification to a predefined address.
+
+> [!NOTE]
+> Make sure to add your database credentials to the site configuration `site/config/config.php`, otherwise Kirby does not know, which connection to use.
 
 ```php
 <?php // site/forms/contact.php
 
+use Uniform\Guards\HoneypotGuard;
+use Uniform\Actions\EmailAction;
+use Webform\Actions\DatabaseAction;
+
 return [
-  'label' => 'Contact Form',
+  'name' => 'Contact Form',
+  'guards' => [
+    HoneypotGuard::class,
+  ],
+  'actions' => [
+    EmailAction::class,
+    DatabaseAction::class,
+  ],
   'email' => [
+    'template' => 'webform/submission',
     'from' => 'no-reply@example.org',
     'to' => 'info@example.org',
   ],
-  'fields' => [
-    // ...
-  ],
-];
-```
-
-> [!NOTE]
-> The email settings will only be used when no recipient is selected on the dedicated form page.
-
-In addition you can provide an email preset to use for each form submission. See the [Kirby configuration](https://getkirby.com/docs/guide/emails#presets) for further information about this feature.
-
-```php
-<?php // site/forms/contact.php
-
-return [
-  'label' => 'Contact Form',
-  'email' => [
-    'preset' => 'contact-form',
+  'database' => [
+    'table' => 'submissions',
   ],
   'fields' => [
     // ...
   ],
 ];
 ```
+
+The following actions are supported by default:
+
+- Send an email ([`Uniform\Actions\EmailAction`](https://kirby-uniform.readthedocs.io/en/latest/actions/email/))
+- Write submission details to a log file ([`Uniform\Actions\LogAction`](https://kirby-uniform.readthedocs.io/en/latest/actions/log/))
+- Notify a webhook about a form submission ([`Uniform\Actions\WebhookAction`](https://kirby-uniform.readthedocs.io/en/latest/actions/webhook/))
+- Upload files to a predefined directory ([`Uniform\Actions\UploadAction`](https://kirby-uniform.readthedocs.io/en/latest/actions/upload/))
+- Store submission details in a database table ([`Webform\Actions\DatabaseAction`](./src/Form/Actions/DatabaseAction.php))
 
 ## FAQ
 
@@ -118,7 +125,7 @@ You can add a custom template for form pages and embed different snippets depend
   </h1>
 
   <?php
-    snippet("forms/{$page->form()->value()}", [
+    snippet("forms/{$page->form()}", [
       'method' => 'POST'
       'action' => $page->url(),
       'form' => $form,
@@ -186,6 +193,9 @@ This allows you to add a separate snippet for each form utilized by your site. Y
     <?php endif ?>
   </div>
 
+  <?= csrf_field() ?>
+  <?= honeypot_field() ?>
+
   <button type="submit" class="button">
     <?= t('form.action.submit', 'Submit Form') ?>
   </button>
@@ -241,10 +251,10 @@ The following form controls area supported: `button`, `input`, `textarea`, `sele
 
 <details>
 <summary>How can I add additional fields to a form page?</summary>
-You can overwrite the standard blueprint provided by the plugin by creating your custom version in `site/blueprints/form.yml`. If you want to reuse the fields provided by the plugin you can utilize the corresponding field group:
+You can overwrite the standard blueprint provided by the plugin by creating your custom version in `site/blueprints/pages/form.yml`.
 
 ```yaml
-# site/blueprints/form.yml
+# site/blueprints/pages/form.yml
 
 extends: pages/default
 
@@ -258,7 +268,7 @@ columns:
       blocks:
         type: blocks
         label: Content
-      form: fields/form # or @hksagentur/webform/fields/form
+      form: fields/form # or '@hksagentur/webform/fields/form'
 
   sidebar:
     width: 1/3
@@ -271,39 +281,73 @@ columns:
 </details>
 
 <details>
-<summary>How can add text to the email generated for each form submission?</summary>
+<summary>How to use the provided email template for form submissions?</summary>
 
-The default template used for each form submission provides some variables that can be used to customize the text of each email. You can use a [kirby hook](https://getkirby.com/docs/reference/plugins/extensions/hooks) to inject data for these variables:
-
-```php
-<?php // site/plugins/example-hook/index.php
-
-use Uniform\Form;
-use Webform\Cms\FormPage;
-
-Kirby::plugin('webform/example-hook', [
-  'hooks' => [
-    'webform.emailSubmission:before' => fn (FormPage $page, Form $form) => [
-      'logo' => $page->site()->logo()->toFile()?->url(),
-      'greeting' => sprintf('Hi, %s!', $form->data('name')),
-      'introLines' => ['A new form submission is available.'],
-      'actionText' => 'View Page',
-      'actionUrl' => $page->url(),
-      'outroLines' => ['This is an automatically generated email.'],
-      'salutation' => sprintf('Greetings,\n%s', $page->site()->title()),
-      'submission' => $form->data(),
-    ];
-  ],
-])
-```
-
-If you want to fully customize the email template you can overwrite the template used, either in your email preset or in your form configuration:
+The plugin provides a custom email template for form submissions. This template generates a table that summarizes the submission details. To use the template adjust your email options for the corresponding form:
 
 ```php
 <?php // site/forms/contact.php
 
+use Uniform\Actions\EmailAction;
+
 return [
-  'label' => 'Contact Form',
+  'name' => 'Contact Form',
+  'actions' => [
+    EmailAction::class,
+  ],
+  'email' => [
+    'template' => 'webform/submission',
+  ],
+  'fields' => [
+    // ...
+  ],
+];
+
+```
+
+This template used provides various placeholders that allow you to customize the email content:
+
+```php
+<?php // site/forms/contact.php
+
+use Uniform\Actions\EmailAction;
+
+return [
+  'name' => 'Contact Form',
+  'actions' => [
+    EmailAction::class,
+  ],
+  'email' => [
+    'template' => 'webform/submission',
+    'data' => [
+      'logo' => site()->logo()->toFile()?->url(),
+      'greeting' => 'Hi!',
+      'introLines' => ['A new form submission is available.'],
+      'actionText' => 'View Page',
+      'actionUrl' => url('contact') ,
+      'outroLines' => ['This is an automatically generated email.'],
+      'salutation' => sprintf("Greetings,\n%s", site()->title()),
+    ],
+  ],
+  'fields' => [
+    // ...
+  ],
+];
+
+```
+
+Of course you can also simply use your own template.
+
+```php
+<?php // site/forms/contact.php
+
+use Uniform\Actions\EmailAction;
+
+return [
+  'name' => 'Contact Form',
+  'actions' => [
+    EmailAction::class,
+  ],
   'email' => [
     'template' => 'contact-form',
   ],

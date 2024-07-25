@@ -23,11 +23,6 @@ trait HasForm
         return $this->content()->form()->value();
     }
 
-    public function formHandler(): string
-    {
-        return $this->content()->handler()->value();
-    }
-
     public function formConfig(): Config
     {
         return $this->formConfig ??= new Config($this->formPath(), $this->formRoot());

@@ -67,7 +67,17 @@ class Config implements JsonSerializable
 
     public function name(): string
     {
-        return $this->get('name', $this->id);
+        return $this->get('name');
+    }
+
+    public function actions(): array
+    {
+        return $this->get('actions', []);
+    }
+
+    public function guards(): array
+    {
+        return $this->get('guards', []);
     }
 
     public function fields(): array
@@ -75,82 +85,13 @@ class Config implements JsonSerializable
         return $this->get('fields', []);
     }
 
-    public function databaseOption(string $key, mixed $default = null): mixed
-    {
-        return $this->get("database.{$key}", $default);
-    }
-
-    public function databaseTable(): ?string
-    {
-        return $this->databaseOption('table');
-    }
-
-    public function emailOption(string $key, mixed $default = null): mixed
-    {
-        $value = $this->get("email.{$key}");
-
-        if ($value) {
-            return $value;
-        }
-
-        $preset = $this->get('email.preset');
-
-        if ($preset) {
-            return $this->kirby()->option("email.presets.{$preset}.{$key}", $default);
-        }
-
-        return $default;
-    }
-
-    public function emailPreset(): ?string
-    {
-        return $this->emailOption('preset');
-    }
-
-    public function emailTemplate(): ?string
-    {
-        return $this->emailOption('template');
-    }
-
-    public function emailSender(): ?string
-    {
-        return $this->emailOption('from');
-    }
-
-    public function emailRecipient(): ?string
-    {
-        return $this->emailOption('to');
-    }
-
-    public function emailSubject(): ?string
-    {
-        return $this->emailOption('subject', $this->name());
-    }
-
-    public function webhookOption(string $key, mixed $default = null): mixed
-    {
-        return $this->get("webhook.{$key}", $default);
-    }
-
-    public function webhookFormat(): ?string
-    {
-        return $this->webhookOption('format');
-    }
-
-    public function webhookUrl(): ?string
-    {
-        return $this->webhookOption('url');
-    }
-
 	public function read(): array
 	{
-        $kirby = App::instance();
-
-		if (F::exists($this->file, $this->root) === true) {
+		if (F::exists($this->file, $this->root)) {
 			return $this->unpack($this->file);
 		}
 
-		return $this->unpack($kirby->extension('thirdParty', 'webform'));
+		return $this->unpack($this->kirby()->extension('thirdParty', 'webform'));
 	}
 
     public function unpack(string|callable|null $extension): array

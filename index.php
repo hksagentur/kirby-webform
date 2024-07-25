@@ -1,16 +1,15 @@
 <?php
 
+use Uniform\Form;
+
 Kirby::plugin('hksagentur/webform', [
-    'options' => [
-        'guard' => 'honeypot',
-    ],
     'blueprints' => [
-        '@hksagentur/webform/pages/form' => __DIR__ . '/blueprints/pages/form.yml',
-        '@hksagentur/webform/fields/form' => __DIR__ . '/blueprints/fields/form.yml',
-        '@hksagentur/webform/fields/email' => __DIR__ . '/blueprints/fields/email.yml',
-        '@hksagentur/webform/fields/webhook' => __DIR__ . '/blueprints/fields/webhook.yml',
-        '@hksagentur/webform/fields/database' => __DIR__ . '/blueprints/fields/database.yml',
+        'fields/form' => __DIR__ . '/blueprints/fields/form.yml',
         'pages/form' => __DIR__ . '/blueprints/pages/form.yml',
+        'sections/form' => __DIR__ . '/blueprints/sections/form.yml',
+        '@hksagentur/webform/fields/form' => __DIR__ . '/blueprints/fields/form.yml',
+        '@hksagentur/webform/pages/form' => __DIR__ . '/blueprints/pages/form.yml',
+        '@hksagentur/webform/sections/form' => __DIR__ . '/blueprints/sections/form.yml',
     ],
     'collections' => [
         'forms' => require __DIR__ . '/collections/forms.php',
@@ -20,6 +19,9 @@ Kirby::plugin('hksagentur/webform', [
     ],
     'controllers' => [
         'form' => require __DIR__ . '/controllers/form.php',
+    ],
+    'hooks' => [
+        'webform.email:before' => require __DIR__ . '/hooks/email.php',
     ],
     'pageModels' => [
         'form' => Webform\Cms\FormPage::class,
