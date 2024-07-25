@@ -17,6 +17,7 @@
         'disabled' => $disabled ?? null,
         'tabindex' => $tabindex ?? null,
         'checked' => $checked ? 'checked' : null,
+        'aria-invalid' => !$multiple && $form->error($name) ? 'true' : null,
         'aria-required' => !empty($required) ? 'true' : null,
         'aria-disabled' => !empty($disabled) ? 'true' : null,
         'aria-describedby' => array_filter([
