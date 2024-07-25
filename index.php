@@ -31,6 +31,7 @@ Kirby::plugin('hksagentur/webform', [
         'webform/field' => __DIR__ . '/snippets/field.php',
         'webform/button' => __DIR__ . '/snippets/button.php',
         'webform/label' => __DIR__ . '/snippets/label.php',
+        'webform/help' => __DIR__ . '/snippets/help.php',
         'webform/input' => __DIR__ . '/snippets/input.php',
         'webform/textarea' => __DIR__ . '/snippets/textarea.php',
         'webform/select' => __DIR__ . '/snippets/select.php',
