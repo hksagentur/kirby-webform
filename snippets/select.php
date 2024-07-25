@@ -7,6 +7,12 @@
     <?php endsnippet() ?>
 <?php endif ?>
 
+<?php if ($help = $slots->help()) : ?>
+    <?php snippet('webform/help', ['id' => $id.'-help'], slots: true) ?>
+        <?= $help ?>
+    <?php endsnippet() ?>
+<?php endif ?>
+
 <div <?= Html::attr([
     'class' => A::merge(A::wrap($class ?? []), [
         'select',
@@ -23,9 +29,12 @@
         'readonly' => $readonly ?? null,
         'tabindex' => $tabindex ?? null,
         'aria-invalid' => $form->error($name) ? 'true' : null,
-        'aria-describedby' => $form->error($name) ? $id.'-error' : null,
         'aria-required' => !empty($required) ? 'true' : null,
         'aria-disabled' => !empty($disabled) ? 'true' : null,
+        'aria-describedby' => array_filter([
+            $form->error($name) ? $id.'-error' : null,
+            $slots->help() ? $id.'-help' : null,
+        ]),
     ]) ?>>
         <?php if (empty($required)) : ?>
             <option value="" <?= Html::attr([
