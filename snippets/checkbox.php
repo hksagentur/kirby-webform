@@ -17,9 +17,18 @@
         'checked' => $checked ? 'checked' : null,
         'aria-required' => !empty($required) ? 'true' : null,
         'aria-disabled' => !empty($disabled) ? 'true' : null,
+        'aria-describedby' => array_filter([
+            $slots->help() ? $id.'-help' : null,
+        ]),
     ]) ?>>
 
     <span class="checkbox__label">
-        <?= $slot ?>
+        <?= $slots->label() ?: $slot ?>
     </span>
 </label>
+
+<?php if ($help = $slots->help()) : ?>
+    <?php snippet('webform/help', ['id' => $id.'-help', 'for' => $id], slots: true) ?>
+        <?= $help ?>
+    <?php endsnippet() ?>
+<?php endif ?>
