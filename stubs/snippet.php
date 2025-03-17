@@ -1,9 +1,10 @@
-<?php $id ??= Str::kebab($page->form()->value()) ?>
+<?php $id ??= 'contact' ?>
 
 <?php if ($form->success()) : ?>
     <?php snippet('webform/status-message', [
         'type' => 'success',
         'id' => $id.'-status',
+        'form' => $form,
     ], slots: true) ?>
         <?php slot('title') ?>
             <?= t('form.message.success.title') ?>
@@ -16,6 +17,7 @@
 <?php elseif ($form->errors()) : ?>
     <?php snippet('webform/error-summary', [
         'id' => $id.'-summary',
+        'form' => $form,
     ], slots: true) ?>
         <?php slot('title') ?>
             <?= t('form.message.error.title') ?>
@@ -27,14 +29,18 @@
     <?php endsnippet() ?>
 <?php endif ?>
 
-<?php snippet('webform/form', ['id' => $id], slots: true) ?>
+<?php snippet('webform/form', [
+    'id' => $id,
+    'action' => url('form/contact'),
+], slots: true) ?>
     <?php snippet('webform/field', slots: true) ?>
         <?php snippet('webform/input', [
             'type' => 'text',
             'name' => 'name',
             'autocomplete' => 'name',
             'required' => true,
-        ], slots: true) ?>
+            'form' => $form,
+    ], slots: true) ?>
             <?= t('form.field.name.label') ?>
         <?php endsnippet() ?>
     <?php endsnippet() ?>
@@ -45,6 +51,7 @@
             'name' => 'email',
             'autocomplete' => 'email',
             'required' => true,
+            'form' => $form,
         ], slots: true) ?>
             <?= t('form.field.email.label') ?>
         <?php endsnippet() ?>
@@ -55,6 +62,7 @@
             'name' => 'message',
             'rows' => 8,
             'required' => true,
+            'form' => $form,
         ], slots: true) ?>
             <?= t('form.field.message.label') ?>
         <?php endsnippet() ?>

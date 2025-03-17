@@ -1,54 +1,17 @@
 <?php
 
-use Uniform\Form;
-
 Kirby::plugin('hksagentur/webform', [
-    'blueprints' => [
-        'fields/form' => __DIR__ . '/blueprints/fields/form.yml',
-        'pages/form' => __DIR__ . '/blueprints/pages/form.yml',
-        'sections/form' => __DIR__ . '/blueprints/sections/form.yml',
-        '@hksagentur/webform/fields/form' => __DIR__ . '/blueprints/fields/form.yml',
-        '@hksagentur/webform/pages/form' => __DIR__ . '/blueprints/pages/form.yml',
-        '@hksagentur/webform/sections/form' => __DIR__ . '/blueprints/sections/form.yml',
-    ],
-    'collections' => [
-        'forms' => require __DIR__ . '/collections/forms.php',
-    ],
-    'commands' => [
-        'make:webform' => require __DIR__ . '/commands/make.php',
-    ],
-    'controllers' => [
-        'form' => require __DIR__ . '/controllers/form.php',
-    ],
-    'hooks' => [
-        'webform.email:before' => require __DIR__ . '/hooks/email.php',
-    ],
-    'pageModels' => [
-        'form' => Webform\Cms\FormPage::class,
-    ],
-    'snippets' => [
-        'webform/form' => __DIR__ . '/snippets/form.php',
-        'webform/field' => __DIR__ . '/snippets/field.php',
-        'webform/button' => __DIR__ . '/snippets/button.php',
-        'webform/label' => __DIR__ . '/snippets/label.php',
-        'webform/help' => __DIR__ . '/snippets/help.php',
-        'webform/input' => __DIR__ . '/snippets/input.php',
-        'webform/textarea' => __DIR__ . '/snippets/textarea.php',
-        'webform/select' => __DIR__ . '/snippets/select.php',
-        'webform/checkbox' => __DIR__ . '/snippets/checkbox.php',
-        'webform/checkbox-group' => __DIR__ . '/snippets/checkbox-group.php',
-        'webform/radio' => __DIR__ . '/snippets/radio.php',
-        'webform/radio-group' => __DIR__ . '/snippets/radio-group.php',
-        'webform/status-message' => __DIR__ . '/snippets/status-message.php',
-        'webform/error-summary' => __DIR__ . '/snippets/error-summary.php',
-        'webform/inline-error' => __DIR__ . '/snippets/inline-error.php',
-    ],
-    'templates' => [
-        'emails/webform/submission.text' => __DIR__ . '/templates/submission.text.php',
-        'emails/webform/submission.html' => __DIR__ . '/templates/submission.html.php',
-    ],
-    'translations' => [
-        'en' => require __DIR__ . '/translations/en.php',
-        'de' => require __DIR__ . '/translations/de.php',
-    ],
+    'blueprints' => require __DIR__ . '/config/blueprints.php',
+    'collections' => require __DIR__ . '/config/collections.php',
+    'commands' => require __DIR__ . '/config/commands.php',
+    'controllers' => require __DIR__ . '/config/controllers.php',
+    'hooks' => require __DIR__ . '/config/hooks.php',
+    'routes' => require __DIR__ . '/config/routes.php',
+    'snippets' => require __DIR__ . '/config/snippets.php',
+    'templates' => require __DIR__ . '/config/templates.php',
+    'translations' => require __DIR__ . '/config/translations.php',
+    'validators' => require __DIR__ . '/config/validators.php',
+    'collectionMethods' => require __DIR__ . '/config/methods/collection.php',
+    'blockModels' => require __DIR__ . '/config/models/block.php',
+    'pageModels' => require __DIR__ . '/config/models/page.php',
 ]);

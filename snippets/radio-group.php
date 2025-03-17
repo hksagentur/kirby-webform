@@ -53,5 +53,6 @@
         'for' => $name,
         'id' => $id.'-error',
         'class' => 'radio-group__error',
+        'form' => $form,
     ]) ?>
 </fieldset>

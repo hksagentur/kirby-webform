@@ -3,20 +3,11 @@
 namespace Webform\Cms;
 
 use Webform\Form\Config;
+use Webform\Form\Manager;
 
 trait HasForm
 {
     protected ?Config $formConfig;
-
-    public function isSubmitted(): bool
-    {
-        return $this->kirby()->request()->is('POST');
-    }
-
-    public function formRoot(): string
-    {
-        return $this->kirby()->root('webforms') ?? $this->kirby()->root('site') . '/forms';
-    }
 
     public function formPath(): string
     {
@@ -25,6 +16,6 @@ trait HasForm
 
     public function formConfig(): Config
     {
-        return $this->formConfig ??= new Config($this->formPath(), $this->formRoot());
+        return $this->formConfig ??= Manager::instance()->config($this->formPath());
     }
 }

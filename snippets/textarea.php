@@ -35,4 +35,8 @@
     ]),
 ]) ?>><?= $value ?? $form->old($name) ?></textarea>
 
-<?php snippet('webform/inline-error', ['id' => $id.'-error', 'for' => $name]) ?>
+<?php snippet('webform/inline-error', [
+    'id' => $id.'-error',
+    'for' => $name,
+    'form' => $form,
+]) ?>

@@ -88,7 +88,7 @@ class Config implements JsonSerializable
 	public function read(): array
 	{
 		if (F::exists($this->file, $this->root)) {
-			return $this->unpack($this->file);
+            return $this->unpack($this->file);
 		}
 
 		return $this->unpack($this->kirby()->extension('thirdParty', 'webform'));
@@ -96,7 +96,7 @@ class Config implements JsonSerializable
 
     public function unpack(string|callable|null $extension): array
 	{
-		return match (true) {
+        return match (true) {
             is_callable($extension) => $extension($this->kirby(), $this->path),
             is_string($extension) => PHP::read($extension),
 			default => throw new NotFoundException('"' . $this->path . '" could not be found'),

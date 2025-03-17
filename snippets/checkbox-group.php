@@ -52,5 +52,6 @@
         'for' => $name,
         'id' => $id.'-error',
         'class' => 'checkbox-group__error',
+        'form' => $form,
     ]) ?>
 </fieldset>
