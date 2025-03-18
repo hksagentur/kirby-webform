@@ -64,6 +64,12 @@
             <?php endforeach ?>
         <?php endif ?>
     </select>
+
+    <?php if (empty($multiple)) : ?>
+        <svg class="select__caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M23.468,2.984a2,2,0,0,0-1.742-1.018H2.274A2,2,0,0,0,.563,5L10.289,21.07a2,2,0,0,0,3.422,0L23.437,5A2,2,0,0,0,23.468,2.984Z"/>
+        </svg>
+    <?php endif ?>
 </div>
 
 <?php snippet('webform/inline-error', [
