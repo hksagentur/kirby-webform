@@ -7,6 +7,7 @@ return [
     'webform/label' => dirname(__DIR__) . '/snippets/label.php',
     'webform/help' => dirname(__DIR__) . '/snippets/help.php',
     'webform/input' => dirname(__DIR__) . '/snippets/input.php',
+    'webform/datalist' => dirname(__DIR__) . '/snippets/datalist.php',
     'webform/textarea' => dirname(__DIR__) . '/snippets/textarea.php',
     'webform/select' => dirname(__DIR__) . '/snippets/select.php',
     'webform/checkbox' => dirname(__DIR__) . '/snippets/checkbox.php',

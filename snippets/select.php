@@ -56,7 +56,7 @@
         <?php else : ?>
             <?php foreach ($options as $value => $label) : ?>
                 <option <?= Html::attr([
-                    'value' => $value,
+                    'value' => !array_is_list($options) ? $value : null,
                     'selected' => A::has($selected, $value) ? 'selected' : null,
                 ]) ?>>
                     <?= $label ?>
