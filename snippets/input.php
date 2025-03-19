@@ -26,6 +26,7 @@
     'step' => $step ?? null,
     'pattern' => $pattern ?? null,
     'placeholder' => $placeholder ?? null,
+    'list' => $list ?? null,
     'autocomplete' => $autocomplete ?? null,
     'required' => $required ?? null,
     'disabled' => $disabled ?? null,
