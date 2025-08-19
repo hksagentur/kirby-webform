@@ -1,7 +1,0 @@
-name:
-  *: hksagentur.webform.form.label
-icon: email
-preview: fields
-wysiwyg: true
-fields:
-  form: fields/form

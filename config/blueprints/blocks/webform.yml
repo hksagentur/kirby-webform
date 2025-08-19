@@ -1,0 +1,90 @@
+name:
+  *: hksagentur.webform.blueprint.name
+icon: email
+preview: fields
+wysiwyg: true
+tabs:
+  content:
+    label:
+      *: hksagentur.webform.blueprint.content.label
+    icon: document
+    fields:
+      title:
+        type: text
+        label:
+          *: hksagentur.webform.blueprint.title.label
+        icon: headline
+      form:
+        type: select
+        label:
+          *: hksagentur.webform.blueprint.form.label
+        required: true
+        options:
+          type: query
+          query: kirby.collection('webforms')
+          value: "{{ item.getPath }}"
+          text: "{{ item.getLabel }}"
+  settings:
+    label:
+      *: hksagentur.webform.blueprint.settings.label
+    icon: cog
+    fields:
+      action:
+        type: toggles
+        label:
+          *: hksagentur.webform.blueprint.action.label
+        default: email
+        options:
+          - value: email
+            icon: email
+            text:
+              *: hksagentur.webform.blueprint.action.email
+          - value: database
+            icon: server
+            text:
+              *: hksagentur.webform.blueprint.action.database
+          - value: webhook
+            icon: url
+            text:
+              *: hksagentur.webform.blueprint.action.webhook
+      emailSubject:
+        type: text
+        label:
+          *: hksagentur.webform.blueprint.emailSubject.label
+        icon: headline
+        when:
+          action: email
+      emailFrom:
+        type: email
+        label:
+          *: hksagentur.webform.blueprint.emailFrom.label
+        when:
+          action: email
+      emailTo:
+        type: email
+        label:
+          *: hksagentur.webform.blueprint.emailTo.label
+        when:
+          action: email
+      emailReplyTo:
+        type: email
+        label:
+          *: hksagentur.webform.blueprint.emailReplyTo.label
+        when:
+          action: email
+      databaseTable:
+        type: text
+        label:
+          *: hksagentur.webform.blueprint.databaseTable.label
+        default: submissions
+        required: true
+        counter: false
+        when:
+          action: database
+      webhookUrl:
+        type: url
+        label:
+          *: hksagentur.webform.blueprint.webhookUrl.label
+        required: true
+        when:
+          action: webhook

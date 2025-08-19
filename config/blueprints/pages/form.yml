@@ -1,7 +1,0 @@
-title:
-  *: hksagentur.webform.form.label
-
-icon: chat
-
-fields:
-  form: '@hksagentur/webform/fields/form'

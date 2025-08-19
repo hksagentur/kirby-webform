@@ -1,0 +1,22 @@
+<?php
+
+namespace Webform\Form\Components\Concerns;
+
+use Closure;
+
+trait CanBeDisabled
+{
+    protected bool|Closure $isDisabled = false;
+
+    public function isDisabled(): bool
+    {
+        return $this->evaluate($this->isDisabled);
+    }
+
+    public function disabled(bool|Closure $isDisabled = true): static
+    {
+        $this->isDisabled = $isDisabled;
+
+        return $this;
+    }
+}

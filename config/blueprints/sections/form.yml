@@ -1,3 +1,0 @@
-type: fields
-fields:
-  form: '@hksagentur/webform/fields/form'

@@ -1,12 +1,23 @@
 <?php
 
 use Kirby\Cms\App;
-use Webform\Form\ConfigCollection;
+use Kirby\Filesystem\Dir;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Collection;
+use Webform\Form\Config;
 
 return [
-    'forms' => function (App $kirby): ConfigCollection {
-        return ConfigCollection::fromDirectory(
-            $kirby->root('webforms') ?? $kirby->root('site') . '/forms'
+    'webforms' => function (App $kirby): Collection {
+        $files = A::map(
+            array: Dir::read($kirby->root('webforms') ?? $kirby->root('site') . '/forms'),
+            map: fn (string $file) => new Config($file),
         );
+
+        $files = A::keyBy(
+            array: $files,
+            keyBy: fn (Config $config) => $config->getPath(),
+        );
+
+        return new Collection($files);
     },
 ];

@@ -1,14 +1,21 @@
 <?php
 
-use Kirby\Toolkit\A;
-use Uniform\Form;
+use Kirby\Cms\Page;
+use Webform\Session\TransientData;
 
 return [
-    'webform.email:before' => function (Form $form, array $options = []) {
-        return A::merge($options, [
-            'data' => [
-                'submission' => $form->data(),
-            ],
-        ]);
+    'page.render:before' => function (string $contentType, array $data, Page $page): array {
+        if ($contentType === 'html') {
+            TransientData::instance()->cleanUp();
+        }
+
+        return $data;
+    },
+    'page.render:after' => function (string $contentType, array $data, string $html, Page $page): string {
+        if ($contentType === 'html') {
+            TransientData::instance()->put('webform.page.previous', $page->url());
+        }
+
+        return $html;
     },
 ];
