@@ -8,7 +8,7 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained
 {
     use Concerns\CanBeAutocompleted;
     use Concerns\CanBeLengthConstrained;
-    use Concerns\CanBeReadonly;
+    use Concerns\CanBeReadOnly;
     use Concerns\HasDatalist;
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;

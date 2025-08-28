@@ -7,7 +7,7 @@ use Closure;
 class DateTimePicker extends Field
 {
     use Concerns\CanBeAutocompleted;
-    use Concerns\CanBeReadonly;
+    use Concerns\CanBeReadOnly;
     use Concerns\HasDatalist;
     use Concerns\HasPlaceholder;
     use Concerns\HasStep;

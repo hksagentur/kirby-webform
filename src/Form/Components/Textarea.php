@@ -7,7 +7,7 @@ use Closure;
 class Textarea extends Field
 {
     use Concerns\CanBeLengthConstrained;
-    use Concerns\CanBeReadonly;
+    use Concerns\CanBeReadOnly;
     use Concerns\HasPlaceholder;
 
     protected string $snippet = 'webform/textarea';
