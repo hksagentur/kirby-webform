@@ -276,6 +276,20 @@ trait CanBeValidated
         return $this->rule('num', $condition);
     }
 
+    public function requiredIf(bool|Closure $required = true, bool|Closure $condition = true): static
+    {
+        return $this->rule(static function (Component $component) use ($required) {
+            return ['requiredIf' => [$component->evaluate($required)]];
+        }, $condition);
+    }
+
+    public function requiredUnless(bool|Closure $required = true, bool|Closure $condition = true): static
+    {
+        return $this->rule(static function (Component $component) use ($required) {
+            return ['requiredUnless' => [$component->evaluate($required)]];
+        }, $condition);
+    }
+
     public function same(mixed $value, bool|Closure $condition = true): static
     {
         return $this->rule(static function (Component $component) use ($value) {

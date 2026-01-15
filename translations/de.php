@@ -57,6 +57,8 @@ return [
     'hksagentur.webform.validation.message.notIn' => 'Der gewählte Wert für {Attribute} ist ungültig.',
     'hksagentur.webform.validation.message.num' => '{Attribute} muss eine Zahl sein.',
     'hksagentur.webform.validation.message.required' => '{Attribute} muss ausgefüllt werden.',
+    'hksagentur.webform.validation.message.requiredIf' => '{Attribute} muss ausgefüllt werden.',
+    'hksagentur.webform.validation.message.requiredUnless' => '{Attribute} muss ausgefüllt werden.',
     'hksagentur.webform.validation.message.same' => '{Attribute} muss dem Wert {other} entsprechen.',
     'hksagentur.webform.validation.message.startsWith' => '{Attribute} muss mit einer vorgegebene Zeichenkette starten ({start}).',
     'hksagentur.webform.validation.message.tel' => 'Format von {Attribute} ist ungültig.',

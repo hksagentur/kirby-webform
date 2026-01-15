@@ -2,6 +2,7 @@
 
 namespace Webform\Form;
 
+use Closure;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -104,6 +105,14 @@ class Validator
                     if ($filled) {
                         continue;
                     }
+                } elseif ($rule === 'requiredIf') {
+                    if ($filled || V::notEmpty(...$parameters)) {
+                        continue;
+                    }
+                } elseif ($rule === 'requiredUnless') {
+                    if ($filled || V::empty(...$parameters)) {
+                        continue;
+                    }
                 } elseif (A::has(['file', 'mimeType', 'minFileSize', 'maxFileSize', 'image', 'document', 'video'], $rule)) {
                     if (A::every($value, fn (mixed $file): bool => V::$rule($file, ...$parameters))) {
                         continue;
@@ -188,22 +197,27 @@ class Validator
         return I18n::translate("hksagentur.webform.validation.message.fallback", "Validation rule failed [{$rule}]");
     }
 
-    protected function formatMessage(string $message, string $field, string $rule, array $parameters = []): string
+    protected function getValidator(string $name): ?Closure
     {
-        if (! Str::matches($message, '/{{1,2}.*?}{1,2}/')) {
-            return $message;
-        }
+        return A::get(V::validators(), $name);
+    }
 
-        $validator = A::get(V::validators(), $rule);
-
-        if (! $validator) {
-            return $message;
-        }
-
+    protected function getValidatorParameters(mixed $validator, array $values = []): array
+    {
         $arguments = [];
 
-        foreach ((new ReflectionFunction($validator))->getParameters() as $index => $parameter) {
-            $value = $parameters[$index] ?? ($parameter->isOptional() ? $parameter->getDefaultValue() : null);
+        if (! ($validator instanceof Closure)) {
+            return $arguments;
+        }
+
+        $parameters = (new ReflectionFunction($validator))->getParameters();
+
+        if (! $parameters) {
+            return $arguments;
+        }
+
+        foreach ($parameters as $index => $parameter) {
+            $value = $values[$index] ?? ($parameter->isOptional() ? $parameter->getDefaultValue() : null);
 
             if (is_array($value)) {
                 $value = A::implode($value, ', ');
@@ -212,13 +226,24 @@ class Validator
             $arguments[$parameter->getName()] = $value;
         }
 
+        return $arguments;
+    }
+
+    protected function formatMessage(string $message, string $field, string $rule, array $parameters = []): string
+    {
+        if (! Str::matches($message, '/{{1,2}.*?}{1,2}/')) {
+            return $message;
+        }
+
+        $validator = $this->getValidator($rule);
+
         $attribute = A::get(
             array: $this->customAttributes,
             key: $field,
             default: Str::lower(Str::replace($field, ['-', '_'], ' ')),
         );
 
-        $data = A::merge($arguments, [
+        $data = A::merge($this->getValidatorParameters($validator, $parameters), [
             'attribute' => $attribute,
             'field' => $field,
             'Attribute' => Str::ucwords($attribute),

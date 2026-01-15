@@ -58,6 +58,8 @@ return [
     'hksagentur.webform.validation.message.notIn' => 'The selected {attribute} is invalid.',
     'hksagentur.webform.validation.message.num' => 'The {attribute} field must be a number.',
     'hksagentur.webform.validation.message.required' => 'The {attribute} field is required.',
+    'hksagentur.webform.validation.message.requiredIf' => 'The {attribute} field is required.',
+    'hksagentur.webform.validation.message.requiredUnless' => 'The {attribute} field is required.',
     'hksagentur.webform.validation.message.same' => 'The {attribute} field must match {other}.',
     'hksagentur.webform.validation.message.startsWith' => 'The {attribute} field must start with {start}.',
     'hksagentur.webform.validation.message.tel' => 'The {attribute} field format is invalid.',
