@@ -16,6 +16,8 @@ return [
     'hksagentur.webform.blueprint.emailReplyTo.label' => 'Reply to',
     'hksagentur.webform.blueprint.databaseTable.label' => 'Table',
     'hksagentur.webform.blueprint.webhookUrl.label' => 'URL',
+    'hksagentur.webform.form.contact.label' => 'Contact',
+    'hksagentur.webform.form.poll.label' => 'Poll',
     'hksagentur.webform.template.submission.notAvailable' => 'n.a.',
     'hksagentur.webform.snippet.select.none' => '- None -',
     'hksagentur.webform.snippet.select.empty' => '- Select -',

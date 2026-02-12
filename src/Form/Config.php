@@ -5,6 +5,7 @@ namespace Webform\Form;
 use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 class Config
@@ -29,7 +30,15 @@ class Config
 
     public function getLabel(): string
     {
-        return Str::ucfirst(F::name($this->path));
+        return I18n::translate(
+            key: sprintf('hksagentur.webform.form.%s.label', $this->getName()),
+            fallback: Str::ucfirst($this->getName())
+        );
+    }
+
+    public function getName(): string
+    {
+        return F::name($this->path);
     }
 
     public function getPath(): string
