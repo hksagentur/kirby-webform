@@ -32,17 +32,17 @@ class Form extends ViewComponent
 
     public function getId(): string
     {
-        return $this->getConfigPath();
+        return $this->config->getPath();
     }
 
     public function getName(): string
     {
-        return F::name($this->getConfigPath());
+        return $this->config->getName();
     }
 
     public function getActionUrl(): string
     {
-        return Url::to("webform/{$this->getConfigPath()}");
+        return Url::to("webform/{$this->getId()}");
     }
 
     public function submit(): void

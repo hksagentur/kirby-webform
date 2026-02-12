@@ -19,14 +19,4 @@ trait HasConfig
 
         return $this;
     }
-
-    public function getConfigRoot(): string
-    {
-        return $this->config->getRoot();
-    }
-
-    public function getConfigPath(): string
-    {
-        return $this->config->getPath();
-    }
 }
