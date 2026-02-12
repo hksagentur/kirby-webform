@@ -3,20 +3,37 @@
 namespace Webform\Http;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Block;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
+use Webform\Cms\FormBlock;
 use Webform\Exception\FileUploadException;
 use Webform\Exception\ValidationException;
 use Webform\Form\Form;
+use Webform\Form\Manager;
 use Webform\Form\MessageBag;
 
 class SubmissionController
 {
     public function __invoke(Form $form): RedirectResponse
     {
-        $referrer = $this->getReferrerPage() ?? $this->getPreviousPage();
+        $page = $this->getReferrerPage() ?? $this->getPreviousPage();
+
+        if ($page instanceof Page) {
+            $form->model($page);
+        }
+
+        $block = $this->getParentBlock($page);
+
+        if ($block instanceof Block) {
+            $form->block($block);
+        }
+
+        if ($block instanceof FormBlock) {
+            $form->action($block->action());
+        }
 
         try {
             $form->validate();
@@ -25,7 +42,7 @@ class SubmissionController
         }
 
         try {
-            $form->submit($referrer);
+            $form->submit();
         } catch (Throwable $exception) {
             return $this->failedSubmission($exception);
         }
@@ -45,6 +62,17 @@ class SubmissionController
         return App::instance()->site()->find(
             App::instance()->session()->get('webform.page.previous')
         );
+    }
+
+    protected function getParentBlock(?Page $page): ?Block
+    {
+        $key = App::instance()->request()->get('_webform_block');
+
+        if (! $key || ! $page) {
+            return null;
+        }
+
+        return Manager::instance()->block($page, $key);
     }
 
     protected function getRedirectUrl(): string

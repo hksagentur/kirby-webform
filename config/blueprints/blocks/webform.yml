@@ -1,8 +1,6 @@
 name:
   *: hksagentur.webform.blueprint.name
 icon: email
-preview: fields
-wysiwyg: true
 tabs:
   content:
     label:
@@ -14,6 +12,10 @@ tabs:
         label:
           *: hksagentur.webform.blueprint.title.label
         icon: headline
+      text:
+        type: writer
+        label:
+          *: hksagentur.webform.blueprint.text.label
       form:
         type: select
         label:
@@ -55,21 +57,24 @@ tabs:
         when:
           action: email
       emailFrom:
-        type: email
+        type: text
         label:
           *: hksagentur.webform.blueprint.emailFrom.label
+        icon: email
         when:
           action: email
       emailTo:
-        type: email
+        type: text
         label:
           *: hksagentur.webform.blueprint.emailTo.label
+        icon: email
         when:
           action: email
       emailReplyTo:
-        type: email
+        type: text
         label:
           *: hksagentur.webform.blueprint.emailReplyTo.label
+        icon: email
         when:
           action: email
       databaseTable:
@@ -82,9 +87,10 @@ tabs:
         when:
           action: database
       webhookUrl:
-        type: url
+        type: text
         label:
           *: hksagentur.webform.blueprint.webhookUrl.label
+        icon: url
         required: true
         when:
           action: webhook

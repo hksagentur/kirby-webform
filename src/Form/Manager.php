@@ -2,6 +2,10 @@
 
 namespace Webform\Form;
 
+use InvalidArgumentException;
+use Kirby\Cms\App;
+use Kirby\Cms\Block;
+use Kirby\Cms\Page;
 use Webform\Form\Form;
 use Webform\Session\TransientData;
 
@@ -9,6 +13,10 @@ class Manager
 {
     protected static ?self $instance = null;
 
+    /** @var array<string, array<string, Block>> */
+    protected array $blocks = [];
+
+    /** @var array<string, Form> */
     protected array $forms = [];
 
     protected ?MessageBag $messageBag = null;
@@ -26,6 +34,11 @@ class Manager
     public function form(string $path): Form
     {
         return $this->forms[$path] ??= Form::from($path);
+    }
+
+    public function block(Page $page, string $key): ?Block
+    {
+        return $this->blocks[$page->id()][$key] ??= $this->findBlock($page, $key);
     }
 
     public function transient(): TransientData
@@ -49,5 +62,16 @@ class Manager
         return $this->messageBag ??= new MessageBag(
             $this->transient()->get('webform.form.errors', [])
         );
+    }
+
+    protected function findBlock(Page $page, string $key): ?Block
+    {
+        try {
+            return $page->content()->get(
+                App::instance()->option('hksagentur.webform.referrer.blocks', 'blocks')
+            )->toBlocks()->findByKey($key);
+        } catch (InvalidArgumentException) {
+            return null;
+        }
     }
 }

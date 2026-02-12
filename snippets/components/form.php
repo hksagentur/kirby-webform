@@ -41,5 +41,6 @@
 
     <input type="hidden" name="_webform_id" value="<?= $form->getId() ?>">
     <input type="hidden" name="_webform_token" value="<?= $form->getCsrfToken() ?>">
-    <input type="hidden" name="_webform_referrer" value="<?= $page->uri() ?>">
+    <input type="hidden" name="_webform_block" value="<?= $form->getBlockId() ?>">
+    <input type="hidden" name="_webform_referrer" value="<?= $form->getModelId() ?>">
 </form>

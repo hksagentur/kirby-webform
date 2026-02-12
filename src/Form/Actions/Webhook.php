@@ -4,6 +4,7 @@ namespace Webform\Form\Actions;
 
 use Closure;
 use Kirby\Http\Remote;
+use Kirby\Toolkit\Str;
 use Webform\Form\FormSubmission;
 
 class Webhook extends Action
@@ -47,6 +48,16 @@ class Webhook extends Action
         return $this;
     }
 
+    public function isUrlEncoded(): bool
+    {
+        return $this->getContentType() === 'application/x-www-form-urlencoded';
+    }
+
+    public function isJson(): bool
+    {
+        return $this->getContentType() === 'application/json';
+    }
+
     public function getContentType(): string
     {
         return $this->evaluate($this->contentType);
@@ -71,23 +82,22 @@ class Webhook extends Action
 
     public function execute(FormSubmission $submission): void
     {
-        $headers = $this->getHeaders();
+        $data = $submission->all();
 
-        $contentType = $this->getContentType();
-        $url = $this->getUrl();
+        $body = $this->isJson()
+            ? json_encode($data, JSON_UNESCAPED_SLASHES)
+            : http_build_query($data);
 
-        $data = in_array($contentType, ['application/json'])
-            ? json_encode($submission->all(), JSON_UNESCAPED_SLASHES)
-            : http_build_query($submission->all());
+        $url = Str::template($this->getUrl(), $data);
 
         $options = $this->applyFilters('webhook:before', [
             'options' => [
                 'headers' => [
-                    ...$headers
+                    ...$this->getHeaders(),
                 ],
                 'method' => 'POST',
                 'url' => $url,
-                'data' => $data,
+                'data' => $body,
             ],
         ], 'options');
 

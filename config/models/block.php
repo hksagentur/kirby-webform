@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'webform' => Webform\Cms\WebformBlock::class,
+    'webform' => Webform\Cms\FormBlock::class,
 ];

@@ -1,4 +1,4 @@
-<?php /** @var \Webform\Cms\WebformBlock $block */ ?>
+<?php /** @var \Webform\Cms\FormBlock $block */ ?>
 
 <div <?= attr([
     'id' => $block->form()->getId(),

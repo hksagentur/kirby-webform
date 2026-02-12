@@ -2,10 +2,6 @@
 
 namespace Webform\Form;
 
-use InvalidArgumentException;
-use Kirby\Cms\App;
-use Kirby\Cms\Blocks;
-use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\F;
 use RuntimeException;
@@ -13,6 +9,8 @@ use Webform\Support\ViewComponent;
 
 class Form extends ViewComponent
 {
+    use Concerns\BelongsToBlock;
+    use Concerns\BelongsToModel;
     use Concerns\CanBeValidated;
     use Concerns\GeneratesCsrfTokens;
     use Concerns\HandlesFileUploads;
@@ -47,12 +45,9 @@ class Form extends ViewComponent
         return Url::to("webform/{$this->getConfigPath()}");
     }
 
-    public function submit(?Page $referrer = null): void
+    public function submit(): void
     {
-        $actions = array_filter([
-            ...$this->getActions(),
-            ...$this->getReferrerActions($referrer),
-        ]);
+        $actions = $this->getActions();
 
         if (empty($actions)) {
             throw new RuntimeException(sprintf(
@@ -71,45 +66,11 @@ class Form extends ViewComponent
         }
     }
 
-    protected function getContentBlocks(?Page $page): Blocks
-    {
-        $field = $page?->content()->get(
-            App::instance()->option('hksagentur.webform.referrer.blocks', 'blocks')
-        );
-
-        if (! $field->exists() || $field->isEmpty()) {
-            return new Blocks();
-        }
-
-        try {
-            return $field->toBlocks();
-        } catch (InvalidArgumentException) {
-            return new Blocks();
-        }
-    }
-
-    protected function getWebformBlocks(?Page $page): Blocks
-    {
-        return $this->getContentBlocks($page)
-            ->filterBy('type', 'webform')
-            ->filterBy('formId', $this->getId());
-    }
-
-    protected function getReferrerActions(?Page $page): array
-    {
-        $actions = [];
-
-        /** @var \Webform\Cms\WebformBlock */
-        foreach ($this->getWebformBlocks($page) as $block) {
-            $actions[] = $block->action()->form($this);
-        }
-
-        return $actions;
-    }
-
     protected function resolveDefaultEvaluationData(): array
     {
         return [
+            'model' => $this->model,
+            'block' => $this->block,
             'form' => $this,
         ];
     }
@@ -117,6 +78,8 @@ class Form extends ViewComponent
     protected function resolveDefaultSnippetData(): array
     {
         return [
+            'model' => $this->model,
+            'block' => $this->block,
             'form' => $this,
             'childComponents' => $this->getComponents(depth: 1),
         ];

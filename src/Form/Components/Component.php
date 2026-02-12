@@ -16,6 +16,7 @@ abstract class Component extends ViewComponent
     protected function resolveDefaultEvaluationData(): array
     {
         return [
+            ...$this->getForm()?->resolveDefaultEvaluationData() ?? [],
             'component' => $this,
         ];
     }
@@ -23,6 +24,7 @@ abstract class Component extends ViewComponent
     protected function resolveDefaultSnippetData(): array
     {
         return [
+            ...$this->getForm()?->resolveDefaultSnippetData() ?? [],
             'component' => $this,
             'childComponents' => $this->getChildComponents(depth: 1),
         ];

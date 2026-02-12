@@ -14,12 +14,12 @@ use Webform\Form\FormSubmission;
 class Email extends Action
 {
     protected string|array|null|Closure $preset = null;
+    protected string|array|null|Closure $to = null;
 
     protected string|null|Closure $template = 'webform/submission';
 
     protected string|null|Closure $subject = null;
     protected string|null|Closure $from = null;
-    protected string|null|Closure $to = null;
     protected string|null|Closure $replyTo = null;
 
     public function __construct(string|array|Closure|null $preset = null)
@@ -93,7 +93,13 @@ class Email extends Action
 
     public function getRecipients(): array
     {
-        return A::wrap($this->evaluate($this->to));
+        $recipients = $this->evaluate($this->to);
+
+        if (is_string($recipients)) {
+            return Str::split($recipients, ',');
+        }
+
+        return A::wrap($recipients);
     }
 
     public function getRecipient(): ?string
@@ -134,13 +140,17 @@ class Email extends Action
         $form = $this->getForm();
         $preset = $this->getPreset();
         $template = $this->getTemplate();
-        $subject = $this->getSubject();
-        $sender = $this->getSender();
-        $recipients = $this->getRecipients();
-        $replyTo = $this->getReplyTo();
 
         $data = $this->prepareSubmissionData($submission->all());
         $attachments = $this->prepareEmailAttachments($submission->files());
+
+        $subject = Str::template($this->getSubject(), $data);
+        $sender = Str::template($this->getSender(), $data);
+        $replyTo = Str::template($this->getReplyTo(), $data);
+
+        $recipients = A::map($this->getRecipients(), function ($recipient) use ($data) {
+            return Str::template($recipient, $data);
+        });
 
         $preset = $this->applyFilters('email:before', [
             'preset' => [
