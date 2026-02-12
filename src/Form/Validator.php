@@ -220,7 +220,7 @@ class Validator
             $value = $values[$index] ?? ($parameter->isOptional() ? $parameter->getDefaultValue() : null);
 
             if (is_array($value)) {
-                $value = A::implode($value, ', ');
+                $value = implode(',', $value);
             }
 
             $arguments[$parameter->getName()] = $value;
