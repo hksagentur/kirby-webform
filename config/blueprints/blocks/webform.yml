@@ -54,6 +54,7 @@ tabs:
         label:
           *: hksagentur.webform.blueprint.emailSubject.label
         icon: headline
+        required: true
         when:
           action: email
       emailFrom:
@@ -61,6 +62,7 @@ tabs:
         label:
           *: hksagentur.webform.blueprint.emailFrom.label
         icon: email
+        required: true
         when:
           action: email
       emailTo:
@@ -68,6 +70,7 @@ tabs:
         label:
           *: hksagentur.webform.blueprint.emailTo.label
         icon: email
+        required: true
         when:
           action: email
       emailReplyTo:
