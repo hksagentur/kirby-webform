@@ -63,6 +63,7 @@ tabs:
           *: hksagentur.webform.blueprint.emailFrom.label
         icon: email
         required: true
+        counter: false
         when:
           action: email
       emailTo:
@@ -71,6 +72,7 @@ tabs:
           *: hksagentur.webform.blueprint.emailTo.label
         icon: email
         required: true
+        counter: false
         when:
           action: email
       emailReplyTo:
@@ -78,6 +80,8 @@ tabs:
         label:
           *: hksagentur.webform.blueprint.emailReplyTo.label
         icon: email
+        required: false
+        counter: false
         when:
           action: email
       databaseTable:
@@ -95,5 +99,6 @@ tabs:
           *: hksagentur.webform.blueprint.webhookUrl.label
         icon: url
         required: true
+        counter: false
         when:
           action: webhook
