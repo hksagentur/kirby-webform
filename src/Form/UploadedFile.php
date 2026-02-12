@@ -116,7 +116,7 @@ class UploadedFile implements JsonSerializable, Stringable
             $extension = F::mimeToExtension($this->getMimeType());
             $name = F::safeName($name).'.'.$extension;
         } else {
-            $name = F::safeBasename($name).'.'.$extension;
+            $name = F::safeName($name);
         }
 
         $directory = App::instance()->root('base').'/'.$directory;

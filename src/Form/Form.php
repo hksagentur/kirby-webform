@@ -34,12 +34,12 @@ class Form extends ViewComponent
 
     public function getId(): string
     {
-        return F::safeBasename($this->getConfigPath(), extract: false);
+        return $this->getConfigPath();
     }
 
     public function getName(): string
     {
-        return F::safeBasename($this->getConfigPath(), extract: true);
+        return F::name($this->getConfigPath());
     }
 
     public function getActionUrl(): string

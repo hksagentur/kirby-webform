@@ -8,17 +8,16 @@ use Webform\Form\Validator;
 
 class ValidationException extends Exception
 {
-    protected static string $defaultKey = 'hksagentur.webform.validation';
-    protected static string $defaultFallback = 'The given data was invalid.';
-
-    protected static int $defaultHttpCode = 422;
-
     protected ?MessageBag $errors = null;
     protected ?Validator $validator = null;
 
-    public function __construct(string|array $arguments = [])
+    public function __construct(array $arguments = [])
     {
-        parent::__construct($arguments);
+        parent::__construct(array_merge([
+            'key' => 'hksagentur.webform.validation',
+            'fallback' => 'The given data was invalid.',
+            'httpCode' => 422,
+        ], $arguments));
 
         $this->errors = new MessageBag();
 

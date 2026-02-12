@@ -69,7 +69,7 @@ trait CanBeRendered
         return $this;
     }
 
-    public function render(): string
+    public function render(array $data = []): string
     {
         return App::instance()->snippet(
             name: $this->getSnippet(),
@@ -78,6 +78,7 @@ trait CanBeRendered
                 'errors' => Manager::instance()->errors(),
                 ...$this->resolveDefaultSnippetData(),
                 ...$this->getSnippetData(),
+                ...$data,
             ],
             return: true,
         );
