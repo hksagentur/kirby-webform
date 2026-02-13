@@ -3,7 +3,8 @@
 namespace Webform\Form\Actions;
 
 use Closure;
-use Webform\Form\FormSubmission;
+use Kirby\Toolkit\Controller;
+use Webform\Form\ValidatedInput;
 
 class Callback extends Action
 {
@@ -28,14 +29,17 @@ class Callback extends Action
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(ValidatedInput $input): void
     {
         $this->fireEvent('callback:before');
 
         $form = $this->getForm();
         $callback = $this->getCallback();
 
-        $result = $callback($form, $submission);
+        $result = (new Controller($callback))->call(data: [
+            ...$form->resolveDefaultEvaluationData(),
+            'input' => $input,
+        ]);
 
         $this->fireEvent('callback:after', [
             'result' => $result,

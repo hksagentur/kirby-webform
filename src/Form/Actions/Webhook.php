@@ -5,7 +5,7 @@ namespace Webform\Form\Actions;
 use Closure;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\Str;
-use Webform\Form\FormSubmission;
+use Webform\Form\ValidatedInput;
 
 class Webhook extends Action
 {
@@ -48,19 +48,19 @@ class Webhook extends Action
         return $this;
     }
 
-    public function isUrlEncoded(): bool
+    public function getContentType(): string
+    {
+        return $this->evaluate($this->contentType);
+    }
+
+    public function usesUrlEncoded(): bool
     {
         return $this->getContentType() === 'application/x-www-form-urlencoded';
     }
 
-    public function isJson(): bool
+    public function usesJsonEncoding(): bool
     {
         return $this->getContentType() === 'application/json';
-    }
-
-    public function getContentType(): string
-    {
-        return $this->evaluate($this->contentType);
     }
 
     public function contentType(string|Closure $mime): static
@@ -80,15 +80,16 @@ class Webhook extends Action
         return $this->contentType('application/json');
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(ValidatedInput $input): void
     {
-        $data = $submission->all();
+        $body = $this->usesJsonEncoding()
+            ? $input->toJson(JSON_UNESCAPED_SLASHES)
+            : $input->asFormParameters();
 
-        $body = $this->isJson()
-            ? json_encode($data, JSON_UNESCAPED_SLASHES)
-            : http_build_query($data);
-
-        $url = Str::template($this->getUrl(), $data);
+        $url = Str::template(
+            string: $this->getUrl(),
+            data: $input->all(),
+        );
 
         $options = $this->applyFilters('webhook:before', [
             'options' => [

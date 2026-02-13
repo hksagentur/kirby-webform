@@ -36,13 +36,13 @@ class SubmissionController
         }
 
         try {
-            $form->validate();
+            $input = $form->validate();
         } catch (ValidationException $exception) {
             return $this->failedValidation($exception);
         }
 
         try {
-            $form->submit();
+            $form->submit($input);
         } catch (Throwable $exception) {
             return $this->failedSubmission($exception);
         }

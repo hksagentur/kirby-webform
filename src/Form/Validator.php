@@ -137,7 +137,7 @@ class Validator
         return ! $this->passes();
     }
 
-    public function validate(): array
+    public function validate(): ValidatedInput
     {
         if ($this->fails()) {
             throw new ValidationException([
@@ -149,7 +149,7 @@ class Validator
         return $this->validated();
     }
 
-    public function validated(): array
+    public function validated(): ValidatedInput
     {
         if ($this->isNotValidated() && $this->fails()) {
             throw new ValidationException([
@@ -168,7 +168,7 @@ class Validator
             }
         }
 
-        return $data;
+        return new ValidatedInput($data);
     }
 
     protected function getMessage(string $field, string $rule): string

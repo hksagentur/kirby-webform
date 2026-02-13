@@ -9,7 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Filesystem\File;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Webform\Form\FormSubmission;
+use Webform\Form\ValidatedInput;
 
 class Email extends Action
 {
@@ -131,7 +131,7 @@ class Email extends Action
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(ValidatedInput $input): void
     {
         $kirby = App::instance();
         $site = App::instance()->site();
@@ -141,8 +141,8 @@ class Email extends Action
         $preset = $this->getPreset();
         $template = $this->getTemplate();
 
-        $data = $this->prepareSubmissionData($submission->all());
-        $attachments = $this->prepareEmailAttachments($submission->files());
+        $data = $this->prepareSubmissionData($input->all());
+        $attachments = $this->prepareEmailAttachments($form->getUploadedFiles());
 
         $subject = Str::template($this->getSubject(), $data);
         $sender = Str::template($this->getSender(), $data);

@@ -2,9 +2,8 @@
 
 namespace Webform\Form;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Url;
-use Kirby\Filesystem\F;
-use RuntimeException;
 use Webform\Support\ViewComponent;
 
 class Form extends ViewComponent
@@ -45,25 +44,21 @@ class Form extends ViewComponent
         return Url::to("webform/{$this->getId()}");
     }
 
-    public function submit(): void
+    public function submit(ValidatedInput $input): void
     {
-        $actions = $this->getActions();
+        $input = App::instance()->apply('webform.submit:before', [
+            'form' => $this,
+            'input' => $input,
+        ], 'input');
 
-        if (empty($actions)) {
-            throw new RuntimeException(sprintf(
-                'Form [%s] does not provide any actions to perform.',
-                $this->getId(),
-            ));
+        foreach ($this->getActions() as $action) {
+            $action->execute($input);
         }
 
-        $submission = new FormSubmission(
-            data: $this->validate(),
-            files: $this->saveUploadedFiles(),
-        );
-
-        foreach ($actions as $action) {
-            $action->execute($submission);
-        }
+        App::instance()->trigger('webform.submit:after', [
+            'form' => $this,
+            'input' => $input,
+        ]);
     }
 
     protected function resolveDefaultEvaluationData(): array

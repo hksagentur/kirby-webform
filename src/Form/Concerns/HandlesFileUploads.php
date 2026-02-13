@@ -9,6 +9,15 @@ use Webform\Form\Components\FileUpload;
 trait HandlesFileUploads
 {
     /** @return array<string, File[]> */
+    protected ?array $uploadedFiles = null;
+
+    /** @return array<string, File[]> */
+    public function getUploadedFiles(): array
+    {
+        return $this->uploadedFiles ??= $this->saveUploadedFiles();
+    }
+
+    /** @return array<string, File[]> */
     public function saveUploadedFiles(): array
     {
         $files = [];

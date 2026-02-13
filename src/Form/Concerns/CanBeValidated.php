@@ -2,21 +2,16 @@
 
 namespace Webform\Form\Concerns;
 
-use Kirby\Toolkit\A;
+use Webform\Form\ValidatedInput;
 use Webform\Form\Validator;
 
 trait CanBeValidated
 {
     protected ?Validator $validator = null;
 
-    public function validate(): array
+    public function validate(): ValidatedInput
     {
         return $this->getValidator()->validate();
-    }
-
-    public function validated(?string $key = null, mixed $default = null): mixed
-    {
-        return A::get($this->getValidator()->validated(), $key, $default);
     }
 
     protected function getValidator(): Validator
