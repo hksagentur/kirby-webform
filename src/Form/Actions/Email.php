@@ -141,8 +141,11 @@ class Email extends Action
         $preset = $this->getPreset();
         $template = $this->getTemplate();
 
-        $data = $this->prepareSubmissionData($input->all());
-        $attachments = $this->prepareEmailAttachments($form->getUploadedFiles());
+        $files = $form->getUploadedFiles();
+        $data = array_replace_recursive($input->all(), $files);
+
+        $data = $this->prepareSubmissionData($data);
+        $attachments = $this->prepareEmailAttachments($files);
 
         $subject = Str::template($this->getSubject(), $data);
         $sender = Str::template($this->getSender(), $data);
@@ -179,7 +182,7 @@ class Email extends Action
         ]);
     }
 
-    protected function prepareSubmissionData(iterable $data): array
+    protected function prepareSubmissionData(array $data): array
     {
         $results = [];
 

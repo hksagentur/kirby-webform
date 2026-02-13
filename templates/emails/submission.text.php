@@ -18,11 +18,23 @@
 <?php endif ?>
 
 <?php if (! empty($outroLines)) : ?>
-<?php foreach ($outroLines as $line) : ?>
-<?= esc($line)."\n" ?>
+<?php foreach ($outroLines as $outroLine) : ?>
+<?= esc($outroLine)."\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 
 <?php if (! empty($salutation)) : ?>
 <?= esc($salutation)."\n" ?>
+<?php endif ?>
+
+<?php if (! empty($footerLinks)) : ?>
+<?php foreach ($footerLinks as $footerLink) : ?>
+[<?= esc($footerLink['text']) ?>](<?= esc($footerLink['url']) ?>)<?= "\n" ?>
+<?php endforeach ?>
+<?php endif ?>
+
+<?php if (! empty($footerLines)) : ?>
+<?php foreach ($footerLines as $footerLine) : ?>
+<?= esc($footerLine)."\n" ?>
+<?php endforeach ?>
 <?php endif ?>
