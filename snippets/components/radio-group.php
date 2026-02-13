@@ -12,7 +12,7 @@
 <fieldset <?= attr([
     'class' => [
         'radio-group',
-        ...$invalid ? ['radio-group--invalid'] : ['radio-group--valid'],
+        ...$invalid ? ['radio-group--invalid'] : [],
     ],
 ]) ?>>
     <?php if ($label = $component->getLabel()) : ?>

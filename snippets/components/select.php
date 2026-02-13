@@ -25,7 +25,7 @@
     <div <?= attr([
         'class' => [
             'select',
-            ...$invalid ? ['select--invalid'] : ['select--valid'],
+            ...$invalid ? ['select--invalid'] : [],
         ],
     ]) ?>>
         <select <?= attr(A::merge($component->getExtraAttributes(), [

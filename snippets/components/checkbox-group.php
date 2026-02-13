@@ -12,7 +12,7 @@
 <fieldset <?= attr([
     'class' => [
         'checkbox-group',
-        ...$invalid ? ['checkbox-group--invalid'] : ['checkbox-group--valid'],
+        ...$invalid ? ['checkbox-group--invalid'] : [],
     ],
 ]) ?>>
     <?php if ($label = $component->getLabel()) : ?>

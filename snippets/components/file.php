@@ -25,7 +25,7 @@
         'type' => 'file',
         'class' => [
             'file-upload',
-            ...$invalid ? ['file-upload--invalid'] : ['file-upload--valid'],
+            ...$invalid ? ['file-upload--invalid'] : [],
         ],
         'id' => $id,
         'name' => $component->isMultiple() ? $name.'[]' : $name,

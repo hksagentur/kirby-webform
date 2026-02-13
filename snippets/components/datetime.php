@@ -26,7 +26,7 @@
         'type' => $component->getType(),
         'class' => [
             'input',
-            ...$invalid ? ['input--invalid'] : ['input--valid'],
+            ...$invalid ? ['input--invalid'] : [],
         ],
         'id' => $id,
         'name' => $name,

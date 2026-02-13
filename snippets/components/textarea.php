@@ -24,7 +24,7 @@
     <textarea <?= attr(A::merge($component->getExtraAttributes(), [
         'class' => [
             'input',
-            ...$invalid ? ['input--invalid'] : ['input--valid'],
+            ...$invalid ? ['input--invalid'] : [],
         ],
         'id' => $id,
         'name' => $name,
