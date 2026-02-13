@@ -36,20 +36,20 @@ class RedirectResponse extends Response
         return $this;
     }
 
-    public function withStatus(string|StatusMessage $message): static
+    public function withStatus(string|StatusMessage $message, string $messageBag = 'default'): static
     {
-        TransientData::instance()->put('webform.form.status', $message);
+        TransientData::instance()->put("webform.form.status.{$messageBag}", $message);
 
         return $this;
     }
 
-    public function withErrors(array|MessageBag $messages): static
+    public function withErrors(array|MessageBag $messages, string $errorBag = 'default'): static
     {
         $messages = $messages instanceof MessageBag
             ? $messages->all()
             : $messages;
 
-        TransientData::instance()->put('webform.form.errors', $messages);
+        TransientData::instance()->put("webform.form.errors.{$errorBag}", $messages);
 
         return $this;
     }

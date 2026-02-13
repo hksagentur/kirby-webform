@@ -38,16 +38,16 @@ class SubmissionController
         try {
             $input = $form->validate();
         } catch (ValidationException $exception) {
-            return $this->failedValidation($exception);
+            return $this->failedValidation($form, $exception);
         }
 
         try {
             $form->submit($input);
         } catch (Throwable $exception) {
-            return $this->failedSubmission($exception);
+            return $this->failedSubmission($form, $exception);
         }
 
-        return $this->processedSubmission();
+        return $this->processedSubmission($form);
     }
 
     protected function getReferrerPage(): ?Page
@@ -90,24 +90,24 @@ class SubmissionController
         return Url::home();
     }
 
-    protected function failedValidation(Throwable $exception): RedirectResponse
+    protected function failedValidation(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
             ->withInput()
-            ->withErrors($this->asMessageBag($exception));
+            ->withErrors($this->asMessageBag($exception), $form->getId());
     }
 
-    protected function failedSubmission(Throwable $exception): RedirectResponse
+    protected function failedSubmission(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
             ->withInput()
-            ->withErrors($this->asMessageBag($exception));
+            ->withErrors($this->asMessageBag($exception), $form->getId());
     }
 
-    protected function processedSubmission(): RedirectResponse
+    protected function processedSubmission(Form $form): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withStatus(I18n::translate('hksagentur.webform.status.message.success'));
+            ->withStatus(I18n::translate('hksagentur.webform.status.message.success'), $form->getId());
     }
 
     protected function asMessageBag(Throwable $exception): MessageBag

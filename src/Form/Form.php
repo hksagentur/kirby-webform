@@ -16,6 +16,8 @@ class Form extends ViewComponent
     use Concerns\HasActions;
     use Concerns\HasComponents;
     use Concerns\HasConfig;
+    use Concerns\HasErrorMessages;
+    use Concerns\HasStatusMessage;
 
     protected string $snippet = 'webform/form';
 
@@ -64,18 +66,20 @@ class Form extends ViewComponent
     protected function resolveDefaultEvaluationData(): array
     {
         return [
-            'model' => $this->model,
-            'block' => $this->block,
             'form' => $this,
+            'model' => $this->getModel(),
+            'block' => $this->getBlock(),
         ];
     }
 
     protected function resolveDefaultSnippetData(): array
     {
         return [
-            'model' => $this->model,
-            'block' => $this->block,
             'form' => $this,
+            'model' => $this->getModel(),
+            'block' => $this->getBlock(),
+            'status' => $this->getStatusMessage(),
+            'errors' => $this->getErrorMessages(),
             'childComponents' => $this->getComponents(depth: 1),
         ];
     }

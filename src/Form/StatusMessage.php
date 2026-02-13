@@ -5,6 +5,7 @@ namespace Webform\Form;
 use JsonSerializable;
 use Stringable;
 use Kirby\Toolkit\Html;
+use Throwable;
 
 readonly class StatusMessage implements Stringable, JsonSerializable
 {
@@ -13,6 +14,46 @@ readonly class StatusMessage implements Stringable, JsonSerializable
         protected ?string $type = 'success',
         protected ?string $role = 'status',
     ) {}
+
+    public static function from(string|array|self $value): ?static
+    {
+        if ($value instanceof static) {
+            return $value;
+        }
+
+        if (is_array($value)) {
+            return static::fromArray($value);
+        }
+
+        return static::fromString( (string) $value);
+    }
+
+    public static function tryFrom(string|null|array|self $value): ?static
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return static::from($value);
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
+    public static function fromString(string $message, ?string $type = 'success', ?string $role = 'status'): ?static
+    {
+        return new static($message, $type, $role);
+    }
+
+    public static function fromArray(array $attributes): static
+    {
+        return new static(
+            $attributes['message'],
+            $attributes['type'] ?? 'success',
+            $attributes['role'] ?? 'status',
+        );
+    }
 
     public function isSuccess(): bool
     {

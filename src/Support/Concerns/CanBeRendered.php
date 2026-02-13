@@ -74,8 +74,6 @@ trait CanBeRendered
         return App::instance()->snippet(
             name: $this->getSnippet(),
             data: [
-                'status' => Manager::instance()->status(),
-                'errors' => Manager::instance()->errors(),
                 ...$this->resolveDefaultSnippetData(),
                 ...$this->getSnippetData(),
                 ...$data,
@@ -101,6 +99,9 @@ trait CanBeRendered
 
     protected function resolveDefaultSnippetData(): array
     {
-        return [];
+        return [
+            'status' => Manager::instance()->status(),
+            'errors' => Manager::instance()->errors(),
+        ];
     }
 }

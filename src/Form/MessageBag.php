@@ -6,6 +6,7 @@ use Countable;
 use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
+use Throwable;
 
 class MessageBag implements Countable, JsonSerializable, Stringable
 {
@@ -16,6 +17,32 @@ class MessageBag implements Countable, JsonSerializable, Stringable
     {
         foreach ($messages as $key => $value) {
             $this->messages[$key] = array_unique(A::wrap($value));
+        }
+    }
+
+    public static function from(string|array|self $value): ?static
+    {
+        if ($value instanceof static) {
+            return $value;
+        }
+
+        if (is_array($value)) {
+            return static::fromArray($value);
+        }
+
+        return static::fromString( (string) $value);
+    }
+
+    public static function tryFrom(string|null|array|self $value): ?static
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return static::from($value);
+        } catch (Throwable) {
+            return null;
         }
     }
 

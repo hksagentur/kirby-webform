@@ -11,7 +11,8 @@ use Webform\Session\TransientData;
 
 class Manager
 {
-    protected static ?self $instance = null;
+    protected static ?Manager $instance = null;
+    protected static ?TransientData $transient = null;
 
     /** @var array<string, array<string, Block>> */
     protected array $blocks = [];
@@ -19,8 +20,11 @@ class Manager
     /** @var array<string, Form> */
     protected array $forms = [];
 
-    protected ?MessageBag $messageBag = null;
-    protected ?TransientData $transientData = null;
+    /** @var array<string, StatusMessage> */
+    protected array $messages = [];
+
+    /** @var array<string, MessageBag> */
+    protected array $errors = [];
 
     public static function instance(?self $instance = null): ?static
     {
@@ -31,9 +35,9 @@ class Manager
         return static::$instance ?? new static();
     }
 
-    public function form(string $path): Form
+    public function transient(): TransientData
     {
-        return $this->forms[$path] ??= Form::from($path);
+        return static::$transient ??= TransientData::instance();
     }
 
     public function block(Page $page, string $key): ?Block
@@ -41,26 +45,22 @@ class Manager
         return $this->blocks[$page->id()][$key] ??= $this->findBlock($page, $key);
     }
 
-    public function transient(): TransientData
+    public function form(string $path): Form
     {
-        return $this->transientData ??= TransientData::instance();
+        return $this->forms[$path] ??= Form::from($path);
     }
 
-    public function status(): ?StatusMessage
+    public function status(string $messageBag = 'default'): ?StatusMessage
     {
-        $message = $this->transient()->get('webform.form.status');
-
-        if (! $message) {
-            return null;
-        }
-
-        return new StatusMessage($message);
+        return $this->messages[$messageBag] ??= StatusMessage::tryFrom(
+            $this->transient()->get("webform.form.status.{$messageBag}")
+        );
     }
 
-    public function errors(): MessageBag
+    public function errors(string $errorBag = 'default'): MessageBag
     {
-        return $this->messageBag ??= new MessageBag(
-            $this->transient()->get('webform.form.errors', [])
+        return $this->errors[$errorBag] ??= MessageBag::fromArray(
+            $this->transient()->get("webform.form.errors.{$errorBag}", [])
         );
     }
 

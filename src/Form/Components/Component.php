@@ -16,16 +16,22 @@ abstract class Component extends ViewComponent
     protected function resolveDefaultEvaluationData(): array
     {
         return [
-            ...$this->getForm()?->resolveDefaultEvaluationData() ?? [],
             'component' => $this,
+            'form' => $this->getForm(),
+            'model' => $this->getForm()?->getModel(),
+            'block' => $this->getForm()?->getBlock(),
         ];
     }
 
     protected function resolveDefaultSnippetData(): array
     {
         return [
-            ...$this->getForm()?->resolveDefaultSnippetData() ?? [],
             'component' => $this,
+            'form' => $this->getForm(),
+            'model' => $this->getForm()?->getModel(),
+            'block' => $this->getForm()?->getBlock(),
+            'status' => $this->getForm()?->getStatusMessage(),
+            'errors' => $this->getForm()?->getErrorMessages(),
             'childComponents' => $this->getChildComponents(depth: 1),
         ];
     }
