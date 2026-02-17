@@ -2,10 +2,10 @@
 
 namespace Webform\Cms\Concerns;
 
-use InvalidArgumentException;
 use Kirby\Cms\Block;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\Str;
+use UnexpectedValueException;
 use Webform\Form\Form;
 use Webform\Form\Manager;
 
@@ -34,7 +34,7 @@ trait HasForm
         }
 
         if (! ($form instanceof Form)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Unexpected form type: %s',
                 $form::class,
             ));

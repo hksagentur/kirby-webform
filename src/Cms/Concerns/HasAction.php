@@ -2,8 +2,8 @@
 
 namespace Webform\Cms\Concerns;
 
-use InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use UnexpectedValueException;
 use Webform\Form\Actions\Action;
 use Webform\Form\Actions\Database;
 use Webform\Form\Actions\Email;
@@ -28,7 +28,7 @@ trait HasAction
         $method = 'create'.Str::camel($type).'Action';
 
         if (! method_exists($this, $method)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Invalid action type: %s',
                 $type
             ));
@@ -37,7 +37,7 @@ trait HasAction
         $action = $this->{$method}();
 
         if (! ($action instanceof Action)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Unexpected action type: %s',
                 $action::class
             ));
