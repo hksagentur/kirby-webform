@@ -4,7 +4,7 @@ Easily create and manage webforms in Kirby, heavily inspired by [Filament Forms]
 
 ## Requirements
 
-Kirby CMS (`>=4.0`)  
+Kirby CMS (`>=3.10`)  
 PHP (`>= 8.2`)
 
 ## Installation
@@ -31,7 +31,7 @@ use Webform\Form\Components\TextInput;
 use Webform\Form\Components\Textarea;
 use Webform\Form\Form;
 
-return Form::create()->components([
+return Form::create()->children([
   TextInput::create('name')
     ->required(),
   TextInput::create('email')
