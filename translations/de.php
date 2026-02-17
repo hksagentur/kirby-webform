@@ -71,6 +71,9 @@ return [
     'hksagentur.webform.status.message.success' => 'Das Formular wurde erfolgreich bearbeitet. Vielen Dank für deine Anfrage.',
     'hksagentur.webform.status.message.error' => 'Das Formular konnte nicht gesendet werden. Bitte überprüfen Sie die markierten Felder und versuchen Sie es erneut.',
     'error.hksagentur.webform.authorization' => 'Diese Aktion ist unzulässig.',
+    'error.hksagentur.webform.notFound' => 'Das angeforderte Modell konnte nicht gefunden werden.',
+    'error.hksagentur.webform.challengeFailed' => 'Die Voraussetzung für die Bearbeitung des Formulars wurde nicht erfüllt.',
+    'error.hksagentur.webform.configNotFound' => 'Die Konfiguration für das Formular [{{ path }}] konnte nicht gefunden werden.',
     'error.hksagentur.webform.tokenMismatch' => 'CSRF-Token stimmt nicht überein.',
     'error.hksagentur.webform.validation' => 'Die angegebenen Daten waren ungültig.',
     'error.hksagentur.webform.upload.default' => 'Die Datei konnte nicht hochgeladen werden.',
@@ -79,7 +82,7 @@ return [
     'error.hksagentur.webform.upload.iniSize' => 'Die Datei ist größer als die upload_max_filesize Einstellung in der php.ini.',
     'error.hksagentur.webform.upload.formSize' => 'Die Datei ist größer als die MAX_FILE_SIZE Einstellung im Formular.',
     'error.hksagentur.webform.upload.partial' => 'Die Datei wurde nur teilweise hochgeladen.',
-    'error.hksagentur.webform.upload.noFile' => 'No file was uploaded.',
+    'error.hksagentur.webform.upload.noFile' => 'Es wurde keine Datei hochgeladen.',
     'error.hksagentur.webform.upload.noTmpDir' => 'Der temporäre Ordner für den Dateiupload existiert leider nicht.',
     'error.hksagentur.webform.upload.extension' => 'Der Dateiupload wurde durch eine Erweiterung verhindert.',
 ];

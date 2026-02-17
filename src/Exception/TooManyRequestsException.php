@@ -2,12 +2,20 @@
 
 namespace Webform\Exception;
 
-use Kirby\Exception\Exception;
-
 class TooManyRequestsException extends Exception
 {
-    protected static string $defaultKey = 'hksagentur.webform.tooManyRequests';
-    protected static string $defaultFallback = 'Too many requests.';
+    public function __construct(string|array $arguments = [])
+    {
+        if (is_string($arguments)) {
+            $arguments = ['key' => $arguments];
+        }
 
-    protected static int $defaultHttpCode = 429;
+        $arguments += [
+             'key' => 'hksagentur.webform.tooManyRequests',
+             'fallback' => 'Too many requests.',
+             'httpCode' => 429,
+         ];
+
+        parent::__construct($arguments);
+    }
 }

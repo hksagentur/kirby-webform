@@ -2,19 +2,13 @@
 
 namespace Webform\Exception;
 
-class NotFoundException extends Exception
+abstract class Exception extends \Kirby\Exception\Exception
 {
     public function __construct(string|array $arguments = [])
     {
         if (is_string($arguments)) {
             $arguments = ['key' => $arguments];
         }
-
-        $arguments += [
-            'key' => 'hksagentur.webform.notFound',
-            'fallback' => 'Not found.',
-            'httpCode' => 404,
-        ];
 
         parent::__construct($arguments);
     }

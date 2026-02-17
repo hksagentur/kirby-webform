@@ -2,7 +2,6 @@
 
 namespace Webform\Exception;
 
-use Kirby\Exception\Exception;
 use Webform\Form\MessageBag;
 use Webform\Form\Validator;
 
@@ -11,18 +10,24 @@ class ValidationException extends Exception
     protected ?MessageBag $errors = null;
     protected ?Validator $validator = null;
 
-    public function __construct(array $arguments = [])
+    public function __construct(string|array $arguments = [])
     {
-        parent::__construct(array_merge([
-            'key' => 'hksagentur.webform.validation',
-            'fallback' => 'The given data was invalid.',
-            'httpCode' => 422,
-        ], $arguments));
+        if (is_string($arguments)) {
+            $arguments = ['key' => $arguments];
+        }
+
+        $arguments += [
+             'key' => 'hksagentur.webform.validation',
+             'fallback' => 'The given data was invalid.',
+             'httpCode' => 422,
+         ];
 
         $this->errors = new MessageBag();
 
         $this->withErrors($arguments['errors'] ?? []);
         $this->withValidator($arguments['validator'] ?? null);
+
+        parent::__construct($arguments);
     }
 
     public function getErrors(): ?MessageBag

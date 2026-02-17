@@ -2,25 +2,21 @@
 
 namespace Webform\Exception;
 
-use Kirby\Exception\Exception;
 use Webform\Form\Components\FileUpload;
 use Webform\Form\MessageBag;
 use Webform\Form\UploadedFile;
 
 class FileUploadException extends Exception
 {
-    protected static string $defaultKey = 'hksagentur.webform.upload.default';
-    protected static string $defaultFallback = 'Invalid file upload [{ file }].';
-
-    protected static int $defaultHttpCode = 400;
-
-    protected static array $defaultData = ['field' => null, 'file' => null];
-
     protected ?FileUpload $uploadField = null;
     protected ?UploadedFile $uploadedFile = null;
 
     public function __construct(string|array $arguments = [])
     {
+        if (is_string($arguments)) {
+            $arguments = ['key' => $arguments];
+        }
+
         $this->uploadedFile = $arguments['file'] ?? null;
         $this->uploadField = $arguments['field'] ?? null;
 
@@ -35,6 +31,8 @@ class FileUploadException extends Exception
                 UPLOAD_ERR_EXTENSION => 'hksagentur.webform.upload.extension',
                 default => 'hksagentur.webform.upload.default',
             },
+            'fallback' => 'Invalid file upload [{ file }].',
+            'httpCode' => 400,
             'data' => [
                 'field' => $this->uploadField?->getName(),
                 'file' => $this->uploadedFile?->getName(),

@@ -2,12 +2,20 @@
 
 namespace Webform\Exception;
 
-use Kirby\Exception\Exception;
-
 class TokenMismatchException extends Exception
 {
-    protected static string $defaultKey = 'hksagentur.webform.tokenMismatch';
-    protected static string $defaultFallback = 'CSRF token mismatch.';
+    public function __construct(string|array $arguments = [])
+    {
+        if (is_string($arguments)) {
+            $arguments = ['key' => $arguments];
+        }
 
-    protected static int $defaultHttpCode = 400;
+        $arguments += [
+            'key' => 'hksagentur.webform.tokenMismatch',
+            'fallback' => 'CSRF token mismatch.',
+            'httpCode' => 400,
+         ];
+
+        parent::__construct($arguments);
+    }
 }
