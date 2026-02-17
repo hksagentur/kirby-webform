@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
+use Kirby\Http\Request;
 use Kirby\Toolkit\I18n;
 use Throwable;
 use Webform\Cms\FormBlock;
@@ -17,7 +18,7 @@ use Webform\Form\MessageBag;
 
 class SubmissionController
 {
-    public function __invoke(Form $form): RedirectResponse
+    public function __invoke(Request $request, Form $form): RedirectResponse
     {
         $page = $this->getReferrerPage() ?? $this->getPreviousPage();
 

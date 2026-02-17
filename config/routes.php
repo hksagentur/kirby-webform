@@ -1,53 +1,39 @@
 <?php
 
 use Kirby\Cms\App;
-use Webform\Cache\RateLimiter;
-use Webform\Exception\NotFoundException;
-use Webform\Exception\TokenMismatchException;
-use Webform\Form\Manager;
+use Kirby\Http\Request;
+use Webform\Form\Form;
+use Webform\Http\Middleware\RateLimited;
+use Webform\Http\Middleware\SubstituteBindings;
+use Webform\Http\Middleware\VerifyCsrfToken;
+use Webform\Http\Pipeline;
 use Webform\Http\SubmissionController;
 use Webform\Http\RedirectResponse;
 
 return [
     [
-        'pattern' => 'webform/(:all)',
+        'pattern' => 'webforms/(:all)',
         'method' => 'POST',
-        'action' => function (string $path): RedirectResponse {
-            $kirby = App::instance();
-            $manager = Manager::instance();
+        'action' => function (): RedirectResponse {
+            return (new Pipeline([
+                VerifyCsrfToken::class,
+                RateLimited::class,
+                SubstituteBindings::class,
+            ]))->then(function (Request $request, Form $form) {
+                $controller = App::instance()->apply('webform.route:before', [
+                    'form' => $form,
+                    'controller' => new SubmissionController(),
+                ], 'controller');
 
-            $token =  $kirby->request()->get('_webform_token');
+                $response = $controller($request, $form);
 
-            if (! $kirby->csrf($token)) {
-                throw new TokenMismatchException();
-            }
+                $response = App::instance()->apply('webform.route:after', [
+                    'form' => $form,
+                    'response' => $response,
+                ], 'response');
 
-            $form = $manager->form($path);
-
-            if (! $form) {
-                throw new NotFoundException();
-            }
-
-            $anonymisedIp = substr(hash('sha256', $kirby->visitor()->ip()), 0, 50);
-
-            $controller = App::instance()->apply('webform.route:before', [
-                'form' => $form,
-                'controller' => new SubmissionController(),
-            ], 'controller');
-
-            $response = RateLimiter::create()->attempt(
-                key: $anonymisedIp,
-                maxAttempts: 20,
-                decayMinutes: 10,
-                callback: fn () => $controller($form),
-            );
-
-            $response = App::instance()->apply('webform.route:after', [
-                'form' => $form,
-                'response' => $response,
-            ], 'response');
-
-            return $response;
+                return $response;
+            });
         }
     ],
 ];

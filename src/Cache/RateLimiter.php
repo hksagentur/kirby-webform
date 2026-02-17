@@ -13,7 +13,7 @@ class RateLimiter
 
     public function __construct(?Cache $cache = null)
     {
-        $this->cache = $cache ?? App::instance()->cache('hksagentur.webform.ratelimiter');
+        $this->cache = $cache ?? App::instance()->cache('hksagentur.webform.rateLimiter');
     }
 
     public static function create(?Cache $cache = null): static
