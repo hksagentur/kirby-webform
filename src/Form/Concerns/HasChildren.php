@@ -39,7 +39,7 @@ trait HasChildren
 
     public function find(string $key): ?Component
     {
-        return $this->getChildren()->find($key);
+        return $this->getChildren()->getIndex()->find($key);
     }
 
     /** @param array<array-key, Component>|Components|Closure|null $children */

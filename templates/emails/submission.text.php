@@ -3,13 +3,13 @@
 <?php endif ?>
 
 <?php if (! empty($introLines)) : ?>
-<?php foreach ($introLines as $line) : ?>
-<?= esc($line)."\n" ?>
+<?php foreach ($introLines as $introLine) : ?>
+<?= esc($introLine)."\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 
 <?php foreach ($data as $key => $value) : ?>
-<?= esc($form->getChildren()->getIndex()->findByName($key)?->getLabel() ?? Str::ucfirst($key)) ?>:
+<?= esc($form->find($key)?->getLabel() ?? Str::ucfirst($key)) ?>:
 <?= esc($value ?: t('hksagentur.webform.template.submission.notAvailable'))."\n\n" ?>
 <?php endforeach ?>
 

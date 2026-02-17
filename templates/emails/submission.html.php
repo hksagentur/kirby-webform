@@ -177,7 +177,7 @@ $footerColor = $footerColor ?? '#6b7280';
                                 <?php foreach ($data as $key => $value) : ?>
                                     <tr>
                                         <th style="font-weight:600;color:<?= esc($headingColor, 'attr') ?>;width:30%;padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top;">
-                                            <?= esc($form->getChildren()->getIndex()->findByName($key)?->getLabel() ?? Str::ucfirst($key)) ?>
+                                            <?= esc($form->find($key)?->getLabel() ?? Str::ucfirst($key)) ?>
                                         </th>
                                         <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top;">
                                             <?= esc($value ?: t('hksagentur.webform.template.submission.notAvailable'))  ?>
@@ -222,10 +222,10 @@ $footerColor = $footerColor ?? '#6b7280';
                 <td class="footer" style="text-align:center;padding:20px 0;font-size:12px;color:<?= esc($footerColor, 'attr') ?>;">
                     <?php if (!empty($footerLinks)) : ?>
                         <nav class="nav" style="margin-bottom:12px;">
-                            <?php foreach ($footerLinks as $index => $link) : ?>
+                            <?php foreach ($footerLinks as $index => $footerLink) : ?>
                                 <?= $index > 0 ? '|' : '' ?>
-                                <a href="<?= esc($link['url'], 'attr') ?>" class="link" target="_blank" style="margin:0 8px;font-size:13px;text-decoration:underline;color:<?= esc($footerColor, 'attr') ?>;">
-                                    <?= esc($link['title']) ?>
+                                <a href="<?= esc($footerLink['url'], 'attr') ?>" class="link" target="_blank" style="margin:0 8px;font-size:13px;text-decoration:underline;color:<?= esc($footerColor, 'attr') ?>;">
+                                    <?= esc($footerLink['title']) ?>
                                 </a>
                             <?php endforeach ?>
                         </nav>
