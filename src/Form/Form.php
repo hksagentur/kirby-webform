@@ -14,7 +14,7 @@ class Form extends ViewComponent
     use Concerns\GeneratesCsrfTokens;
     use Concerns\HandlesFileUploads;
     use Concerns\HasActions;
-    use Concerns\HasComponents;
+    use Concerns\HasChildren;
     use Concerns\HasConfig;
     use Concerns\HasErrorMessages;
     use Concerns\HasStatusMessage;
@@ -43,7 +43,7 @@ class Form extends ViewComponent
 
     public function getActionUrl(): string
     {
-        return Url::to("webform/{$this->getId()}");
+        return Url::to("webforms/{$this->getId()}");
     }
 
     public function submit(ValidatedInput $input): void
@@ -80,7 +80,7 @@ class Form extends ViewComponent
             'block' => $this->getBlock(),
             'status' => $this->getStatusMessage(),
             'errors' => $this->getErrorMessages(),
-            'childComponents' => $this->getComponents(depth: 1),
+            'children' => $this->getChildren(),
         ];
     }
 }

@@ -3,8 +3,8 @@
 namespace Webform\Support\Concerns;
 
 use Closure;
-use Exception;
 use Kirby\Cms\App;
+use LogicException;
 use Webform\Form\Manager;
 
 trait CanBeRendered
@@ -36,7 +36,7 @@ trait CanBeRendered
             return $defaultSnippet;
         }
 
-        throw new Exception(sprintf('Component [%s] does not provide a snippet path.', static::class));
+        throw new LogicException(sprintf('Component [%s] does not provide a snippet path.', static::class));
     }
 
     public function snippet(?string $snippet, array $data = []): static

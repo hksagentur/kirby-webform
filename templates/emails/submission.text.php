@@ -9,7 +9,7 @@
 <?php endif ?>
 
 <?php foreach ($data as $key => $value) : ?>
-<?= esc($form->getField($key)?->getLabel() ?? Str::ucfirst($key)) ?>:
+<?= esc($form->getChildren()->getIndex()->findByName($key)?->getLabel() ?? Str::ucfirst($key)) ?>:
 <?= esc($value ?: t('hksagentur.webform.template.submission.notAvailable'))."\n\n" ?>
 <?php endforeach ?>
 

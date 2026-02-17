@@ -72,7 +72,10 @@ class Config
         $form = $this->read();
 
         if (is_null($form)) {
-            throw new NotFoundException("Form configuration [{$this->path}] not found.");
+            throw new NotFoundException([
+                'key' => 'hksagentur.webform.configNotFound',
+                'data' => ['path' => $this->path],
+            ]);
         }
 
         return $form;

@@ -8,7 +8,7 @@ abstract class Component extends ViewComponent
 {
     use Concerns\BelongsToForm;
     use Concerns\CanAllowHtml;
-    use Concerns\HasChildComponents;
+    use Concerns\HasChildren;
     use Concerns\HasExtraAttributes;
     use Concerns\HasId;
     use Concerns\HasKey;
@@ -32,7 +32,7 @@ abstract class Component extends ViewComponent
             'block' => $this->getForm()?->getBlock(),
             'status' => $this->getForm()?->getStatusMessage(),
             'errors' => $this->getForm()?->getErrorMessages(),
-            'childComponents' => $this->getChildComponents(depth: 1),
+            'children' => $this->getChildren(),
         ];
     }
 }

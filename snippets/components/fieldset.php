@@ -10,8 +10,8 @@
     <?php endif ?>
 
     <div class="fieldset__content">
-        <?php foreach ($childComponents as $childComponent) : ?>
-            <?= $childComponent ?>
+        <?php foreach ($children as $child) : ?>
+            <?= $child ?>
         <?php endforeach ?>
     </div>
 </fieldset>

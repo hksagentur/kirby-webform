@@ -177,7 +177,7 @@ $footerColor = $footerColor ?? '#6b7280';
                                 <?php foreach ($data as $key => $value) : ?>
                                     <tr>
                                         <th style="font-weight:600;color:<?= esc($headingColor, 'attr') ?>;width:30%;padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top;">
-                                            <?= esc($form->getField($key)?->getLabel() ?? Str::ucfirst($key)) ?>
+                                            <?= esc($form->getChildren()->getIndex()->findByName($key)?->getLabel() ?? Str::ucfirst($key)) ?>
                                         </th>
                                         <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top;">
                                             <?= esc($value ?: t('hksagentur.webform.template.submission.notAvailable'))  ?>

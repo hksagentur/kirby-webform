@@ -2,6 +2,7 @@
 
 namespace Webform\Form\Concerns;
 
+use Webform\Form\Components;
 use Webform\Form\ValidatedInput;
 use Webform\Form\Validator;
 
@@ -9,16 +10,16 @@ trait CanBeValidated
 {
     protected ?Validator $validator = null;
 
-    public function validate(): ValidatedInput
-    {
-        return $this->getValidator()->validate();
-    }
-
-    protected function getValidator(): Validator
+    public function getValidator(): Validator
     {
         return $this->validator ??= method_exists($this, 'validator')
             ? $this->validator()
             : $this->createDefaultValidator();
+    }
+
+    public function validate(): ValidatedInput
+    {
+        return $this->getValidator()->validate();
     }
 
     protected function createDefaultValidator(): Validator
@@ -28,7 +29,7 @@ trait CanBeValidated
         $messages = [];
         $attributes = [];
 
-        foreach ($this->getFields() as $field) {
+        foreach ($this->getChildren()->getIndex()->getFields() as $field) {
             $data[$field->getName()] = $field->getValue();
             $rules[$field->getName()] = $field->getValidationRules();
             $messages[$field->getName()] = $field->getValidationMessages();

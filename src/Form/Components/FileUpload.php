@@ -5,7 +5,6 @@ namespace Webform\Form\Components;
 use Closure;
 use Kirby\Cms\R;
 use Kirby\Filesystem\File;
-use Webform\Exception\FileUploadException;
 use Webform\Form\UploadedFile;
 
 class FileUpload extends Field

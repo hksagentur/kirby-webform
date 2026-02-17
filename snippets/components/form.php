@@ -35,8 +35,8 @@
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?php foreach ($childComponents as $childComponent) : ?>
-        <?= $childComponent ?>
+    <?php foreach ($children as $child) : ?>
+        <?= $child ?>
     <?php endforeach ?>
 
     <input type="hidden" name="_webform_id" value="<?= $form->getId() ?>">
