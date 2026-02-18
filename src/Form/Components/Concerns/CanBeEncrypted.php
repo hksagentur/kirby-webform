@@ -6,6 +6,7 @@ use Closure;
 use InvalidArgumentException;
 use Kirby\Http\Environment;
 use Kirby\Toolkit\SymmetricCrypto;
+use RuntimeException;
 
 trait CanBeEncrypted
 {
@@ -62,12 +63,18 @@ trait CanBeEncrypted
             return $this->crypto;
         }
 
+        if (! SymmetricCrypto::isAvailable()) {
+            throw new RuntimeException(
+                'The sodium extension is required to use encryption features.'
+            );
+        }
+
         $secretKey = Environment::getGlobally('APP_KEY');
 
         if (! $secretKey) {
             throw new InvalidArgumentException(sprintf(
                 'Missing secret key, expected a base64-encoded %d-byte key.',
-                 SODIUM_CRYPTO_SECRETBOX_KEYBYTES
+                SODIUM_CRYPTO_SECRETBOX_KEYBYTES
             ));
         }
 
@@ -75,8 +82,8 @@ trait CanBeEncrypted
 
         if (! $secretKey || strlen($secretKey) !== 32) {
             throw new InvalidArgumentException(sprintf(
-                 'Invalid secret key length, expected %d-bytes.',
-                 SODIUM_CRYPTO_SECRETBOX_KEYBYTES
+                'Invalid secret key length, expected %d-bytes.',
+                SODIUM_CRYPTO_SECRETBOX_KEYBYTES
             ));
         }
 
