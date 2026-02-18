@@ -7,6 +7,7 @@ use Closure;
 use Countable;
 use IteratorAggregate;
 use Kirby\Toolkit\A;
+use Stringable;
 use Webform\Form\Components\Component;
 use Webform\Form\Components\Field;
 
@@ -15,7 +16,7 @@ use Webform\Form\Components\Field;
  * @template-covariant TValue of Component
  * @extends IteratorAggregate<TKey, TValue>
  */
-class Components implements Countable, IteratorAggregate
+class Components implements Countable, IteratorAggregate, Stringable
 {
     /** @var ?static<Component> */
     protected ?self $index = null;
@@ -195,10 +196,25 @@ class Components implements Countable, IteratorAggregate
         return $this->components;
     }
 
+    public function toHtml(): string
+    {
+        return implode("\n", array_map(fn (Component $component) => $component->toHtml(), $this->components));
+    }
+
+    public function toString(): string
+    {
+        return $this->toHtml();
+    }
+
     /** @return ArrayIterator<TKey, TValue> */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->components);
+    }
+
+    public function __toString(): string
+    {
+        return $this->toHtml();
     }
 
     protected function getAttribute(Component $component, string $key): mixed
@@ -208,7 +224,7 @@ class Components implements Countable, IteratorAggregate
             'id' => $component->getId(),
             'name' => $component instanceof Field ? $component->getName() : null,
             'value' => $component instanceof Field ? $component->getValue() : null,
-            default => null,
+             default => null,
         };
     }
 
