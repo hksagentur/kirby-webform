@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Content\Field;
-use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
@@ -55,7 +54,7 @@ return [
     /**
      * Validate that the value is a list.
      */
-    'list' => function (mixed $value) : bool {
+    'list' => function (mixed $value): bool {
         return is_array($value) && array_is_list($value);
     },
 

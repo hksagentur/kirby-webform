@@ -21,7 +21,8 @@ readonly class ValidatedInput implements ArrayAccess, IteratorAggregate, JsonSer
     public function __construct(
         /** @var array<string, mixed> */
         protected array $input = [],
-    ) {}
+    ) {
+    }
 
     public function isFilled(string|array $keys): bool
     {

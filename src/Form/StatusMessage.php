@@ -13,7 +13,8 @@ readonly class StatusMessage implements Stringable, JsonSerializable
         protected string $message,
         protected ?string $type = 'success',
         protected ?string $role = 'status',
-    ) {}
+    ) {
+    }
 
     public static function from(string|array|self $value): ?static
     {
@@ -25,7 +26,7 @@ readonly class StatusMessage implements Stringable, JsonSerializable
             return static::fromArray($value);
         }
 
-        return static::fromString( (string) $value);
+        return static::fromString((string) $value);
     }
 
     public static function tryFrom(string|null|array|self $value): ?static

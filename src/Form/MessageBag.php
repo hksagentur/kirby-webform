@@ -30,7 +30,7 @@ class MessageBag implements Countable, JsonSerializable, Stringable
             return static::fromArray($value);
         }
 
-        return static::fromString( (string) $value);
+        return static::fromString((string) $value);
     }
 
     public static function tryFrom(string|null|array|self $value): ?static

@@ -10,7 +10,8 @@ class Callback extends Action
 {
     public function __construct(
         protected Closure $callback
-    ) {}
+    ) {
+    }
 
     public static function create(Closure $callback): static
     {

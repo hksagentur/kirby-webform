@@ -17,13 +17,14 @@ class UploadedFile implements JsonSerializable, Stringable
         protected ?string $path,
         protected ?string $name,
         protected int $error = UPLOAD_ERR_OK,
-    ) {}
+    ) {
+    }
 
     public static function from(array $file): static
     {
         return new static(
-            path: $file['tmp_name'] ?? NULL,
-            name: $file['name'] ?? NULL,
+            path: $file['tmp_name'] ?? null,
+            name: $file['name'] ?? null,
             error: $file['error'] ?? UPLOAD_ERR_OK,
         );
     }

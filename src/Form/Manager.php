@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Page;
-use Webform\Form\Form;
 use Webform\Session\TransientData;
 
 class Manager
