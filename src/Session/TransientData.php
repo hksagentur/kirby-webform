@@ -31,7 +31,12 @@ class TransientData
 
     public function has(string $key): bool
     {
-        return $this->get($key, $fallback = new stdClass) !== $fallback;
+        $value = $this->get(
+            $key,
+            $fallback = new stdClass(),
+        );
+
+        return $value !== $fallback;
     }
 
     public function get(string $key, mixed $default = null): mixed
@@ -47,6 +52,20 @@ class TransientData
         $this->removeKey('old', $key);
 
         return $this;
+    }
+
+    public function getOrPut(string $key, mixed $value): mixed
+    {
+        if ($this->has($key)) {
+            return $this->get($key);
+        }
+
+        $this->put(
+            $key,
+            $value = is_callable($value) ? $value() : $value,
+        );
+
+        return $value;
     }
 
     public function now(string $key, mixed $value): static
@@ -76,7 +95,7 @@ class TransientData
         return $this;
     }
 
-    public function cleanUp(): static
+    public function flush(): static
     {
         $this->session->remove($this->getKeys('old'));
 

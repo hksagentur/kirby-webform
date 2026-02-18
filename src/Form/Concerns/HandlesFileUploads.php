@@ -22,7 +22,7 @@ trait HandlesFileUploads
     {
         $files = [];
 
-        foreach ($this->getChildren()->getIndex()->whereInstanceOf(FileUpload::class) as $field) {
+        foreach ($this->findAll(FileUpload::class) as $field) {
             try {
                 $files[$field->getName()] = $field->saveUploadedFiles();
             } catch (FileUploadException $exception) {

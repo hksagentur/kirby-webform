@@ -10,6 +10,8 @@ trait CanBeValidated
 {
     protected ?Validator $validator = null;
 
+    abstract public function getChildren(): Components;
+
     public function getValidator(): Validator
     {
         return $this->validator ??= method_exists($this, 'validator')

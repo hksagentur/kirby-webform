@@ -33,7 +33,7 @@ trait HasValue
 
     public function getValue(): mixed
     {
-        $key = $this->requestKey();
+        $key = $this->getKey();
 
         if (V::empty($key)) {
             return null;
@@ -54,7 +54,7 @@ trait HasValue
 
     public function getOldValue(): mixed
     {
-        $key = $this->sessionKey();
+        $key = $this->getKey();
 
         if (V::empty($key)) {
             return null;
@@ -81,11 +81,6 @@ trait HasValue
         return $this;
     }
 
-    protected function requestKey(): ?string
-    {
-        return $this->getName();
-    }
-
     protected function requestData(?string $key = null): mixed
     {
         $data = R::data();
@@ -95,11 +90,6 @@ trait HasValue
         }
 
         return A::get($data, $key, []);
-    }
-
-    protected function sessionKey(): ?string
-    {
-        return $this->getName();
     }
 
     protected function sessionData(?string $key = null): mixed

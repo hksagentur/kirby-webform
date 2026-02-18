@@ -5,15 +5,13 @@ namespace Webform\Form\Concerns;
 use Closure;
 use Webform\Form\Components;
 use Webform\Form\Components\Component;
+use Webform\Support\Concerns\QueriesChildren;
 
 trait HasChildren
 {
-    protected array|Components|Closure|null $children = null;
+    use QueriesChildren;
 
-    public function hasChildren(): bool
-    {
-        return $this->getChildren()->count() > 0;
-    }
+    protected array|Components|Closure|null $children = null;
 
     public function getChildren(): Components
     {
@@ -24,22 +22,6 @@ trait HasChildren
         return $this->children = (new Components(
             $this->evaluate($this->children) ?: []
         ))->form($this);
-    }
-
-    public function hasFields(): bool
-    {
-        return $this->getFields()->count() > 0;
-    }
-
-    /** @return Components<Field> */
-    public function getFields(): Components
-    {
-        return $this->getChildren()->getFields();
-    }
-
-    public function find(string $key): ?Component
-    {
-        return $this->getChildren()->getIndex()->find($key);
     }
 
     /** @param array<array-key, Component>|Components|Closure|null $children */

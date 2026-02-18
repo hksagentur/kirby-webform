@@ -6,6 +6,7 @@ use Webform\Form\Form;
 use Webform\Http\Middleware\RateLimited;
 use Webform\Http\Middleware\SubstituteBindings;
 use Webform\Http\Middleware\VerifyCsrfToken;
+use Webform\Http\Middleware\VerifyHoneypot;
 use Webform\Http\Pipeline;
 use Webform\Http\SubmissionController;
 use Webform\Http\RedirectResponse;
@@ -19,6 +20,7 @@ return [
                 VerifyCsrfToken::class,
                 RateLimited::class,
                 SubstituteBindings::class,
+                VerifyHoneypot::class,
             ]))->then(function (Request $request, Form $form) {
                 $controller = App::instance()->apply('webform.route:before', [
                     'form' => $form,

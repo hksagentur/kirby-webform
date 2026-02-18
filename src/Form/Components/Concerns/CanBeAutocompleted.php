@@ -3,6 +3,7 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
+use Kirby\Toolkit\Component;
 
 trait CanBeAutocompleted
 {
@@ -22,5 +23,12 @@ trait CanBeAutocompleted
         $this->autocomplete = $autocomplete;
 
         return $this;
+    }
+
+    public function disableAutocomplete(bool|Closure $condition = true): static
+    {
+        return $this->autocomplete(static function (Component $component) use ($condition): ?bool {
+            return $component->evaluate($condition) ? false : null;
+        });
     }
 }

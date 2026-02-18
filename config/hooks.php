@@ -6,7 +6,7 @@ use Webform\Session\TransientData;
 return [
     'page.render:before' => function (string $contentType, array $data, Page $page): array {
         if ($contentType === 'html') {
-            TransientData::instance()->cleanUp();
+            TransientData::instance()->flush();
         }
 
         return $data;
