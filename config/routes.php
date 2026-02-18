@@ -12,12 +12,12 @@ use Webform\Http\Pipeline;
 use Webform\Http\SubmissionController;
 use Webform\Http\RedirectResponse;
 
-return fn (App $kirby) => [
+return [
     [
         'pattern' => 'webforms/(:all)',
         'method' => 'POST',
-        'action' => function () use ($kirby): RedirectResponse {
-            $middlewares = $kirby->option('hksagentur.webform.middleware', [
+        'action' => function (): RedirectResponse {
+            $middlewares = App::instance()->option('hksagentur.webform.middleware', [
                 VerifyCsrfToken::class,
                 RateLimited::class,
                 SubstituteBindings::class,
@@ -25,15 +25,15 @@ return fn (App $kirby) => [
                 VerifyTimeTrap::class,
             ]);
 
-            return (new Pipeline($middlewares))->then(function (Request $request, Form $form) use ($kirby) {
-                $controller = $kirby->apply('webform.route:before', [
+            return (new Pipeline($middlewares))->then(function (Request $request, Form $form): RedirectResponse {
+                $controller = App::instance()->apply('webform.route:before', [
                     'form' => $form,
                     'controller' => new SubmissionController(),
                 ], 'controller');
 
                 $response = $controller($request, $form);
 
-                $response = $kirby->apply('webform.route:after', [
+                $response = App::instance()->apply('webform.route:after', [
                     'form' => $form,
                     'response' => $response,
                 ], 'response');
