@@ -1,6 +1,10 @@
 <label <?= attr([
     'for' => $for ?? null,
-    'class' => 'label',
+    'class' => [
+        'label',
+        ...A::wrap($class ?? []),
+    ],
+    ...$attrs ?? [],
 ]) ?>>
     <?= $slot ?>
 </label>

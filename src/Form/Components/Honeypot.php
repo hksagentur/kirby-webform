@@ -2,11 +2,9 @@
 
 namespace Webform\Form\Components;
 
-class Honeypot extends Field
+class Honeypot extends TextInput
 {
-    use Concerns\CanBeAutocompleted;
     use Concerns\CanBeObfuscated;
-    use Concerns\HasPlaceholder;
 
     protected string $snippet = 'webform/honeypot';
 

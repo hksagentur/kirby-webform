@@ -15,6 +15,7 @@ return [
     'webform/form' => dirname(__DIR__) . '/snippets/components/form.php',
     'webform/grid' => dirname(__DIR__) . '/snippets/components/grid.php',
     'webform/help' => dirname(__DIR__) . '/snippets/components/help.php',
+    'webform/hint' => dirname(__DIR__) . '/snippets/components/hint.php',
     'webform/hidden' => dirname(__DIR__) . '/snippets/components/hidden.php',
     'webform/honeypot' => dirname(__DIR__) . '/snippets/components/honeypot.php',
     'webform/inline-error' => dirname(__DIR__) . '/snippets/components/inline-error.php',

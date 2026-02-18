@@ -1,7 +1,11 @@
 <?php if (! empty($messages)) : ?>
     <div <?= attr([
         'id' => $id ?? null,
-        'class' => 'inline-error',
+        'class' => [
+            'inline-error',
+            ...A::wrap($class ?? []),
+        ],
+        ...$attrs ?? [],
     ]) ?>>
         <svg <?= attr([
             'xmlns' => 'http://www.w3.org/2000/svg',

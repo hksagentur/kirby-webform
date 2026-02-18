@@ -5,9 +5,11 @@
     'class' => [
         'message',
         "message--{$type}",
+        ...A::wrap($class ?? []),
     ],
     'role' => $role ?? null,
     'aria-live' => $politeness ?? null,
+    ...$attrs ?? [],
 ]) ?>>
     <svg class="message__icon icon" viewBox="0 0 24 24">
         <?php if ($type === 'success') : ?>

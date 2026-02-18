@@ -9,12 +9,12 @@
 <?php $invalid ??= $errors->hasAny($name) ?>
 <?php $messages ??= $errors->get($name) ?>
 
-<fieldset <?= attr([
+<fieldset <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => [
         'checkbox-group',
         ...$invalid ? ['checkbox-group--invalid'] : [],
     ],
-]) ?>>
+])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <legend class="checkbox-group__label">
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>

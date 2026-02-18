@@ -3,9 +3,9 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
-<?php snippet('webform/field', [
-    'class' => 'trojan-horse',
-], slots: true) ?>
+<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
+
+<?php snippet('webform/field', ['class' => 'trojan-horse'], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
         <?php snippet('webform/label', ['for' => $id], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
@@ -19,11 +19,14 @@
     <?php endif ?>
 
     <input <?= attr(A::merge($component->getExtraAttributes(), [
-        'type' => 'text',
+        'type' => $component->getType(),
         'class' => 'input',
         'id' => $id,
         'name' => $name,
-        'value' => '',
+        'value' => $value,
+        'min' => $component->getMinValue(),
+        'max' => $component->getMaxValue(),
+        'step' => $component->getStep(),
         'placeholder' => $component->getPlaceholder(),
         'autocomplete' => $component->getAutocomplete() ?? 'nope',
     ])) ?>>

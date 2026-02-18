@@ -9,12 +9,12 @@
 <?php $invalid ??= $errors->hasAny($name) ?>
 <?php $messages ??= $errors->get($name) ?>
 
-<fieldset <?= attr([
+<fieldset <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => [
         'radio-group',
         ...$invalid ? ['radio-group--invalid'] : [],
     ],
-]) ?>>
+])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <legend class="radio-group__label">
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
