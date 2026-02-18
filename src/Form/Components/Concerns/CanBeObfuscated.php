@@ -6,15 +6,15 @@ use Closure;
 use Kirby\Toolkit\Str;
 use Webform\Session\TransientData;
 
-trait CanObfuscateName
+trait CanBeObfuscated
 {
-    protected bool|Closure $obfuscateName = false;
+    protected bool|Closure $obfuscate = false;
 
     public function getName(): ?string
     {
         $name = parent::getName();
 
-        if (! $name || ! $this->shouldObfuscateName()) {
+        if (! $name || ! $this->shouldObfuscate()) {
             return $name;
         }
 
@@ -24,14 +24,14 @@ trait CanObfuscateName
         );
     }
 
-    public function shouldObfuscateName(): bool
+    public function shouldObfuscate(): bool
     {
-        return $this->evaluate($this->obfuscateName);
+        return $this->evaluate($this->obfuscate);
     }
 
-    public function obfuscateName(bool|Closure $obfuscate = true): static
+    public function obfuscate(bool|Closure $obfuscate = true): static
     {
-        $this->obfuscateName = $obfuscate;
+        $this->obfuscate = $obfuscate;
 
         return $this;
     }
