@@ -19,12 +19,30 @@
     ]
   },
   "require": {
+    "php": ">=8.1.0",
+    "getkirby/cms": ">=3.10 <6.0",
     "getkirby/composer-installer": "^1.2"
   },
+  "require-dev": {
+    "getkirby/cms": "^5.3",
+    "laravel/pint": "^1.27"
+  },
+  "suggest": {
+		"ext-pdo": "Support for storing submissions in databases",
+		"ext-sodium": "Support for encryption of field values"
+	},
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
+  },
+  "scripts": {
+    "format": "pint --verbose",
+    "lint": "pint --verbose --test"
   },
   "extra": {
-    "installer-name": "webform"
+    "installer-name": "webform",
+    "kirby-cms-path": false
   }
 }
