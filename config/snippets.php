@@ -24,6 +24,7 @@ return [
     'webform/radio' => dirname(__DIR__) . '/snippets/components/radio.php',
     'webform/select' => dirname(__DIR__) . '/snippets/components/select.php',
     'webform/stack' => dirname(__DIR__) . '/snippets/components/stack.php',
+    'webform/time-trap' => dirname(__DIR__) . '/snippets/components/time-trap.php',
     'webform/text-input' => dirname(__DIR__) . '/snippets/components/text-input.php',
     'webform/textarea' => dirname(__DIR__) . '/snippets/components/textarea.php',
 ];

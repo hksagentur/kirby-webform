@@ -75,6 +75,7 @@ return [
     'error.hksagentur.webform.challengeFailed' => 'Die Voraussetzung für die Bearbeitung des Formulars wurde nicht erfüllt.',
     'error.hksagentur.webform.configNotFound' => 'Die Konfiguration für das Formular [{{ path }}] konnte nicht gefunden werden.',
     'error.hksagentur.webform.honeypotFilled' => 'Das Honeypot-Feld wurde ausgefüllt.',
+    'error.hksagentur.webform.timeTrapTriggered' => 'Das Zeitlimit für die Bearbeitung des Formulars wurde nicht eingehalten.',
     'error.hksagentur.webform.tokenMismatch' => 'CSRF-Token stimmt nicht überein.',
     'error.hksagentur.webform.validation' => 'Die angegebenen Daten waren ungültig.',
     'error.hksagentur.webform.upload.default' => 'Die Datei konnte nicht hochgeladen werden.',

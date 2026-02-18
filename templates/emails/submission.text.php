@@ -29,7 +29,7 @@
 
 <?php if (! empty($footerLinks)) : ?>
 <?php foreach ($footerLinks as $footerLink) : ?>
-[<?= esc($footerLink['text']) ?>](<?= esc($footerLink['url']) ?>)<?= "\n" ?>
+[<?= esc($footerLink['title']) ?>](<?= esc($footerLink['url']) ?>)<?= "\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 

@@ -33,7 +33,7 @@ trait HasValue
 
     public function getValue(): mixed
     {
-        $key = $this->getKey();
+        $key = $this->getName();
 
         if (V::empty($key)) {
             return null;
@@ -54,7 +54,7 @@ trait HasValue
 
     public function getOldValue(): mixed
     {
-        $key = $this->getKey();
+        $key = $this->getName();
 
         if (V::empty($key)) {
             return null;

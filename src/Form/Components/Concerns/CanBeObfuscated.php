@@ -4,11 +4,14 @@ namespace Webform\Form\Components\Concerns;
 
 use Closure;
 use Kirby\Toolkit\Str;
+use Webform\Form\Form;
 use Webform\Session\TransientData;
 
 trait CanBeObfuscated
 {
     protected bool|Closure $obfuscate = false;
+
+    abstract public function getForm(): ?Form;
 
     public function getName(): ?string
     {
@@ -19,7 +22,7 @@ trait CanBeObfuscated
         }
 
         return TransientData::instance()->getOrPut(
-            key: "webform.field.{$name}.name",
+            key: sprintf('webform.form.%s.field.%s.obfuscatedName', $this->getForm()?->getId() ?? 'default', $name),
             value: fn () => $name . '_' . Str::random(length: 8, type: 'alphalower'),
         );
     }
