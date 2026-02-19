@@ -4,6 +4,7 @@ namespace Webform\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Url;
+use Kirby\Toolkit\Str;
 use Webform\Support\ViewComponent;
 
 class Form extends ViewComponent
@@ -16,8 +17,7 @@ class Form extends ViewComponent
     use Concerns\HasActions;
     use Concerns\HasChildren;
     use Concerns\HasConfig;
-    use Concerns\HasErrorMessages;
-    use Concerns\HasStatusMessage;
+    use Concerns\HasContext;
 
     protected string $snippet = 'webform/form';
 
@@ -26,9 +26,19 @@ class Form extends ViewComponent
         return new static();
     }
 
-    public static function from(string $path): static
+    public static function loadFromConfig(string $path): static
     {
         return Config::create($path)->readOrFail();
+    }
+
+    public static function tryLoadFromConfig(string $path): ?static
+    {
+        return Config::create($path)->read();
+    }
+
+    public function getKey(): string
+    {
+        return Str::slug($this->config->getName(), '_');
     }
 
     public function getId(): string
@@ -48,6 +58,7 @@ class Form extends ViewComponent
 
     public function submit(ValidatedInput $input): void
     {
+        /** @var ValidatedInput $input */
         $input = App::instance()->apply('webform.submit:before', [
             'form' => $this,
             'input' => $input,
@@ -75,11 +86,10 @@ class Form extends ViewComponent
     protected function resolveDefaultSnippetData(): array
     {
         return [
+            ...$this->getContext()->toArray(),
             'form' => $this,
             'model' => $this->getModel(),
             'block' => $this->getBlock(),
-            'status' => $this->getStatusMessage(),
-            'errors' => $this->getErrorMessages(),
             'children' => $this->getChildren(),
         ];
     }

@@ -3,8 +3,6 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
-<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
-
 <?php snippet('webform/field', ['class' => 'trojan-horse'], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
         <?php snippet('webform/label', ['for' => $id], slots: true) ?>
@@ -23,7 +21,7 @@
         'class' => 'input',
         'id' => $id,
         'name' => $name,
-        'value' => $value,
+        'value' => $component->getValue(),
         'min' => $component->getMinValue(),
         'max' => $component->getMaxValue(),
         'step' => $component->getStep(),

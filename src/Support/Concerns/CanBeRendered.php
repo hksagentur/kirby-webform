@@ -5,7 +5,6 @@ namespace Webform\Support\Concerns;
 use Closure;
 use Kirby\Cms\App;
 use LogicException;
-use Webform\Form\Manager;
 
 trait CanBeRendered
 {
@@ -99,9 +98,6 @@ trait CanBeRendered
 
     protected function resolveDefaultSnippetData(): array
     {
-        return [
-            'status' => Manager::instance()->status(),
-            'errors' => Manager::instance()->errors(),
-        ];
+        return [];
     }
 }

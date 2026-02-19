@@ -3,7 +3,7 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
-<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
+<?php $value ??= $component->getValue() ?>
 <?php $options ??= $component->getOptions() ?>
 
 <?php $invalid ??= $errors->hasAny($name) ?>

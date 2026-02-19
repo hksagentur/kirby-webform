@@ -3,7 +3,6 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
-<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
 <?php $options ??= $component->getDatalistOptions() ?>
 
 <?php $invalid ??= $errors->hasAny($name) ?>
@@ -30,7 +29,7 @@
         ],
         'id' => $id,
         'name' => $name,
-        'value' => $value,
+        'value' => $component->getValue(),
         'required' => $component->isRequired(),
         'disabled' => $component->isDisabled(),
         'readonly' => $component->isReadonly(),

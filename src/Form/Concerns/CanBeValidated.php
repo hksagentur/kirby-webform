@@ -2,42 +2,47 @@
 
 namespace Webform\Form\Concerns;
 
+use Kirby\Cms\App;
 use Webform\Form\Components;
 use Webform\Form\ValidatedInput;
 use Webform\Form\Validator;
 
 trait CanBeValidated
 {
-    protected ?Validator $validator = null;
-
     abstract public function getChildren(): Components;
 
-    public function getValidator(): Validator
+    public function validate(?array $input = null): ValidatedInput
     {
-        return $this->validator ??= method_exists($this, 'validator')
-            ? $this->validator()
-            : $this->createDefaultValidator();
+        $input ??= App::instance()->request()->data();
+
+        /** @var Validator $validator */
+        $validator = App::instance()->apply('webform.validate:before', [
+            'form' => $this,
+            'validator' => $this->createValidator($input),
+        ], 'validator');
+
+        $validated = $validator->validate();
+
+        App::instance()->trigger('webform.validate:after', [
+            'form' => $this,
+            'validator' => $validator,
+        ]);
+
+        return $validated;
     }
 
-    public function validate(): ValidatedInput
+    protected function createValidator(array $input): Validator
     {
-        return $this->getValidator()->validate();
-    }
-
-    protected function createDefaultValidator(): Validator
-    {
-        $data = [];
         $rules = [];
         $messages = [];
         $attributes = [];
 
         foreach ($this->getChildren()->getIndex()->getFields() as $field) {
-            $data[$field->getName()] = $field->getValue();
             $rules[$field->getName()] = $field->getValidationRules();
             $messages[$field->getName()] = $field->getValidationMessages();
             $attributes[$field->getName()] = $field->getValidationAttribute();
         }
 
-        return new Validator($data, $rules, $messages, $attributes);
+        return new Validator($input, $rules, $messages, $attributes);
     }
 }

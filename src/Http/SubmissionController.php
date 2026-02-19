@@ -13,7 +13,6 @@ use Webform\Cms\FormBlock;
 use Webform\Exception\FileUploadException;
 use Webform\Exception\ValidationException;
 use Webform\Form\Form;
-use Webform\Form\Manager;
 use Webform\Form\MessageBag;
 
 class SubmissionController
@@ -67,13 +66,13 @@ class SubmissionController
 
     protected function getParentBlock(?Page $page): ?Block
     {
-        $key = App::instance()->request()->get('_webform_block');
+        $id = App::instance()->request()->get('_webform_block');
 
-        if (! $key || ! $page) {
+        if (! $id || ! $page) {
             return null;
         }
 
-        return Manager::instance()->block($page, $key);
+        return $page->block($id);
     }
 
     protected function getRedirectUrl(): string
@@ -94,21 +93,21 @@ class SubmissionController
     protected function failedValidation(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput()
-            ->withErrors($this->asMessageBag($exception), $form->getId());
+            ->withInput($form->getInput(), $form->getKey())
+            ->withErrors($this->asMessageBag($exception), $form->getKey());
     }
 
     protected function failedSubmission(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput()
-            ->withErrors($this->asMessageBag($exception), $form->getId());
+            ->withInput($form->getInput(), $form->getKey())
+            ->withErrors($this->asMessageBag($exception), $form->getKey());
     }
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withStatus(I18n::translate('hksagentur.webform.status.message.success'), $form->getId());
+            ->withStatus(I18n::translate('hksagentur.webform.status.message.success'), $form->getKey());
     }
 
     protected function asMessageBag(Throwable $exception): MessageBag

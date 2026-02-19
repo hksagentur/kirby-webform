@@ -26,6 +26,7 @@ return [
             ]);
 
             return (new Pipeline($middlewares))->then(function (Request $request, Form $form): RedirectResponse {
+                /** @var callable $controller */
                 $controller = App::instance()->apply('webform.route:before', [
                     'form' => $form,
                     'controller' => new SubmissionController(),

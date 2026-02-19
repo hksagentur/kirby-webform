@@ -30,8 +30,8 @@ abstract class Component extends ViewComponent
             'form' => $this->getForm(),
             'model' => $this->getForm()?->getModel(),
             'block' => $this->getForm()?->getBlock(),
-            'status' => $this->getForm()?->getStatusMessage(),
-            'errors' => $this->getForm()?->getErrorMessages(),
+            'status' => $this->getForm()?->getContext()->getStatus(),
+            'errors' => $this->getForm()?->getContext()->getErrors(),
             'children' => $this->getChildren(),
         ];
     }

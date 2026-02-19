@@ -7,14 +7,14 @@ use Kirby\Session\SessionData;
 use Kirby\Toolkit\A;
 use stdClass;
 
-class TransientData
+class FlashStore
 {
     protected static ?self $instance = null;
 
     protected SessionData $session;
     protected string $sessionKey;
 
-    public function __construct(?SessionData $session = null, string $sessionKey = 'webform.flash')
+    public function __construct(?SessionData $session = null, string $sessionKey = 'webform.flashes')
     {
         $this->session = $session ?? App::instance()->session()->data();
         $this->sessionKey = $sessionKey;
@@ -27,6 +27,11 @@ class TransientData
         }
 
         return static::$instance ?? new static();
+    }
+
+    public static function __callStatic(string $method, array $arguments = []): mixed
+    {
+        return static::instance()->$method(...$arguments);
     }
 
     public function has(string $key): bool
@@ -95,7 +100,7 @@ class TransientData
         return $this;
     }
 
-    public function flush(): static
+    public function clear(): static
     {
         $this->session->remove($this->getKeys('old'));
 

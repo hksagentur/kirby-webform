@@ -224,7 +224,7 @@ class Components implements Countable, IteratorAggregate, Stringable
             'id' => $component->getId(),
             'name' => $component instanceof Field ? $component->getName() : null,
             'value' => $component instanceof Field ? $component->getValue() : null,
-             default => null,
+            default => null,
         };
     }
 

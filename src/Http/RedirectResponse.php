@@ -7,7 +7,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Webform\Form\MessageBag;
 use Webform\Form\StatusMessage;
-use Webform\Session\TransientData;
+use Webform\Support\Flash;
 
 class RedirectResponse extends Response
 {
@@ -25,20 +25,20 @@ class RedirectResponse extends Response
         ]);
     }
 
-    public function withInput(?array $input = null): static
+    public function withInput(?array $input = null, string $inputBag = 'default'): static
     {
         $input = is_null($input)
             ? App::instance()->request()->data()
             : $input;
 
-        TransientData::instance()->put('webform.form.input', $input);
+        Flash::put("webform.form.{$inputBag}.input", $input);
 
         return $this;
     }
 
     public function withStatus(string|StatusMessage $message, string $messageBag = 'default'): static
     {
-        TransientData::instance()->put("webform.form.status.{$messageBag}", $message);
+        Flash::put("webform.form.{$messageBag}.status", $message);
 
         return $this;
     }
@@ -49,7 +49,7 @@ class RedirectResponse extends Response
             ? $messages->all()
             : $messages;
 
-        TransientData::instance()->put("webform.form.errors.{$errorBag}", $messages);
+        Flash::put("webform.form.{$errorBag}.errors", $messages);
 
         return $this;
     }

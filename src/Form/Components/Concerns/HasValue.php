@@ -2,72 +2,15 @@
 
 namespace Webform\Form\Components\Concerns;
 
-use Kirby\Cms\R;
 use Kirby\Cms\S;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\V;
+use Webform\Form\Form;
 
 trait HasValue
 {
     protected mixed $defaultValue = null;
 
-    public function isFilled(): bool
-    {
-        return ! $this->isNotFilled();
-    }
-
-    public function isNotFilled(): bool
-    {
-        return in_array($this->getValue(), [[], '', null], true);
-    }
-
-    public function hasBeenFilled(): bool
-    {
-        return ! $this->hasNotBeenFilled();
-    }
-
-    public function hasNotBeenFilled(): bool
-    {
-        return in_array($this->getOldValue(), [[], '', null], true);
-    }
-
-    public function getValue(): mixed
-    {
-        $key = $this->getName();
-
-        if (V::empty($key)) {
-            return null;
-        }
-
-        $value = $this->requestData($key);
-
-        if (is_array($value)) {
-            return $value;
-        }
-
-        if (V::empty($value)) {
-            return null;
-        }
-
-        return $value;
-    }
-
-    public function getOldValue(): mixed
-    {
-        $key = $this->getName();
-
-        if (V::empty($key)) {
-            return null;
-        }
-
-        $value = $this->sessionData($key);
-
-        if (V::empty($value)) {
-            return null;
-        }
-
-        return $value;
-    }
+    abstract public function getForm(): ?Form;
 
     public function getDefaultValue(): mixed
     {
@@ -81,25 +24,31 @@ trait HasValue
         return $this;
     }
 
-    protected function requestData(?string $key = null): mixed
+    public function getValue(): mixed
     {
-        $data = R::data();
-
-        if (is_null($key)) {
-            return $data;
-        }
-
-        return A::get($data, $key, []);
+        return $this->getOldValue() ?? $this->getDefaultValue();
     }
 
-    protected function sessionData(?string $key = null): mixed
+    public function getOldValue(): mixed
     {
-        $data = S::get('webform.form.input', []);
+        $key = $this->getName();
 
-        if (is_null($key)) {
-            return $data;
+        if (! $key) {
+            return null;
         }
 
-        return A::get($data, $key, []);
+        $form = $this->getForm()?->getKey();
+
+        if (! $form) {
+            return null;
+        }
+
+        $data = S::get("webform.form.{$form}.input");
+
+        if (! $data) {
+            return null;
+        }
+
+        return A::get($data, $key);
     }
 }

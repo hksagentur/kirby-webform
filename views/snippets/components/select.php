@@ -2,9 +2,7 @@
 
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
-
-<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
-<?php $options ??= $component->getOptions() ?>
+<?php $value ??= $component->getValue() ?>
 
 <?php $invalid ??= $errors->hasAny($name) ?>
 <?php $messages ??= $errors->get($name) ?>
@@ -58,7 +56,7 @@
                         <?php foreach ($optionLabel as $groupedOptionValue => $groupedOptionLabel) : ?>
                             <option <?= attr([
                                 'value' => $groupedOptionValue,
-                                'selected' => $optionValue == $value,
+                                'selected' => $groupedOptionValue == $value,
                             ]) ?>>
                                 <?= $component->isHtmlAllowed() ? $groupedOptionLabel : esc($groupedOptionLabel) ?>
                             </option>

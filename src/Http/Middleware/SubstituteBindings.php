@@ -3,41 +3,32 @@
 namespace Webform\Http\Middleware;
 
 use Closure;
-use Kirby\Cms\App;
-use Kirby\Cms\Page;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
 use Webform\Exception\NotFoundException;
-use Webform\Form\Form;
 use Webform\Form\Manager;
 
 class SubstituteBindings extends Middleware
 {
     public function handle(Request $request, Closure $next): Response|array|false
     {
-        $path = $request->path();
+        $path = Str::after($request->path(), 'webforms/');
 
-        $model = match (true) {
-            Str::startsWith($path, 'pages/') => $this->resolvePage(Str::after($path, 'pages/')),
-            Str::startsWith($path, 'webforms/') => $this->resolveWebform(Str::after($path, 'webforms/')),
-            default => null,
-        };
-
-        if (! $model) {
+        if (! $path) {
             throw new NotFoundException();
         }
 
-        return $next($request, $model);
-    }
+        $form = Manager::instance()->form($path);
 
-    protected function resolvePage(string $path): ?Page
-    {
-        return App::instance()->site()->find($path);
-    }
+        if (! $form) {
+            throw new NotFoundException();
+        }
 
-    protected function resolveWebform(string $path): ?Form
-    {
-        return Manager::instance()->form($path);
+        if (! $form) {
+            throw new NotFoundException();
+        }
+
+        return $next($request, $form);
     }
 }

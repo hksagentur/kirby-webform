@@ -4,5 +4,5 @@
     'type' => 'hidden',
     'id' => $component->getId(),
     'name' => $component->getName(),
-    'value' => $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue(),
+    'value' => $component->getValue(),
 ])) ?>>

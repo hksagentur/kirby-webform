@@ -3,9 +3,8 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
-use Kirby\Toolkit\Str;
 use Webform\Form\Form;
-use Webform\Session\TransientData;
+use Webform\Support\Flash;
 
 trait CanBeObfuscated
 {
@@ -21,9 +20,15 @@ trait CanBeObfuscated
             return $name;
         }
 
-        return TransientData::instance()->getOrPut(
-            key: sprintf('webform.form.%s.field.%s.obfuscatedName', $this->getForm()?->getId() ?? 'default', $name),
-            value: fn () => $name . '_' . Str::random(length: 8, type: 'alphalower'),
+        $form = $this->getForm()?->getKey();
+
+        if (! $form) {
+            return $name;
+        }
+
+        return Flash::getOrPut(
+            key: "webform.form.{$form}.field.{$name}.obfuscatedName",
+            value: fn () => $this->shouldObfuscate() ? $this->obfuscateName($name) : $name,
         );
     }
 

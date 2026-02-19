@@ -8,7 +8,7 @@
     'type' => $component->getType(),
     'id' => $id,
     'name' => $name,
-    'value' => $component->getValue() ?? $component->getDefaultValue(),
+    'value' => $component->getValue(),
     'disabled' => $component->isDisabled(),
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>

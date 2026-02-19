@@ -2,8 +2,7 @@
 
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
-
-<?php $value ??= $component->getOldValue() ?? $component->getValue() ?? $component->getDefaultValue() ?>
+<?php $value ??= $component->getValue() ?>
 
 <?php $invalid ??= $errors->hasAny($name) ?>
 <?php $messages ??= $errors->get($name) ?>
