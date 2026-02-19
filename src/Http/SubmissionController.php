@@ -93,21 +93,23 @@ class SubmissionController
     protected function failedValidation(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput($form->getInput(), $form->getKey())
-            ->withErrors($this->asMessageBag($exception), $form->getKey());
+            ->withInput(inputBag: $form->getKey())
+            ->withErrors(messages: $this->asMessageBag($exception), errorBag: $form->getKey());
     }
 
     protected function failedSubmission(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput($form->getInput(), $form->getKey())
-            ->withErrors($this->asMessageBag($exception), $form->getKey());
+            ->withInput(inputBag: $form->getKey())
+            ->withErrors(messages: $this->asMessageBag($exception), errorBag: $form->getKey());
     }
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
-        return (new RedirectResponse($this->getRedirectUrl()))
-            ->withStatus(I18n::translate('hksagentur.webform.status.message.success'), $form->getKey());
+        return (new RedirectResponse($this->getRedirectUrl()))->withStatus(
+            message: I18n::translate('hksagentur.webform.status.message.success'),
+            messageBag: $form->getKey(),
+        );
     }
 
     protected function asMessageBag(Throwable $exception): MessageBag
