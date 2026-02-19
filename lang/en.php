@@ -74,8 +74,6 @@ return [
     'error.hksagentur.webform.challengeFailed' => 'The prerequisite for processing the form was not met.',
     'error.hksagentur.webform.notFound' => 'The requested model could not be found.',
     'error.hksagentur.webform.configNotFound' => 'The configuration for the form [{{ path }}] could not be found.',
-    'error.hksagentur.webform.honeypotFilled' => 'The honeypot field was filled.',
-    'error.hksagentur.webform.timeTrapTriggered' => 'The time limit for processing the form was not met.',
     'error.hksagentur.webform.tokenMismatch' => 'CSRF token mismatch.',
     'error.hksagentur.webform.validation' => 'The given data was invalid.',
     'error.hksagentur.webform.upload.default' => 'The file could not be uploaded.',

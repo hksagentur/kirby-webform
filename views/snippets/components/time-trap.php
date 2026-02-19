@@ -4,5 +4,5 @@
     'type' => 'hidden',
     'id' => $component->getId(),
     'name' => $component->getName(),
-    'value' => $component->shouldEncrypt() ? $component->getEncryptedValue() : $component->getValue(),
+    'value' => $component->getValue(),
 ])) ?>>

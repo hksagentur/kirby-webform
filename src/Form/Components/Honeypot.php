@@ -2,7 +2,9 @@
 
 namespace Webform\Form\Components;
 
-class Honeypot extends TextInput
+use Kirby\Cms\R;
+
+class Honeypot extends TextInput implements Contracts\ProvidesChallenge
 {
     use Concerns\CanBeObfuscated;
 
@@ -16,5 +18,10 @@ class Honeypot extends TextInput
     public static function create(string $name): static
     {
         return new static($name);
+    }
+
+    public function verify(): bool
+    {
+        return in_array(R::get($this->getName()), ['', [], null], true);
     }
 }

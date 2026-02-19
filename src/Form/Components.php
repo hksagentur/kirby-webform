@@ -9,6 +9,7 @@ use IteratorAggregate;
 use Kirby\Toolkit\A;
 use Stringable;
 use Webform\Form\Components\Component;
+use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\Field;
 
 /**
@@ -46,6 +47,12 @@ class Components implements Countable, IteratorAggregate, Stringable
     public function getFields(): static
     {
         return $this->whereInstanceOf(Field::class);
+    }
+
+    /** @return static<TKey, Component&ProvidesChallenge> */
+    public function getChallenges(): static
+    {
+        return $this->whereInstanceOf(ProvidesChallenge::class);
     }
 
     /** @return static<TKey, Component> */

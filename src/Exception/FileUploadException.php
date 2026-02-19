@@ -48,15 +48,29 @@ class FileUploadException extends Exception
         return $this->uploadedFile;
     }
 
+    public function withUploadedFile(?UploadedFile $file): static
+    {
+        $this->uploadedFile = $file;
+
+        return $this;
+    }
+
     public function getUploadField(): ?FileUpload
     {
         return $this->uploadField;
     }
 
+    public function withUploadedField(?FileUpload $field): static
+    {
+        $this->uploadField = $field;
+
+        return $this;
+    }
+
     public function getErrors(): MessageBag
     {
         return new MessageBag([
-            $this->uploadField?->getName() ?? 'upload' => $this->getMessage(),
+            $this->uploadField?->getName() ?? 'file' => $this->getMessage(),
         ]);
     }
 }
