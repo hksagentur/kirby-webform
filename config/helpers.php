@@ -1,20 +1,14 @@
 <?php
 
 use Webform\Form\Form;
-use Webform\Form\Manager;
+use Webform\Form\FormFactory;
 
 if (! function_exists('webform')) {
     /**
      * Load a webform from a given configuration path.
-     *
-     * @return ($path is null ? Manager : Form|null)
      */
-    function webform(?string $path = null): Form|Manager|null
+    function webform(string $path): ?Form
     {
-        if (! is_null($path)) {
-            return Manager::instance()->form($path);
-        }
-
-        return Manager::instance();
+        return FormFactory::instance()->createFromConfig($path);
     }
 }

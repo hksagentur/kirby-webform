@@ -2,9 +2,9 @@
 
 namespace Webform\Form;
 
-class Manager
+class FormFactory
 {
-    protected static ?Manager $instance = null;
+    protected static ?self $instance = null;
 
     /** @var array<string, Form> */
     protected array $forms = [];
@@ -18,7 +18,7 @@ class Manager
         return static::$instance ??= new static();
     }
 
-    public function form(string $path): ?Form
+    public function createFromConfig(string $path): ?Form
     {
         return $this->forms[$path] ??= Form::tryLoadFromConfig($path);
     }
