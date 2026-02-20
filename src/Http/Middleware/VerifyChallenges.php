@@ -12,14 +12,12 @@ class VerifyChallenges extends Middleware
 {
     public function handle(Request $request, Closure $next, ?Form $form = null): Response|array|false
     {
-        $challenges = $form?->getChildren()->getIndex()->getChallenges() ?? [];
+        $challenges = $form?->getChallenges();
 
-        foreach ($challenges as $challenge) {
-            if (! $challenge->verify()) {
-                throw new ChallengeFailedException([
-                    'component' => $challenge,
-                ]);
-            }
+        if ($challenges?->verifyAll() === false) {
+            throw new ChallengeFailedException([
+                'challenge' => $challenges?->invalid()->first(),
+            ]);
         }
 
         return $next($request, $form);

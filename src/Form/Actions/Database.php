@@ -4,6 +4,7 @@ namespace Webform\Form\Actions;
 
 use Closure;
 use Kirby\Database\Db;
+use Webform\Form\FormSubmission;
 use Webform\Form\ValidatedInput;
 
 class Database extends Action
@@ -32,10 +33,10 @@ class Database extends Action
         return $this;
     }
 
-    public function execute(ValidatedInput $input): void
+    public function execute(FormSubmission $submission): void
     {
         $row = $this->applyFilters('save:before', [
-            'row' => $input->all(),
+            'row' => $submission->all(),
         ], 'row');
 
         DB::table($this->getTable())->insert($row);

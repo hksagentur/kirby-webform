@@ -3,7 +3,7 @@
 namespace Webform\Form\Concerns;
 
 use Kirby\Cms\App;
-use Webform\Form\Components;
+use Webform\Form\Collections\Components;
 use Webform\Form\ValidatedInput;
 use Webform\Form\Validator;
 
@@ -37,7 +37,7 @@ trait CanBeValidated
         $messages = [];
         $attributes = [];
 
-        foreach ($this->getChildren()->getIndex()->getFields() as $field) {
+        foreach ($this->getFields() as $field) {
             $rules[$field->getName()] = $field->getValidationRules();
             $messages[$field->getName()] = $field->getValidationMessages();
             $attributes[$field->getName()] = $field->getValidationAttribute();

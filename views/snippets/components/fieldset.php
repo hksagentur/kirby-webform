@@ -2,6 +2,8 @@
 
 <fieldset <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => 'fieldset',
+    'disabled' => $component->isDisabled(),
+    'role' => 'group',
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <legend class="fieldset__legend">
@@ -10,8 +12,6 @@
     <?php endif ?>
 
     <div class="fieldset__content">
-        <?php foreach ($children as $child) : ?>
-            <?= $child ?>
-        <?php endforeach ?>
+        <?= $component->getChildren() ?>
     </div>
 </fieldset>

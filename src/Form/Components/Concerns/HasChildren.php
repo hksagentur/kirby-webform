@@ -3,7 +3,7 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
-use Webform\Form\Components;
+use Webform\Form\Collections\Components;
 use Webform\Form\Components\Component;
 use Webform\Form\Form;
 use Webform\Support\Concerns\QueriesChildren;

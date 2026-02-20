@@ -1,0 +1,34 @@
+<?php
+
+namespace Webform\Form\Collections;
+
+use Webform\Form\Components\Contracts\ProvidesChallenge;
+
+/**
+ * @template TKey of array-key
+ * @template-covariant TValue of Component&ProvidesChallenge
+ * @extends Components<TKey, TValue>
+ */
+class Challenges extends Components
+{
+    /** @return string[] */
+    public function fieldNames(): array
+    {
+        return array_filter($this->fields()->pluck('name'));
+    }
+
+    public function valid(): static
+    {
+        return $this->filter(fn (ProvidesChallenge $challenge) => $challenge->verify());
+    }
+
+    public function invalid(): static
+    {
+        return $this->reject(fn (ProvidesChallenge $challenge) => $challenge->verify());
+    }
+
+    public function verifyAll(): bool
+    {
+        return ! $this->some(fn (ProvidesChallenge $challenge) => ! $challenge->verify());
+    }
+}

@@ -8,6 +8,11 @@ trait HasLabel
 {
     protected string|Closure|null $label = null;
 
+    public function hasLabel(): bool
+    {
+        return $this->getLabel() !== null;
+    }
+
     public function getLabel(): ?string
     {
         return $this->evaluate($this->label);

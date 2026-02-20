@@ -14,6 +14,7 @@ class Field extends Component implements Contracts\CanBeRequired, Contracts\HasV
     use Concerns\HasLabel;
     use Concerns\HasName;
     use Concerns\HasValue;
+    use Concerns\HasErrors;
 
     public function __construct(string $name)
     {

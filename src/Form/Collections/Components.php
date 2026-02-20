@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Form;
+namespace Webform\Form\Collections;
 
 use ArrayIterator;
 use Closure;
@@ -11,6 +11,7 @@ use Stringable;
 use Webform\Form\Components\Component;
 use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\Field;
+use Webform\Form\Form;
 
 /**
  * @template TKey of array-key
@@ -19,10 +20,14 @@ use Webform\Form\Components\Field;
  */
 class Components implements Countable, IteratorAggregate, Stringable
 {
-    /** @var ?static<Component> */
+    /**
+     * @var ?static<TKey, TValue>
+     */
     protected ?self $index = null;
 
-    /**  @param array<TKey, TValue>  $components */
+    /**
+     * @param array<TKey, TValue>  $components
+     */
     public function __construct(
         protected array $components = []
     ) {
@@ -43,39 +48,9 @@ class Components implements Countable, IteratorAggregate, Stringable
         return count($this->components);
     }
 
-    /** @return static<TKey, Field> */
-    public function getFields(): static
-    {
-        return $this->whereInstanceOf(Field::class);
-    }
-
-    /** @return static<TKey, Component&ProvidesChallenge> */
-    public function getChallenges(): static
-    {
-        return $this->whereInstanceOf(ProvidesChallenge::class);
-    }
-
-    /** @return static<TKey, Component> */
-    public function getIndex(): static
-    {
-        if ($this->index !== null) {
-            return $this->index;
-        }
-
-        $components = [];
-
-        foreach ($this->components as $component) {
-            $components = [
-                ...$components,
-                $component,
-                ...$component->getChildren()->getIndex(),
-            ];
-        }
-
-        return new static($components);
-    }
-
-    /** @param ?(callable(TValue, TKey): bool) $callback */
+    /**
+     * @param ?(callable(TValue, TKey): bool) $callback
+     */
     public function first(?callable $callback = null): ?Component
     {
         if (! is_callable($callback)) {
@@ -91,7 +66,9 @@ class Components implements Countable, IteratorAggregate, Stringable
         return null;
     }
 
-    /** @param ?(callable(TValue, TKey): bool) $callback */
+    /**
+     * @param ?(callable(TValue, TKey): bool) $callback
+     */
     public function last(?callable $callback = null): ?Component
     {
         if (! is_callable($callback)) {
@@ -117,13 +94,17 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this->first(fn (Component $component) => $this->getAttribute($component, $key) === $value);
     }
 
-    /** @param (callable(TValue, TKey): bool) $callback */
+    /**
+     * @param (callable(TValue, TKey): bool) $callback
+     */
     public function filter(callable $callback): static
     {
         return new static(A::filter($this->components, $callback));
     }
 
-    /** @param  (callable(TValue, TKey): bool) $callback */
+    /**
+     * @param  (callable(TValue, TKey): bool) $callback
+     */
     public function reject(callable $callback): static
     {
         return $this->filter(fn (Component $component, int|string $key) => ! $callback($component, $key));
@@ -155,7 +136,30 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
-     * @template-covariant TComponent of TValue
+     * @param (callable(TValue, TKey): bool) $callback
+     */
+    public function some(callable $callback): bool
+    {
+        return $this->first($callback) !== null;
+    }
+
+    /**
+     * @param (callable(TValue, TKey): bool) $callback
+     */
+    public function every(callable $callback): bool
+    {
+        foreach ($this->components as $key => $component) {
+            if (! $callback($component, $key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @template TComponent of TValue
+     *
      * @param class-string<TComponent> $type
      * @return ?TComponent
      */
@@ -165,7 +169,8 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
-     * @template-covariant TComponent of TValue
+     * @template TComponent of TValue
+     *
      * @param class-string<TComponent> $type
      * @return static<TKey, TComponent>
      */
@@ -174,12 +179,120 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this->filter(fn (Component $component) => $component instanceof $type);
     }
 
+    /**
+     * @return string[]
+     */
+    public function componentKeys(): array
+    {
+        return array_filter($this->pluck('key'));
+    }
+
+    /**
+     * @return array<TKey, mixed>
+     */
+    public function pluck(string $key): array
+    {
+        return $this->map(fn (Component $component) => $this->getAttribute($component, $key));
+    }
+
+    /**
+     * @template TMapValue
+     *
+     * @param (callable(TValue, TKey): TMapValue) $callback
+     * @return array<TKey, TMapValue>
+     */
+    public function map(callable $callback): array
+    {
+        $keys = array_keys($this->components);
+
+        $items = array_map($callback, $this->components, $keys);
+        $items = array_combine($keys, $items);
+
+        return $items;
+    }
+
+    /**
+     * @return static<string, TValue>
+     */
+    public function keyBy(string $key): static
+    {
+        $components = [];
+
+        foreach ($this->components as $component) {
+            $value = $this->getAttribute($component, $key);
+
+            if ($value === null) {
+                continue;
+            }
+
+            $components[$value] = $component;
+        }
+
+        return new static($components);
+    }
+
+    /**
+     * @template TMergeValue of Component
+     *
+     * @param TMergeValue[]|Components<TKey, TMergeValue> $components
+     * @return static<TKey, TValue|TMergeValue>
+     */
     public function merge(array|Components $components): static
     {
         return new static([
             ...$this->components,
             ...$components,
         ]);
+    }
+
+    /**
+     * @return array<TKey, TValue>
+     */
+    public function all(): array
+    {
+        return $this->components;
+    }
+
+    /**
+     * @template-covariant TField of Field
+     *
+     * @return Fields<TKey, TField>
+     */
+    public function fields(): Fields
+    {
+        return new Fields($this->whereInstanceOf(Field::class)->all());
+    }
+
+    /**
+     * @template-covariant TChallenge of TValue&ProvidesChallenge
+     *
+     * @return Challenges<TKey, TChallenge>
+     */
+    public function challenges(): Challenges
+    {
+        return new Challenges($this->whereInstanceOf(ProvidesChallenge::class)->all());
+    }
+
+    /**
+     * @return static<TKey, TValue>
+     */
+    public function index(): static
+    {
+        if ($this->index !== null) {
+            return $this->index;
+        }
+
+        $components = [];
+
+        foreach ($this->components as $component) {
+            $components = [
+                ...$components,
+                $component,
+                ...$component->getIndex(),
+            ];
+        }
+
+        return new static($components);
     }
 
     public function form(Form $form): static
@@ -191,13 +304,9 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this;
     }
 
-    /** @return array<TKey, TValue> */
-    public function all(): array
-    {
-        return $this->components;
-    }
-
-    /** @return array<TKey, TValue> */
+    /**
+     * @return array<TKey, TValue>
+     */
     public function toArray(): array
     {
         return $this->components;
@@ -213,7 +322,9 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this->toHtml();
     }
 
-    /** @return ArrayIterator<TKey, TValue> */
+    /**
+     * @return ArrayIterator<TKey, TValue>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->components);
@@ -224,13 +335,14 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this->toHtml();
     }
 
+    /**
+     * @param TValue $component
+     */
     protected function getAttribute(Component $component, string $key): mixed
     {
         return match ($key) {
             'key' => $component->getKey(),
             'id' => $component->getId(),
-            'name' => $component instanceof Field ? $component->getName() : null,
-            'value' => $component instanceof Field ? $component->getValue() : null,
             default => null,
         };
     }

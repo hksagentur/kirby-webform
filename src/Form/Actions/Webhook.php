@@ -5,6 +5,7 @@ namespace Webform\Form\Actions;
 use Closure;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\Str;
+use Webform\Form\FormSubmission;
 use Webform\Form\ValidatedInput;
 
 class Webhook extends Action
@@ -80,16 +81,15 @@ class Webhook extends Action
         return $this->contentType('application/json');
     }
 
-    public function execute(ValidatedInput $input): void
+    public function execute(FormSubmission $submission): void
     {
-        $body = $this->usesJsonEncoding()
-            ? $input->toJson(JSON_UNESCAPED_SLASHES)
-            : $input->asFormParameters();
+        $data = $submission->all();
 
-        $url = Str::template(
-            string: $this->getUrl(),
-            data: $input->all(),
-        );
+        $url = Str::template($this->getUrl(), $data);
+
+        $body = $this->usesJsonEncoding()
+            ? json_encode($data, JSON_UNESCAPED_SLASHES)
+            : http_build_query($data, '', '&', PHP_QUERY_RFC3986);
 
         $options = $this->applyFilters('webhook:before', [
             'options' => [

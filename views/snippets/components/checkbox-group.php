@@ -4,28 +4,47 @@
 <?php $name ??= $component->getName() ?>
 <?php $value ??= $component->getValue() ?>
 
-<?php $invalid ??= $errors->hasAny($name) ?>
-<?php $messages ??= $errors->get($name) ?>
+<?php $label ??= $component->getLabel() ?>
+<?php $hint ??= $component->getHint() ?>
+<?php $help ??= $component->getHelp() ?>
+
+<?php $required ??= $component->isRequired() ?>
+<?php $disabled ??= $component->isDisabled() ?>
+
+<?php $invalid ??= $component->isInvalid() ?>
+<?php $messages ??= $component->getErrors() ?>
 
 <fieldset <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => [
         'checkbox-group',
         ...$invalid ? ['checkbox-group--invalid'] : [],
     ],
+    'aria-labelledby' => [
+        ...$label ? ["{$id}-label"] : [],
+    ],
+    'aria-describedby' => [
+        ...$invalid ? ["{$id}-error"] : [],
+        ...$hint ? ["{$id}-hint"] : [],
+    ],
+    'disabled' => $disabled,
+    'role' => 'group',
 ])) ?>>
-    <?php if ($label = $component->getLabel()) : ?>
-        <legend class="checkbox-group__label">
+    <?php if ($label) : ?>
+        <legend <?= attr([
+            'id' => "{$id}-label",
+            'class' => 'checkbox-group__label',
+        ]) ?>>
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
         </legend>
     <?php endif ?>
 
-    <?php if ($hint = $component->getHint()) : ?>
+    <?php if ($hint) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $hint : esc($hint) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?php if ($help = $component->getHelp()) : ?>
+    <?php if ($help) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $help : esc($help) ?>
         <?php endsnippet() ?>
@@ -39,14 +58,10 @@
                     'type' => 'checkbox',
                     'name' => $name . '[]',
                     'value' => $optionValue,
-                    'required' => $component->isRequired(),
-                    'disabled' => $component->isDisabled(),
+                    'required' => $required,
                     'checked' => in_array($optionValue, A::wrap($value)),
                     'aria-invalid' => $invalid ? 'true' : null,
-                    'aria-describedby' => [
-                        ...$invalid ? ["{$id}-error"] : [],
-                        ...$hint ? ["{$id}-hint"] : [],
-                    ],
+                    'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="checkbox-group__option-label">
                     <?= $component->isHtmlAllowed() ? $optionLabel : esc($optionLabel)  ?>

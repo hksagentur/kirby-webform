@@ -6,6 +6,7 @@ use Closure;
 
 class Fieldset extends Component
 {
+    use Concerns\CanBeDisabled;
     use Concerns\HasLabel;
 
     protected string $snippet = 'webform/fieldset';
@@ -18,10 +19,5 @@ class Fieldset extends Component
     public static function create(string|Closure|null $label = null): static
     {
         return new static($label);
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->evaluate($this->label) ?? ucfirst($this->getName());
     }
 }

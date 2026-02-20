@@ -6,7 +6,5 @@
         'cluster',
     ],
 ])) ?>>
-    <?php foreach ($children as $child) : ?>
-        <?= $child ?>
-    <?php endforeach ?>
+    <?= $component->getChildren() ?>
 </div>

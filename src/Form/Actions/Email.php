@@ -4,12 +4,9 @@ namespace Webform\Form\Actions;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Cms\Page;
-use Kirby\Cms\User;
-use Kirby\Filesystem\File;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Webform\Form\ValidatedInput;
+use Webform\Form\FormSubmission;
+use Webform\Support\A;
 
 class Email extends Action
 {
@@ -131,7 +128,7 @@ class Email extends Action
         return $this;
     }
 
-    public function execute(ValidatedInput $input): void
+    public function execute(FormSubmission $submission): void
     {
         $kirby = App::instance();
         $site = App::instance()->site();
@@ -141,11 +138,8 @@ class Email extends Action
         $preset = $this->getPreset();
         $template = $this->getTemplate();
 
-        $files = $form->getUploadedFiles();
-        $data = array_replace_recursive($input->all(), $files);
-
-        $data = $this->prepareSubmissionData($data);
-        $attachments = $this->prepareEmailAttachments($files);
+        $data = $submission->all();
+        $attachments = A::collapse($submission->filePaths());
 
         $subject = Str::template($this->getSubject(), $data);
         $sender = Str::template($this->getSender(), $data);
@@ -180,43 +174,5 @@ class Email extends Action
             'preset' => $preset,
             'email' => $email,
         ]);
-    }
-
-    protected function prepareSubmissionData(array $data): array
-    {
-        $results = [];
-
-        foreach ($data as $key => $value) {
-            if (! Str::startsWith($key, '_')) {
-                $results[$key] = $this->prepareSubmissionValue($value);
-            }
-        }
-
-        return $results;
-    }
-
-    protected function prepareSubmissionValue(mixed $value): string
-    {
-        return match (true) {
-            $value instanceof File => $value->filename(),
-            $value instanceof Page => $value->title()->value(),
-            $value instanceof User => $value->name()->value(),
-            is_iterable($value) => A::join($this->prepareSubmissionData($value)),
-            default => (string) $value,
-        };
-    }
-
-    /** @param array<string, File[]> $files */
-    protected function prepareEmailAttachments(array $files): array
-    {
-        $results = [];
-
-        foreach ($files as $groupedFiles) {
-            foreach ($groupedFiles as $file) {
-                $results[] = $file->root();
-            }
-        }
-
-        return $results;
     }
 }

@@ -4,8 +4,8 @@
 <?php $name ??= $component->getName() ?>
 <?php $value ??= $component->getValue() ?>
 
-<?php $invalid ??= $errors->hasAny($name) ?>
-<?php $messages ??= $errors->get($name) ?>
+<?php $invalid ??= $component->isInvalid() ?>
+<?php $messages ??= $component->getErrors() ?>
 
 <?php snippet('webform/field', slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>

@@ -2,7 +2,9 @@
 
 namespace Webform\Support\Concerns;
 
-use Webform\Form\Components;
+use Webform\Form\Collections\Challenges;
+use Webform\Form\Collections\Components;
+use Webform\Form\Collections\Fields;
 use Webform\Form\Components\Component;
 
 trait QueriesChildren
@@ -14,49 +16,65 @@ trait QueriesChildren
         return $this->getChildren()->count() > 0;
     }
 
-    public function hasChild(string $key): bool
-    {
-        return $this->getChildren()->find($key) !== null;
-    }
-
     public function hasFields(): bool
     {
         return $this->getFields()->count() > 0;
     }
 
-    public function hasField(string $key): bool
+    public function hasChallenges(): bool
     {
-        return $this->getFields()->find($key) !== null;
+        return $this->getChallenges()->count() > 0;
     }
 
-    /** @return Components<Field> */
-    public function getFields(): Components
+    public function getIndex(): Components
     {
-        return $this->getChildren()->getFields();
+        return $this->getChildren()->index();
+    }
+
+    /**
+     * @template TField of Field
+     *
+     * @return Fields<array-key, TField>
+     */
+    public function getFields(): Fields
+    {
+        return $this->getIndex()->fields();
+    }
+
+    /**
+     * @template TChallenge of Component&ProvidesChallenge
+     *
+     * @return Challenges<array-key, TChallenge>
+     */
+    public function getChallenges(): Challenges
+    {
+        return $this->getIndex()->challenges();
     }
 
     public function find(string $key): ?Component
     {
-        return $this->getChildren()->getIndex()->find($key);
+        return $this->getIndex()->find($key);
     }
 
     /**
-     * @template-covariant TComponent of Component
+     * @template TComponent of Component
+     *
      * @param class-string<TComponent> $type
      * @return ?TComponent
      */
     public function findFirst(string $type): ?Component
     {
-        return $this->getChildren()->getIndex()->firstInstanceOf($type);
+        return $this->getIndex()->firstInstanceOf($type);
     }
 
     /**
-     * @template-covariant TComponent of Component
+     * @template TComponent of Component
+     *
      * @param class-string<TComponent> $type
      * @return Components<array-key, TComponent>
      */
     public function findAll(string $type): Components
     {
-        return $this->getChildren()->getIndex()->whereInstanceOf($type);
+        return $this->getIndex()->whereInstanceOf($type);
     }
 }

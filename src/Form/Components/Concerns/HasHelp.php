@@ -8,6 +8,11 @@ trait HasHelp
 {
     protected string|Closure|null $help = null;
 
+    public function hasHelp(): bool
+    {
+        return $this->getHelp() !== null;
+    }
+
     public function getHelp(): ?string
     {
         return $this->evaluate($this->help);

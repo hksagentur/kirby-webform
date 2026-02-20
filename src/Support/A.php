@@ -4,28 +4,9 @@ namespace Webform\Support;
 
 class A extends \Kirby\Toolkit\A
 {
-    public static function set(array &$array, string $key, mixed $value): array
+    public static function collapse(array $array): array
     {
-        if (! str_contains($key, '.')) {
-            $array[$key] = $value;
-            return $array;
-        }
-
-        $parts = explode('.', $key);
-
-        while (count($parts) > 1) {
-            $part = array_shift($parts);
-
-            if (! isset($array[$part]) || ! is_array($array[$part])) {
-                $array[$part] = [];
-            }
-
-            $array = &$array[$part];
-        }
-
-        $array[array_shift($parts)] = $value;
-
-        return $array;
+        return array_merge([], ...array_filter($array, is_array(...)));
     }
 
     public static function forget(array &$array, int|string|array $keys): void
@@ -54,5 +35,29 @@ class A extends \Kirby\Toolkit\A
 
             unset($array[array_shift($parts)]);
         }
+    }
+
+    public static function set(array &$array, string $key, mixed $value): array
+    {
+        if (! str_contains($key, '.')) {
+            $array[$key] = $value;
+            return $array;
+        }
+
+        $parts = explode('.', $key);
+
+        while (count($parts) > 1) {
+            $part = array_shift($parts);
+
+            if (! isset($array[$part]) || ! is_array($array[$part])) {
+                $array[$part] = [];
+            }
+
+            $array = &$array[$part];
+        }
+
+        $array[array_shift($parts)] = $value;
+
+        return $array;
     }
 }

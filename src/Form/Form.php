@@ -18,6 +18,8 @@ class Form extends ViewComponent
     use Concerns\HasChildren;
     use Concerns\HasConfig;
     use Concerns\HasContext;
+    use Concerns\HasErrors;
+    use Concerns\HasStatus;
 
     protected string $snippet = 'webform/form';
 
@@ -58,19 +60,26 @@ class Form extends ViewComponent
 
     public function submit(ValidatedInput $input): void
     {
-        /** @var ValidatedInput $input */
-        $input = App::instance()->apply('webform.submit:before', [
+        $submission = FormSubmission::fromInput(
+            data: $input->except(
+                $this->getChallenges()->fieldNames()
+            ),
+            files: $this->getUploadedFiles(),
+        );
+
+        /** @var FormSubmission $submission */
+        $submission = App::instance()->apply('webform.submit:before', [
             'form' => $this,
-            'input' => $input,
-        ], 'input');
+            'submission' => $submission,
+        ], 'submission');
 
         foreach ($this->getActions() as $action) {
-            $action->execute($input);
+            $action->execute($submission);
         }
 
         App::instance()->trigger('webform.submit:after', [
             'form' => $this,
-            'input' => $input,
+            'submission' => $submission,
         ]);
     }
 
@@ -86,11 +95,9 @@ class Form extends ViewComponent
     protected function resolveDefaultSnippetData(): array
     {
         return [
-            ...$this->getContext()->toArray(),
             'form' => $this,
             'model' => $this->getModel(),
             'block' => $this->getBlock(),
-            'children' => $this->getChildren(),
         ];
     }
 }

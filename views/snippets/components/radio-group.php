@@ -2,32 +2,53 @@
 
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
-
 <?php $value ??= $component->getValue() ?>
-<?php $options ??= $component->getOptions() ?>
 
-<?php $invalid ??= $errors->hasAny($name) ?>
-<?php $messages ??= $errors->get($name) ?>
+<?php $label ??= $component->getLabel() ?>
+<?php $hint ??= $component->getHint() ?>
+<?php $help ??= $component->getHelp() ?>
+
+<?php $required ??= $component->isRequired() ?>
+<?php $disabled ??= $component->isDisabled() ?>
+<?php $readOnly ??= $component->isReadOnly() ?>
+
+<?php $invalid ??= $component->isInvalid() ?>
+<?php $messages ??= $component->getErrors() ?>
 
 <fieldset <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => [
         'radio-group',
         ...$invalid ? ['radio-group--invalid'] : [],
     ],
+    'aria-labelledby' => [
+        ...$label ? ["{$id}-label"] : [],
+    ],
+    'aria-describedby' => [
+        ...$invalid ? ["{$id}-error"] : [],
+        ...$hint ? ["{$id}-hint"] : [],
+    ],
+    'aria-required' => $required ? 'true' : null,
+    'aria-readonly' => $readOnly ? 'true' : null,
+    'aria-invalid' => $invalid ? 'true' : null,
+    'disabled' => $disabled,
+    'role' => 'radiogroup',
 ])) ?>>
-    <?php if ($label = $component->getLabel()) : ?>
-        <legend class="radio-group__label">
+    <?php if ($label) : ?>
+        <legend <?= attr([
+            'id' => "{$id}-label",
+            'class' => 'radio-group__label',
+        ]) ?>>
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
         </legend>
     <?php endif ?>
 
-    <?php if ($hint = $component->getHint()) : ?>
+    <?php if ($hint) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $hint : esc($hint) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?php if ($help = $component->getHelp()) : ?>
+    <?php if ($help) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $help : esc($help) ?>
         <?php endsnippet() ?>
@@ -41,14 +62,9 @@
                     'type' => 'radio',
                     'name' => $name,
                     'value' => $optionValue,
-                    'required' => $component->isRequired(),
-                    'disabled' => $component->isDisabled(),
+                    'required' => $required,
                     'checked' => $optionValue == $value,
-                    'aria-invalid' => $invalid ? 'true' : null,
-                    'aria-describedby' => [
-                        ...$invalid ? ["{$id}-error"] : [],
-                        ...$hint ? ["{$id}-hint"] : [],
-                    ],
+                    'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="radio-group__option-label">
                     <?= $component->isHtmlAllowed() ? $optionLabel : esc($optionLabel)  ?>
