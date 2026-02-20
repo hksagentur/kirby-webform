@@ -114,7 +114,7 @@ class Validator
                         continue;
                     }
                 } elseif (A::has(['file', 'mimeType', 'minFileSize', 'maxFileSize', 'image', 'document', 'video'], $rule)) {
-                    if (A::every($value, fn (mixed $file): bool => V::$rule($file, ...$parameters))) {
+                    if (! $value || A::every($value, fn (mixed $file): bool => V::$rule($file, ...$parameters))) {
                         continue;
                     }
                 } elseif ($filled) {
