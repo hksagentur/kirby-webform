@@ -30,12 +30,12 @@ class Form extends ViewComponent
 
     public static function loadFromConfig(string $path): static
     {
-        return Config::create($path)->readOrFail();
+        return FormConfig::create($path)->readOrFail();
     }
 
     public static function tryLoadFromConfig(string $path): ?static
     {
-        return Config::create($path)->read();
+        return FormConfig::create($path)->read();
     }
 
     public function getKey(): string
