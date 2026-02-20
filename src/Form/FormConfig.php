@@ -8,7 +8,7 @@ use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-class Config
+class FormConfig
 {
     protected string $root;
     protected string $path;

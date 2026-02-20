@@ -2,18 +2,18 @@
 
 namespace Webform\Form\Concerns;
 
-use Webform\Form\Config;
+use Webform\Form\FormConfig;
 
 trait HasConfig
 {
-    protected Config $config;
+    protected FormConfig $config;
 
-    public function getConfig(): Config
+    public function getConfig(): FormConfig
     {
         return $this->config;
     }
 
-    public function config(Config $config): static
+    public function config(FormConfig $config): static
     {
         $this->config = $config;
 
