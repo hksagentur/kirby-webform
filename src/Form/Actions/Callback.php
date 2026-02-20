@@ -5,7 +5,6 @@ namespace Webform\Form\Actions;
 use Closure;
 use Kirby\Toolkit\Controller;
 use Webform\Form\FormSubmission;
-use Webform\Form\ValidatedInput;
 
 class Callback extends Action
 {

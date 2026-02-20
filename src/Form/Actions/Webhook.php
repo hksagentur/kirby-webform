@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\Str;
 use Webform\Form\FormSubmission;
-use Webform\Form\ValidatedInput;
 
 class Webhook extends Action
 {

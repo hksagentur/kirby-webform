@@ -5,7 +5,6 @@ namespace Webform\Form\Actions;
 use Closure;
 use Kirby\Database\Db;
 use Webform\Form\FormSubmission;
-use Webform\Form\ValidatedInput;
 
 class Database extends Action
 {
