@@ -69,7 +69,7 @@ return [
     'hksagentur.webform.validation.message.url' => '{{ Attribute }} muss eine URL sein.',
     'hksagentur.webform.validation.message.uuid' => '{{ Attribute }} muss ein UUID sein.',
     'hksagentur.webform.status.message.success' => 'Das Formular wurde erfolgreich bearbeitet. Vielen Dank für deine Anfrage.',
-    'hksagentur.webform.status.message.error' => 'Das Formular konnte nicht gesendet werden. Bitte überprüfen Sie die markierten Felder und versuchen Sie es erneut.',
+    'hksagentur.webform.status.message.error' => 'Das Formular konnte nicht gesendet werden. Bitte überprüfe die markierten Felder und versuche es erneut.',
     'error.hksagentur.webform.authorization' => 'Diese Aktion ist unzulässig.',
     'error.hksagentur.webform.notFound' => 'Das angeforderte Modell konnte nicht gefunden werden.',
     'error.hksagentur.webform.challengeFailed' => 'Die Voraussetzung für die Bearbeitung des Formulars wurde nicht erfüllt.',
