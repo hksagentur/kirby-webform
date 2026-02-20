@@ -3,6 +3,8 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
+<?php $options ??= $component->getDatalistOptions() ?>
+
 <?php snippet('webform/field', ['class' => 'trojan-horse'], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
         <?php snippet('webform/label', ['for' => $id], slots: true) ?>
@@ -27,7 +29,14 @@
         'step' => $component->getStep(),
         'placeholder' => $component->getPlaceholder(),
         'autocomplete' => $component->getAutocomplete() ?? 'nope',
+        'list' => $options ? "{$id}-datalist" : null,
+        'aria-describedby' => $hint ? ["{$id}-hint"] : [],
     ])) ?>>
+
+    <?php snippet('webform/datalist', [
+        'id' => "{$id}-datalist",
+        'options' => $options,
+    ]) ?>
 
     <?php if ($help = $component->getHelp()) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
