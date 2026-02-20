@@ -3,6 +3,7 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
+use Kirby\Toolkit\Str;
 use Webform\Form\Form;
 use Webform\Support\Flash;
 
@@ -28,7 +29,7 @@ trait CanBeObfuscated
 
         return Flash::getOrPut(
             key: "webform.form.{$form}.field.{$name}.obfuscatedName",
-            value: fn () => $this->shouldObfuscate() ? $this->obfuscateName($name) : $name,
+            value: fn () => $name . '_' . Str::random(8),
         );
     }
 
