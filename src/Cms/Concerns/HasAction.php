@@ -72,8 +72,12 @@ trait HasAction
             $action->from($this->content()->emailFrom()->value());
         }
 
+        if ($this->content()->emailTo()->isNotEmpty()) {
+            $action->to($this->content()->emailTo()->value());
+        }
+
         if ($this->content()->emailReplyTo()->isNotEmpty()) {
-            $action->to($this->content()->emailReplyTo()->value());
+            $action->replyTo($this->content()->emailReplyTo()->value());
         }
 
         return $action;
