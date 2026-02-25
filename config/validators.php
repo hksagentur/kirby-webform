@@ -4,7 +4,7 @@ use Kirby\Content\Field;
 use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
-use Webform\Form\UploadedFile;
+use Webform\Http\UploadedFile;
 
 return [
 

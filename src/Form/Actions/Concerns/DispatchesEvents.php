@@ -10,15 +10,13 @@ trait DispatchesEvents
     {
         return App::instance()->apply("webform.{$name}", $arguments + [
             'action' => $this,
-            'form' => $this->getForm(),
         ], $modify);
     }
 
     public function fireEvent(string $name, array $arguments = []): void
     {
-        App::instance()->trigger("webform.{$name}", $arguments += [
+        App::instance()->trigger("webform.{$name}", $arguments + [
             'action' => $this,
-            'form' => $this->getForm(),
         ]);
     }
 }

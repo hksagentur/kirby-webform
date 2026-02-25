@@ -2,11 +2,13 @@
 
 namespace Webform\Form\Collections;
 
+use Webform\Form\Components\Component;
 use Webform\Form\Components\Contracts\ProvidesChallenge;
 
 /**
  * @template TKey of array-key
- * @template-covariant TValue of Component&ProvidesChallenge
+ * @template-covariant TValue of (Component&ProvidesChallenge)
+ *
  * @extends Components<TKey, TValue>
  */
 class Challenges extends Components

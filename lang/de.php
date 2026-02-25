@@ -19,7 +19,6 @@ return [
     'hksagentur.webform.blueprint.webhookUrl.label' => 'URL',
     'hksagentur.webform.form.contact.label' => 'Kontakt',
     'hksagentur.webform.form.poll.label' => 'Umfrage',
-    'hksagentur.webform.template.submission.notAvailable' => 'n.a.',
     'hksagentur.webform.snippet.select.none' => '- Keine -',
     'hksagentur.webform.snippet.select.empty' => '- Auswählen -',
     'hksagentur.webform.validation.message.fallback' => '{{ Attribute }} ist ungültig.',

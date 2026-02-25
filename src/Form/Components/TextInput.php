@@ -100,6 +100,10 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained
         return $this;
     }
 
+    /**
+     * @psalm-suppress MethodSignatureMismatch
+     * @todo {@link https://github.com/vimeo/psalm/issues/8673}
+     */
     public function email(bool|Closure $condition = true): static
     {
         $this->isEmail = $condition;
@@ -109,6 +113,10 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained
         return $this;
     }
 
+    /**
+     * @psalm-suppress MethodSignatureMismatch
+     * @todo {@link https://github.com/vimeo/psalm/issues/8673}
+     */
     public function tel(bool|Closure $condition = true): static
     {
         $this->isTel = $condition;
@@ -118,6 +126,10 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained
         return $this;
     }
 
+    /**
+     * @psalm-suppress MethodSignatureMismatch
+     * @todo {@link https://github.com/vimeo/psalm/issues/8673}
+     */
     public function url(bool|Closure $condition = true): static
     {
         $this->isUrl = $condition;

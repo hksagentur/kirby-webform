@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<psalm
+	errorLevel="7"
+  phpVersion="8.2"
+	resolveFromConfigFile="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+	<projectFiles>
+		<directory name="config" />
+		<directory name="src" />
+
+		<ignoreFiles>
+			<directory name="lang" />
+			<directory name="vendor" />
+			<directory name="views" />
+		</ignoreFiles>
+	</projectFiles>
+
+	<issueHandlers>
+    <InvalidScope>
+			<errorLevel type="suppress">
+				<directory name="config/methods" />
+			</errorLevel>
+		</InvalidScope>
+
+    <UndefinedMagicMethod errorLevel="suppress" />
+
+    <MixedAssignment errorLevel="info" />
+    <MixedArgument errorLevel="info" />
+    <MixedReturnStatement errorLevel="info" />
+    <MissingOverrideAttribute errorLevel="suppress" />
+
+    <PossiblyUnusedMethod errorLevel="suppress" />
+    <PossiblyUnusedParam errorLevel="suppress" />
+    <PossiblyUnusedProperty errorLevel="suppress" />
+    <PossiblyUnusedReturnValue errorLevel="suppress" />
+
+    <UnusedClass errorLevel="suppress" />
+    <UnusedClosureParam errorLevel="suppress" />
+    <UnusedForeachValue errorLevel="suppress" />
+	</issueHandlers>
+</psalm>

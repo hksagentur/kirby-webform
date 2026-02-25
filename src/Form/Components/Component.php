@@ -2,7 +2,8 @@
 
 namespace Webform\Form\Components;
 
-use Webform\Support\ViewComponent;
+use Webform\Form\Concerns as Foundation;
+use Webform\Template\ViewComponent;
 
 abstract class Component extends ViewComponent
 {
@@ -12,8 +13,19 @@ abstract class Component extends ViewComponent
     use Concerns\HasExtraAttributes;
     use Concerns\HasId;
     use Concerns\HasKey;
+    use Foundation\CanBeTraversed;
+    use Foundation\EvaluatesClosures;
 
-    protected function resolveDefaultEvaluationData(): array
+    public function getPropertyValue(string $property, mixed $default = null): mixed
+    {
+        return match ($property) {
+            'id' => $this->getId(),
+            'key' => $this->getKey(),
+            default => $default,
+        };
+    }
+
+    public function getEvaluationContext(): array
     {
         return [
             'component' => $this,
@@ -23,7 +35,7 @@ abstract class Component extends ViewComponent
         ];
     }
 
-    protected function resolveDefaultSnippetData(): array
+    public function getSnippetContext(): array
     {
         return [
             'component' => $this,

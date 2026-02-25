@@ -20,6 +20,6 @@ class FormFactory
 
     public function createFromConfig(string $path): ?Form
     {
-        return $this->forms[$path] ??= Form::tryLoadFromConfig($path);
+        return $this->forms[$path] ??= FormConfig::create($path)->read();
     }
 }

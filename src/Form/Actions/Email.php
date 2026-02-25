@@ -4,9 +4,11 @@ namespace Webform\Form\Actions;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Filesystem\File;
 use Kirby\Toolkit\Str;
 use Webform\Form\FormSubmission;
-use Webform\Support\A;
+use Webform\Toolkit\A;
+use Webform\Template\SubmissionEmail;
 
 class Email extends Action
 {
@@ -18,6 +20,8 @@ class Email extends Action
     protected string|null|Closure $subject = null;
     protected string|null|Closure $from = null;
     protected string|null|Closure $replyTo = null;
+
+    protected string|Closure $directory = 'storage/uploads';
 
     public function __construct(string|array|Closure|null $preset = null)
     {
@@ -128,6 +132,18 @@ class Email extends Action
         return $this;
     }
 
+    public function getAttachmentDirectory(): string
+    {
+        return $this->evaluate($this->directory);
+    }
+
+    public function storeAttachmentsIn(string|Closure $directory): static
+    {
+        $this->directory = $directory;
+
+        return $this;
+    }
+
     public function execute(FormSubmission $submission): void
     {
         $kirby = App::instance();
@@ -138,16 +154,8 @@ class Email extends Action
         $preset = $this->getPreset();
         $template = $this->getTemplate();
 
-        $data = $submission->all();
-        $attachments = A::collapse($submission->filePaths());
-
-        $subject = Str::template($this->getSubject(), $data);
-        $sender = Str::template($this->getSender(), $data);
-        $replyTo = Str::template($this->getReplyTo(), $data);
-
-        $recipients = A::map($this->getRecipients(), function ($recipient) use ($data) {
-            return Str::template($recipient, $data);
-        });
+        $options = $this->prepareEmailOptions($submission);
+        $attachments = $this->prepareEmailAttachments($submission);
 
         $preset = $this->applyFilters('email:before', [
             'preset' => [
@@ -156,14 +164,11 @@ class Email extends Action
                     'site' => $site,
                     'user' => $user,
                     'form' => $form,
-                    'data' => $data,
+                    ...SubmissionEmail::from($form, $submission),
                 ],
                 ...$preset,
+                ...$options,
                 ...$template ? ['template' => $template] : [],
-                ...$subject ? ['subject' => $subject] : [],
-                ...$sender ? ['from' => $sender] : [],
-                ...$recipients ? ['to' => $recipients] : [],
-                ...$replyTo ? ['replyTo' => $replyTo] : [],
                 ...$attachments ? ['attachments' => $attachments] : [],
             ],
         ], 'preset');
@@ -174,5 +179,34 @@ class Email extends Action
             'preset' => $preset,
             'email' => $email,
         ]);
+    }
+
+    protected function prepareEmailOptions(FormSubmission $submission): array
+    {
+        $format = fn (?string $value): string => Str::template($value, $submission->all());
+
+        $options = A::map([
+            'subject' => $this->getSubject(),
+            'from' => $this->getSender(),
+            'to' => $this->getRecipients(),
+            'replyTo' => $this->getReplyTo(),
+        ], fn (string|array|null $option) => match (true) {
+            is_array($option) => A::map($option, $format),
+            is_string($option) => $format($option),
+            default => null,
+        });
+
+        return $options;
+    }
+
+    protected function prepareEmailAttachments(FormSubmission $submission): array
+    {
+        $files = $submission->storeFilesIn($this->getAttachmentDirectory());
+
+        $files = A::collapse(A::map($files, function (array $files) {
+            return A::map($files, fn (File $file) => $file->root());
+        }));
+
+        return $files;
     }
 }

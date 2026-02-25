@@ -8,7 +8,7 @@ trait HasContext
 {
     protected ?FormContext $context = null;
 
-    public function getContext(): FormContext
+    public function getFormContext(): FormContext
     {
         return $this->context ??= FormContext::fromSession($this->getKey());
     }

@@ -5,12 +5,9 @@ namespace Webform\Form\Concerns;
 use Closure;
 use Webform\Form\Collections\Components;
 use Webform\Form\Components\Component;
-use Webform\Support\Concerns\QueriesChildren;
 
 trait HasChildren
 {
-    use QueriesChildren;
-
     protected array|Components|Closure|null $children = null;
 
     public function getChildren(): Components

@@ -22,10 +22,10 @@
     <?php if ($status = $form->getStatus()) : ?>
         <?php snippet('webform/message', [
             'id' => $form->getId().'-status',
-            'type' => $status->getType(),
-            'role' => $status->getRole(),
+            'type' => 'success',
+            'role' => 'status',
         ], slots: true) ?>
-            <?= esc($status->getMessage()) ?>
+            <?= esc($status) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 

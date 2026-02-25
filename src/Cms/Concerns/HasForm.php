@@ -6,6 +6,7 @@ use Kirby\Cms\Block;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\Str;
 use UnexpectedValueException;
+use Webform\Cms\Contracts\HasActions;
 use Webform\Form\Form;
 use Webform\Form\FormFactory;
 
@@ -47,6 +48,10 @@ trait HasForm
         if ($this instanceof Block) {
             $form->block($this);
             $form->model($this->parent());
+        }
+
+        if ($this instanceof HasActions) {
+            $form->actions($this->actions());
         }
 
         return $form;

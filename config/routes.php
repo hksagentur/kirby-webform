@@ -3,12 +3,12 @@
 use Kirby\Cms\App;
 use Kirby\Http\Request;
 use Webform\Form\Form;
+use Webform\Http\Controller\SubmissionController;
 use Webform\Http\Middleware\RateLimited;
 use Webform\Http\Middleware\SubstituteBindings;
 use Webform\Http\Middleware\VerifyChallenges;
 use Webform\Http\Middleware\VerifyCsrfToken;
 use Webform\Http\Pipeline;
-use Webform\Http\SubmissionController;
 use Webform\Http\RedirectResponse;
 
 return [

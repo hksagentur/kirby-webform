@@ -5,7 +5,7 @@ namespace Webform\Cache;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cache\Cache;
-use Webform\Exception\TooManyRequestsException;
+use Webform\Http\Exception\TooManyRequestsException;
 
 class RateLimiter
 {

@@ -6,8 +6,8 @@ use Closure;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
-use Webform\Exception\NotFoundException;
 use Webform\Form\FormFactory;
+use Webform\Http\Exception\NotFoundException;
 
 class SubstituteBindings extends Middleware
 {

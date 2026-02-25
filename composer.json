@@ -24,7 +24,9 @@
     "getkirby/composer-installer": "^1.2"
   },
   "require-dev": {
-    "laravel/pint": "^1.27"
+    "laravel/pint": "^1.27",
+    "vimeo/psalm": "^6.15",
+    "phpmd/phpmd": "^2.15"
   },
   "suggest": {
 		"ext-pdo": "Support for storing submissions in databases",
@@ -37,8 +39,17 @@
     }
   },
   "scripts": {
-    "format": "pint --verbose",
-    "lint": "pint --verbose --test"
+    "analyze": [
+      "@analyze:composer",
+      "@analyze:psalm",
+      "@analyze:phpmd",
+      "@analyze:pint"
+    ],
+    "analyze:composer": "composer validate --strict",
+    "analyze:psalm": "psalm",
+    "analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'vendor/*'",
+    "analyze:pint": "pint --verbose --test",
+    "format": "pint --verbose"
   },
   "extra": {
     "installer-name": "webform",

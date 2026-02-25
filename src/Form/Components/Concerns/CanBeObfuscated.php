@@ -5,7 +5,7 @@ namespace Webform\Form\Components\Concerns;
 use Closure;
 use Kirby\Toolkit\Str;
 use Webform\Form\Form;
-use Webform\Support\Flash;
+use Webform\Toolkit\Flash;
 
 trait CanBeObfuscated
 {

@@ -2,16 +2,24 @@
 
 namespace Webform\Form\Actions;
 
-use Webform\Form\Actions\Concerns\BelongsToForm;
-use Webform\Form\Actions\Concerns\DispatchesEvents;
+use Webform\Form\Concerns as Foundation;
 use Webform\Form\FormSubmission;
-use Webform\Support\Concerns\EvaluatesClosures;
 
 abstract class Action
 {
-    use BelongsToForm;
-    use DispatchesEvents;
-    use EvaluatesClosures;
+    use Concerns\BelongsToForm;
+    use Concerns\DispatchesEvents;
+    use Foundation\EvaluatesClosures;
+
+    public function getEvaluationContext(): array
+    {
+        return [
+            'action' => $this,
+            'form' => $this->getForm(),
+            'model' => $this->getForm()?->getModel(),
+            'block' => $this->getForm()?->getBlock(),
+        ];
+    }
 
     abstract public function execute(FormSubmission $submission): void;
 }

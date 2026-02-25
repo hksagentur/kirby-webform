@@ -3,25 +3,27 @@
 namespace Webform\Form;
 
 use Kirby\Cms\S;
+use Webform\Validation\Message;
+use Webform\Validation\Messages;
 
 readonly class FormContext
 {
-    protected ?StatusMessage $status;
-    protected MessageBag $errors;
+    protected ?Message $status;
+    protected Messages $errors;
 
-    public function __construct(?StatusMessage $status = null, ?MessageBag $errors = null)
+    public function __construct(?Message $status = null, ?Messages $errors = null)
     {
         $this->status = $status;
-        $this->errors = $errors ?? new MessageBag();
+        $this->errors = $errors ?? new Messages();
     }
 
     public static function fromSession(string $key): static
     {
-        $status = StatusMessage::tryFrom(
+        $status = Message::tryFrom(
             S::get("webform.form.{$key}.status")
         );
 
-        $errors = MessageBag::from(
+        $errors = Messages::from(
             S::get("webform.form.{$key}.errors", [])
         );
 
@@ -38,12 +40,12 @@ readonly class FormContext
         return $this->errors->isNotEmpty();
     }
 
-    public function getStatus(): ?StatusMessage
+    public function getStatus(): ?Message
     {
         return $this->status;
     }
 
-    public function getErrors(): MessageBag
+    public function getErrors(): Messages
     {
         return $this->errors;
     }

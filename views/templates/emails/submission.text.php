@@ -1,3 +1,14 @@
+<?php
+/**
+ * E-Mail Template for Webform Submissions
+ *
+ * @var \Kirby\Cms\App $kirby
+ * @var \Kirby\Cms\Site $site
+ * @var \Kirby\Cms\User $user
+ * @var \Webform\Form\Form $form
+ */
+?>
+
 <?php if (! empty($greeting)) : ?>
 <?= esc($greeting)."\n" ?>
 <?php endif ?>
@@ -8,9 +19,9 @@
 <?php endforeach ?>
 <?php endif ?>
 
-<?php foreach ($data as $key => $value) : ?>
-<?= esc($form->find($key)?->getLabel() ?? Str::ucfirst($key)) ?>:
-<?= esc($value ?: t('hksagentur.webform.template.submission.notAvailable'))."\n\n" ?>
+<?php foreach ($rows as ['label' => $label, 'value' => $value]) : ?>
+<?= esc($label) ?>:
+<?= esc($value)."\n\n" ?>
 <?php endforeach ?>
 
 <?php if (! empty($actionText)) : ?>
@@ -28,8 +39,8 @@
 <?php endif ?>
 
 <?php if (! empty($footerLinks)) : ?>
-<?php foreach ($footerLinks as $footerLink) : ?>
-[<?= esc($footerLink['title']) ?>](<?= esc($footerLink['url']) ?>)<?= "\n" ?>
+<?php foreach ($footerLinks as ['title' => $title, 'url' => $url]) : ?>
+[<?= esc($title) ?>](<?= esc($url) ?>)<?= "\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 

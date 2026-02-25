@@ -3,38 +3,41 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
+use InvalidArgumentException;
 use Kirby\Http\Environment;
 use Kirby\Toolkit\Str;
-use Webform\Support\Concerns\EncryptsData;
+use Kirby\Toolkit\SymmetricCrypto;
+use RuntimeException;
 
 trait CanBeEncrypted
 {
-    use EncryptsData;
+    protected ?SymmetricCrypto $encrypter = null;
 
     protected bool|Closure $encrypt = false;
     protected string|Closure|null $secretKey = null;
 
-    public function getValue(): mixed
+    public function encrypter(): SymmetricCrypto
     {
-        $value = parent::getValue();
-
-        if (! $value || ! $this->shouldEncrypt()) {
-            return $value;
+        if ($this->encrypter !== null) {
+            return $this->encrypter;
         }
 
-        return base64_encode($this->encrypter()->encrypt((string) $value));
-    }
+        if (! SymmetricCrypto::isAvailable()) {
+            throw new RuntimeException(
+                'The sodium extension is required to use encryption features.'
+            );
+        }
 
-    public function shouldEncrypt(): bool
-    {
-        return $this->evaluate($this->encrypt);
-    }
+        $secretKey = $this->getSecretKey();
 
-    public function encrypt(bool|Closure $encrypt = true): static
-    {
-        $this->encrypt = $encrypt;
+        if (! $secretKey || strlen($secretKey) !== 32) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid secret key length, expected %d-bytes.',
+                SODIUM_CRYPTO_SECRETBOX_KEYBYTES
+            ));
+        }
 
-        return $this;
+        return $this->encrypter = new SymmetricCrypto($secretKey);
     }
 
     public function getSecretKey(): string
@@ -57,5 +60,28 @@ trait CanBeEncrypted
         $this->secretKey = $key;
 
         return $this;
+    }
+
+    public function shouldEncrypt(): bool
+    {
+        return $this->evaluate($this->encrypt);
+    }
+
+    public function encrypt(bool|Closure $encrypt = true): static
+    {
+        $this->encrypt = $encrypt;
+
+        return $this;
+    }
+
+    public function getValue(): mixed
+    {
+        $value = parent::getValue();
+
+        if (! $value || ! $this->shouldEncrypt()) {
+            return $value;
+        }
+
+        return base64_encode($this->encrypter()->encrypt((string) $value));
     }
 }

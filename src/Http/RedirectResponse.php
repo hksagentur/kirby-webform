@@ -5,9 +5,9 @@ namespace Webform\Http;
 use Kirby\Cms\App;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
-use Webform\Form\MessageBag;
-use Webform\Form\StatusMessage;
-use Webform\Support\Flash;
+use Webform\Toolkit\Flash;
+use Webform\Validation\Message;
+use Webform\Validation\Messages;
 
 class RedirectResponse extends Response
 {
@@ -36,16 +36,16 @@ class RedirectResponse extends Response
         return $this;
     }
 
-    public function withStatus(string|StatusMessage $message, string $messageBag = 'default'): static
+    public function withStatus(string|Message $message, string $messageBag = 'default'): static
     {
         Flash::put("webform.form.{$messageBag}.status", $message);
 
         return $this;
     }
 
-    public function withErrors(array|MessageBag $messages, string $errorBag = 'default'): static
+    public function withErrors(array|Messages $messages, string $errorBag = 'default'): static
     {
-        $messages = $messages instanceof MessageBag
+        $messages = $messages instanceof Messages
             ? $messages->all()
             : $messages;
 

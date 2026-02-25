@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
-use Webform\Exception\TokenMismatchException;
+use Webform\Http\Exception\TokenMismatchException;
 
 class VerifyCsrfToken extends Middleware
 {

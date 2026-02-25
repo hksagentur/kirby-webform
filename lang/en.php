@@ -18,7 +18,6 @@ return [
     'hksagentur.webform.blueprint.webhookUrl.label' => 'URL',
     'hksagentur.webform.form.contact.label' => 'Contact',
     'hksagentur.webform.form.poll.label' => 'Poll',
-    'hksagentur.webform.template.submission.notAvailable' => 'n.a.',
     'hksagentur.webform.snippet.select.none' => '- None -',
     'hksagentur.webform.snippet.select.empty' => '- Select -',
     'hksagentur.webform.validation.message.fallback' => 'The {{ attribute }} field is invalid.',

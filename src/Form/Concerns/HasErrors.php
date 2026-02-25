@@ -3,11 +3,11 @@
 namespace Webform\Form\Concerns;
 
 use Webform\Form\FormContext;
-use Webform\Form\MessageBag;
+use Webform\Validation\Messages;
 
 trait HasErrors
 {
-    abstract public function getContext(): FormContext;
+    abstract public function getFormContext(): FormContext;
 
     public function isValid(): bool
     {
@@ -21,11 +21,11 @@ trait HasErrors
 
     public function hasErrors(): bool
     {
-        return $this->getContext()->hasErrors();
+        return $this->getFormContext()->hasErrors();
     }
 
-    public function getErrors(): MessageBag
+    public function getErrors(): Messages
     {
-        return $this->getContext()->getErrors();
+        return $this->getFormContext()->getErrors();
     }
 }

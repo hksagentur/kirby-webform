@@ -2,13 +2,13 @@
 
 namespace Webform\Form\Collections;
 
-use Webform\Form\Components\Component;
 use Webform\Form\Components\Field;
-use Webform\Form\MessageBag;
+use Webform\Validation\Messages;
 
 /**
  * @template TKey of array-key
  * @template-covariant TValue of Field
+ *
  * @extends Components<TKey, TValue>
  */
 class Fields extends Components
@@ -39,7 +39,7 @@ class Fields extends Components
         return $this->filter(fn (Field $field) => $field->isDisabled());
     }
 
-    public function errors(): MessageBag
+    public function errors(): Messages
     {
         $errors = [];
 
@@ -47,17 +47,6 @@ class Fields extends Components
             $errors[$field->getName()] = $field->getErrors();
         }
 
-        return new MessageBag($errors);
-    }
-
-    protected function getAttribute(Component $component, string $key): mixed
-    {
-        return match ($key) {
-            'key' => $component->getKey(),
-            'id' => $component->getId(),
-            'name' => $component->getName(),
-            'value' => $component->getValue(),
-            default => null,
-        };
+        return new Messages($errors);
     }
 }

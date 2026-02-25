@@ -6,12 +6,9 @@ use Closure;
 use Webform\Form\Collections\Components;
 use Webform\Form\Components\Component;
 use Webform\Form\Form;
-use Webform\Support\Concerns\QueriesChildren;
 
 trait HasChildren
 {
-    use QueriesChildren;
-
     protected array|Components|Closure|null $children = null;
 
     abstract public function getForm(): ?Form;

@@ -3,14 +3,14 @@
 namespace Webform\Form\Concerns;
 
 use Webform\Form\FormContext;
-use Webform\Form\StatusMessage;
+use Webform\Validation\Message;
 
 trait HasStatus
 {
-    abstract public function getContext(): FormContext;
+    abstract public function getFormContext(): FormContext;
 
-    public function getStatus(): ?StatusMessage
+    public function getStatus(): ?Message
     {
-        return $this->getContext()->getStatus();
+        return $this->getFormContext()->getStatus();
     }
 }

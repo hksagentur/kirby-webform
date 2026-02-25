@@ -3,10 +3,9 @@
 namespace Webform\Cms;
 
 use Kirby\Cms\Block;
-use Webform\Cms\Contracts\Factory;
 
-class FormBlock extends Block implements Factory
+class FormBlock extends Block implements Contracts\HasActions, Contracts\HasForm
 {
-    use Concerns\HasAction;
+    use Concerns\HasActions;
     use Concerns\HasForm;
 }

@@ -4,10 +4,10 @@ namespace Webform\Http;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Exception\Exception;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Throwable;
-use Webform\Exception\Exception;
 
 class Pipeline
 {

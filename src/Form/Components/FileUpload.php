@@ -3,17 +3,12 @@
 namespace Webform\Form\Components;
 
 use Closure;
-use Kirby\Cms\R;
-use Kirby\Filesystem\File;
-use Webform\Form\UploadedFile;
 
 class FileUpload extends Field
 {
     protected string $snippet = 'webform/file';
 
     protected bool|Closure $isMultiple = false;
-
-    protected string|Closure $directory = 'storage/uploads';
 
     protected int|Closure|null $minSize = null;
     protected int|Closure|null $maxSize = null;
@@ -26,11 +21,6 @@ class FileUpload extends Field
     public function isMultiple(): bool
     {
         return (bool) $this->evaluate($this->isMultiple);
-    }
-
-    public function getDirectory(): ?string
-    {
-        return $this->evaluate($this->directory);
     }
 
     public function getMinSize(): ?int
@@ -61,13 +51,6 @@ class FileUpload extends Field
     public function multiple(bool|Closure $condition = true): static
     {
         $this->isMultiple = $condition;
-
-        return $this;
-    }
-
-    public function directory(string|Closure $directory): static
-    {
-        $this->directory = $directory;
 
         return $this;
     }
@@ -107,40 +90,13 @@ class FileUpload extends Field
         return $this;
     }
 
-    /** @return UploadedFile[] */
-    public function getDefaultValue(): array
-    {
-        return $this->evaluate($this->defaultValue) ?? [];
-    }
-
-    /** @return UploadedFile[] */
-    public function getOldValue(): array
-    {
-        return [];
-    }
-
-    /** @return UploadedFile[] */
-    public function getValue(): array
-    {
-        $files = R::file($this->getName()) ?? [];
-
-        if (! array_is_list($files)) {
-            $files = [$files];
-        }
-
-        $files = array_map(UploadedFile::tryFrom(...), $files);
-        $files = array_filter($files);
-
-        return $files;
-    }
-
     public function getValidationRules(): array
     {
         $rules = parent::getValidationRules();
 
         $rules['list'] = [];
 
-        if ($minFiles = $this->getMaxFiles()) {
+        if ($minFiles = $this->getMinFiles()) {
             $rules['min'] = [$minFiles];
         }
 
@@ -163,19 +119,5 @@ class FileUpload extends Field
         }
 
         return $rules;
-    }
-
-    /** @return File[] */
-    public function saveUploadedFiles(): array
-    {
-        $files = [];
-
-        foreach ($this->getValue() as $file) {
-            if ($file->isFile()) {
-                $files[] = $file->move($this->getDirectory());
-            }
-        }
-
-        return $files;
     }
 }

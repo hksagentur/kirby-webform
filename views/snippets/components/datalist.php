@@ -1,5 +1,5 @@
 <?php if (! empty($options)) : ?>
-    <datalist <?= attr(['id' => $id ?? null, ...$attrs ?? []]) ?>>
+    <datalist <?= attr(['id' => $id ?? null, ...($attrs ?? [])]) ?>>
         <?php foreach ($options as $key => $value) : ?>
             <option <?= attr([
                 'value' => !array_is_list($options) ? $key : null,

@@ -2,18 +2,22 @@
 
 namespace Webform\Form;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Url;
 use Kirby\Toolkit\Str;
-use Webform\Support\ViewComponent;
+use Webform\Form\Components\Contracts\ProvidesChallenge;
+use Webform\Form\Components\FileUpload;
+use Webform\Template\ViewComponent;
+use Webform\Validation\ValidatedInput;
 
 class Form extends ViewComponent
 {
     use Concerns\BelongsToBlock;
     use Concerns\BelongsToModel;
+    use Concerns\CanBeTraversed;
     use Concerns\CanBeValidated;
+    use Concerns\DispatchesEvents;
+    use Concerns\EvaluatesClosures;
     use Concerns\GeneratesCsrfTokens;
-    use Concerns\HandlesFileUploads;
     use Concerns\HasActions;
     use Concerns\HasChildren;
     use Concerns\HasConfig;
@@ -28,14 +32,9 @@ class Form extends ViewComponent
         return new static();
     }
 
-    public static function loadFromConfig(string $path): static
+    public static function loadFromConfig(string $path): ?static
     {
-        return FormConfig::create($path)->readOrFail();
-    }
-
-    public static function tryLoadFromConfig(string $path): ?static
-    {
-        return FormConfig::create($path)->read();
+        return FormFactory::instance()->createFromConfig($path);
     }
 
     public function getKey(): string
@@ -58,46 +57,54 @@ class Form extends ViewComponent
         return Url::to("webforms/{$this->getId()}");
     }
 
+    public function getEvaluationContext(): array
+    {
+        return [
+            'form' => $this,
+            'model' => $this->getModel(),
+            'block' => $this->getBlock(),
+        ];
+    }
+
+    public function getSnippetContext(): array
+    {
+        return [
+            'form' => $this,
+            'model' => $this->getModel(),
+            'block' => $this->getBlock(),
+        ];
+    }
+
     public function submit(ValidatedInput $input): void
     {
-        $submission = FormSubmission::fromInput(
-            data: $input->except(
-                $this->getChallenges()->fieldNames()
-            ),
-            files: $this->getUploadedFiles(),
-        );
-
         /** @var FormSubmission $submission */
-        $submission = App::instance()->apply('webform.submit:before', [
+        $submission = $this->applyFilters('submit:before', [
             'form' => $this,
-            'submission' => $submission,
+            'submission' => $this->createFormSubmission($input),
         ], 'submission');
 
         foreach ($this->getActions() as $action) {
             $action->execute($submission);
         }
 
-        App::instance()->trigger('webform.submit:after', [
+        $this->fireEvent('submit:after', [
             'form' => $this,
             'submission' => $submission,
         ]);
     }
 
-    protected function resolveDefaultEvaluationData(): array
+    protected function createFormSubmission(ValidatedInput $input): FormSubmission
     {
-        return [
-            'form' => $this,
-            'model' => $this->getModel(),
-            'block' => $this->getBlock(),
-        ];
-    }
+        $challengeFields = $this->getFields()->whereInstanceOf(ProvidesChallenge::class);
+        $uploadFields = $this->getFields()->whereInstanceOf(FileUpload::class);
 
-    protected function resolveDefaultSnippetData(): array
-    {
-        return [
-            'form' => $this,
-            'model' => $this->getModel(),
-            'block' => $this->getBlock(),
-        ];
+        $files = $input->only($uploadFields->fieldNames());
+
+        $data = $input->except([
+            ...$challengeFields->fieldNames(),
+            ...$uploadFields->fieldNames(),
+        ]);
+
+        return new FormSubmission($data, $files);
     }
 }

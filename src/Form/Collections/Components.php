@@ -16,7 +16,8 @@ use Webform\Form\Form;
 /**
  * @template TKey of array-key
  * @template-covariant TValue of Component
- * @extends IteratorAggregate<TKey, TValue>
+ *
+ * @implements IteratorAggregate<TKey, TValue>
  */
 class Components implements Countable, IteratorAggregate, Stringable
 {
@@ -49,7 +50,23 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
-     * @param ?(callable(TValue, TKey): bool) $callback
+     * @return string[]
+     */
+    public function keys(): array
+    {
+        return array_keys($this->components);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function componentKeys(): array
+    {
+        return array_filter($this->pluck('key'));
+    }
+
+    /**
+     * @param ?(callable(TValue, TKey, array<TKey, TValue>): bool) $callback
      */
     public function first(?callable $callback = null): ?Component
     {
@@ -57,17 +74,11 @@ class Components implements Countable, IteratorAggregate, Stringable
             return A::first($this->components);
         }
 
-        foreach ($this->components as $key => $component) {
-            if ($callback($component, $key)) {
-                return $component;
-            }
-        }
-
-        return null;
+        return A::find($this->components, $callback);
     }
 
     /**
-     * @param ?(callable(TValue, TKey): bool) $callback
+     * @param ?(callable(TValue, TKey, array<TKey, TValue>): bool) $callback
      */
     public function last(?callable $callback = null): ?Component
     {
@@ -75,23 +86,23 @@ class Components implements Countable, IteratorAggregate, Stringable
             return A::last($this->components);
         }
 
-        foreach (array_reverse($this->components) as $key => $component) {
-            if ($callback($component, $key)) {
-                return $component;
-            }
-        }
-
-        return null;
+        return A::find(array_reverse($this->components), $callback);
     }
 
+    /**
+     * @return ?TValue
+     */
     public function find(string $key): ?Component
     {
         return $this->findBy('key', $key);
     }
 
+    /**
+     * @return ?TValue
+     */
     public function findBy(string $key, mixed $value): ?Component
     {
-        return $this->first(fn (Component $component) => $this->getAttribute($component, $key) === $value);
+        return $this->first(fn (Component $component) => $component->getPropertyValue($key) === $value);
     }
 
     /**
@@ -127,12 +138,12 @@ class Components implements Countable, IteratorAggregate, Stringable
 
     public function whereIn(string $key, array $values, bool $strict = false): static
     {
-        return $this->filter(fn (Component $component) => in_array($this->getAttribute($component, $key), $values, $strict));
+        return $this->filter(fn (Component $component) => in_array($component->getPropertyValue($key), $values, $strict));
     }
 
     public function whereNotIn(string $key, array $values, bool $strict = false): static
     {
-        return $this->filter(fn (Component $component) => ! in_array($this->getAttribute($component, $key), $values, $strict));
+        return $this->filter(fn (Component $component) => ! in_array($component->getPropertyValue($key), $values, $strict));
     }
 
     /**
@@ -140,7 +151,7 @@ class Components implements Countable, IteratorAggregate, Stringable
      */
     public function some(callable $callback): bool
     {
-        return $this->first($callback) !== null;
+        return A::some($this->components, $callback);
     }
 
     /**
@@ -148,20 +159,12 @@ class Components implements Countable, IteratorAggregate, Stringable
      */
     public function every(callable $callback): bool
     {
-        foreach ($this->components as $key => $component) {
-            if (! $callback($component, $key)) {
-                return false;
-            }
-        }
-
-        return true;
+        return A::every($this->components, $callback);
     }
 
     /**
-     * @template TComponent of TValue
-     *
-     * @param class-string<TComponent> $type
-     * @return ?TComponent
+     * @param class-string<TValue> $type
+     * @return ?TValue
      */
     public function firstInstanceOf(string $type): ?Component
     {
@@ -169,30 +172,12 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
-     * @template TComponent of TValue
-     *
-     * @param class-string<TComponent> $type
-     * @return static<TKey, TComponent>
+     * @param class-string<TValue> $type
+     * @return static<TKey, TValue>
      */
     public function whereInstanceOf(string $type): static
     {
         return $this->filter(fn (Component $component) => $component instanceof $type);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function componentKeys(): array
-    {
-        return array_filter($this->pluck('key'));
-    }
-
-    /**
-     * @return array<TKey, mixed>
-     */
-    public function pluck(string $key): array
-    {
-        return $this->map(fn (Component $component) => $this->getAttribute($component, $key));
     }
 
     /**
@@ -212,6 +197,14 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
+     * @return array<TKey, mixed>
+     */
+    public function pluck(string $key): array
+    {
+        return $this->map(fn (Component $component) => $component->getPropertyValue($key));
+    }
+
+    /**
      * @return static<string, TValue>
      */
     public function keyBy(string $key): static
@@ -219,7 +212,7 @@ class Components implements Countable, IteratorAggregate, Stringable
         $components = [];
 
         foreach ($this->components as $component) {
-            $value = $this->getAttribute($component, $key);
+            $value = $component->getPropertyValue($key);
 
             if ($value === null) {
                 continue;
@@ -254,26 +247,6 @@ class Components implements Countable, IteratorAggregate, Stringable
     }
 
     /**
-     * @template-covariant TField of Field
-     *
-     * @return Fields<TKey, TField>
-     */
-    public function fields(): Fields
-    {
-        return new Fields($this->whereInstanceOf(Field::class)->all());
-    }
-
-    /**
-     * @template-covariant TChallenge of TValue&ProvidesChallenge
-     *
-     * @return Challenges<TKey, TChallenge>
-     */
-    public function challenges(): Challenges
-    {
-        return new Challenges($this->whereInstanceOf(ProvidesChallenge::class)->all());
-    }
-
-    /**
      * @return static<TKey, TValue>
      */
     public function index(): static
@@ -293,6 +266,20 @@ class Components implements Countable, IteratorAggregate, Stringable
         }
 
         return new static($components);
+    }
+
+    public function fields(): Fields
+    {
+        return new Fields(
+            $this->whereInstanceOf(Field::class)->all()
+        );
+    }
+
+    public function challenges(): Challenges
+    {
+        return new Challenges(
+            $this->whereInstanceOf(ProvidesChallenge::class)->all()
+        );
     }
 
     public function form(Form $form): static
@@ -335,33 +322,21 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this->toHtml();
     }
 
-    /**
-     * @param TValue $component
-     */
-    protected function getAttribute(Component $component, string $key): mixed
-    {
-        return match ($key) {
-            'key' => $component->getKey(),
-            'id' => $component->getId(),
-            default => null,
-        };
-    }
-
     protected function operatorForWhere(string $key, string $operator, mixed $value): Closure
     {
         return function (Component $component) use ($key, $operator, $value) {
-            $attribute = $this->getAttribute($component, $key);
+            $property = $component->getPropertyValue($key);
 
             return match ($operator) {
-                '===' => $attribute === $value,
-                '!=' => $attribute != $value,
-                '!==' => $attribute !== $value,
-                '>' => $attribute > $value,
-                '>=' => $attribute >= $value,
-                '<' => $attribute < $value,
-                '<=' => $attribute <= $value,
-                '<=>' => $attribute <=> $value,
-                default => $attribute == $value,
+                '===' => $property === $value,
+                '!=' => $property != $value,
+                '!==' => $property !== $value,
+                '>' => $property > $value,
+                '>=' => $property >= $value,
+                '<' => $property < $value,
+                '<=' => $property <= $value,
+                '<=>' => $property <=> $value,
+                default => $property == $value,
             };
         };
     }

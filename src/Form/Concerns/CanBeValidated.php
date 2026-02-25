@@ -3,17 +3,30 @@
 namespace Webform\Form\Concerns;
 
 use Kirby\Cms\App;
-use Webform\Form\Collections\Components;
-use Webform\Form\ValidatedInput;
-use Webform\Form\Validator;
+use Webform\Form\Collections\Fields;
+use Webform\Http\UploadedFile;
+use Webform\Validation\ValidatedInput;
+use Webform\Validation\Validator;
 
 trait CanBeValidated
 {
-    abstract public function getChildren(): Components;
+    protected ?ValidatedInput $validated = null;
+
+    abstract public function getFields(): Fields;
+
+    public function validated(): ?ValidatedInput
+    {
+        return $this->validated;
+    }
 
     public function validate(?array $input = null): ValidatedInput
     {
-        $input ??= App::instance()->request()->data();
+        $request = App::instance()->request();
+
+        $input ??= array_replace_recursive(
+            $request->data(),
+            UploadedFile::fromRequest($request),
+        );
 
         /** @var Validator $validator */
         $validator = App::instance()->apply('webform.validate:before', [
@@ -28,7 +41,7 @@ trait CanBeValidated
             'validator' => $validator,
         ]);
 
-        return $validated;
+        return $this->validated = $validated;
     }
 
     protected function createValidator(array $input): Validator
