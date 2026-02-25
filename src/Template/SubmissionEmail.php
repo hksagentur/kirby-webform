@@ -15,7 +15,7 @@ readonly class SubmissionEmail extends ViewModel
     public function __construct(
         protected Form $form,
         protected FormSubmission $submission,
-    ){
+    ) {
     }
 
     public static function from(Form $form, FormSubmission $submission): static
@@ -53,7 +53,7 @@ readonly class SubmissionEmail extends ViewModel
         };
     }
 
-    public function rows() : array
+    public function rows(): array
     {
         $rows = [];
 
