@@ -6,20 +6,24 @@ use ArrayIterator;
 use Closure;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
 use Webform\Form\Components\Component;
 use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\Field;
 use Webform\Form\Form;
+use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Jsonable;
 
 /**
  * @template TKey of array-key
  * @template-covariant TValue of Component
  *
+ * @implements Arrayable<TKey, TValue>
  * @implements IteratorAggregate<TKey, TValue>
  */
-class Components implements Countable, IteratorAggregate, Stringable
+class Components implements Arrayable, Countable, Jsonable, JsonSerializable, IteratorAggregate, Stringable
 {
     /**
      * @var ?static<TKey, TValue>
@@ -291,9 +295,11 @@ class Components implements Countable, IteratorAggregate, Stringable
         return $this;
     }
 
-    /**
-     * @return array<TKey, TValue>
-     */
+    public function toString(): string
+    {
+        return $this->toHtml();
+    }
+
     public function toArray(): array
     {
         return $this->components;
@@ -304,9 +310,9 @@ class Components implements Countable, IteratorAggregate, Stringable
         return implode("\n", array_map(fn (Component $component) => $component->toHtml(), $this->components));
     }
 
-    public function toString(): string
+    public function toJson(int $options = 0): string
     {
-        return $this->toHtml();
+        return json_encode($this->jsonSerialize(), $options);
     }
 
     /**
@@ -315,6 +321,11 @@ class Components implements Countable, IteratorAggregate, Stringable
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->components);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
     public function __toString(): string

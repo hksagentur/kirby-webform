@@ -2,11 +2,17 @@
 
 namespace Webform\Form;
 
+use JsonSerializable;
 use Kirby\Cms\S;
+use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Jsonable;
 use Webform\Validation\Message;
 use Webform\Validation\Messages;
 
-readonly class FormContext
+/**
+ * @implements Arrayable<string, string|string[]>
+ */
+readonly class FormContext implements Arrayable, Jsonable, JsonSerializable
 {
     protected ?Message $status;
     protected Messages $errors;
@@ -53,8 +59,18 @@ readonly class FormContext
     public function toArray(): array
     {
         return [
-            'status' => $this->status,
-            'errors' => $this->errors,
+            'status' => $this->status?->toArray(),
+            'errors' => $this->errors->toArray(),
         ];
+    }
+
+    public function toJson(int $options = 0): string
+    {
+        return json_encode($this->jsonSerialize(), $options);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Template\Contracts;
+namespace Webform\Toolkit;
 
 interface Htmlable
 {

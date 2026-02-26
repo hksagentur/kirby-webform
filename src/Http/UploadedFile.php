@@ -14,8 +14,13 @@ use Kirby\Toolkit\Str;
 use Stringable;
 use Throwable;
 use Webform\Http\Exception\FileUploadException;
+use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Jsonable;
 
-class UploadedFile implements JsonSerializable, Stringable
+/**
+ * @implements Arrayable<string, string>
+ */
+class UploadedFile implements Arrayable, Jsonable, JsonSerializable, Stringable
 {
     public function __construct(
         protected string $path,

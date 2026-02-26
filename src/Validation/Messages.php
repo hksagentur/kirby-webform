@@ -7,8 +7,13 @@ use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
 use Throwable;
+use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Jsonable;
 
-class Messages implements Countable, JsonSerializable, Stringable
+/**
+ * @implements Arrayable<string, string[]>
+ */
+class Messages implements Arrayable, Countable, Jsonable, JsonSerializable, Stringable
 {
     /** @var array<string, string[]> */
     protected array $messages = [];
@@ -120,27 +125,6 @@ class Messages implements Countable, JsonSerializable, Stringable
         }
 
         return $this;
-    }
-
-    public function addIf(bool $condition, string $key, string $message): static
-    {
-        return $condition
-            ? $this->add($key, $message)
-            : $this;
-    }
-
-    public function forget(string $key): static
-    {
-        unset($this->messages[$key]);
-
-        return $this;
-    }
-
-    public function forgetIf(bool $condition, string $key): static
-    {
-        return $condition
-            ? $this->forget($key)
-            : $this;
     }
 
     public function all(): array

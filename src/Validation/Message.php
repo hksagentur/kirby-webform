@@ -2,9 +2,16 @@
 
 namespace Webform\Validation;
 
+use JsonSerializable;
+use Stringable;
 use Throwable;
+use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Jsonable;
 
-readonly class Message
+/**
+ * @implements Arrayable<string, string>
+ */
+readonly class Message implements Arrayable, Jsonable, JsonSerializable, Stringable
 {
     public function __construct(
         protected string $text,
@@ -55,9 +62,9 @@ readonly class Message
         return json_encode($this->jsonSerialize(), $options);
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): string
     {
-        return $this->toArray();
+        return $this->toString();
     }
 
     public function __toString(): string

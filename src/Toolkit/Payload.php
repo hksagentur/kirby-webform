@@ -8,9 +8,10 @@ use JsonSerializable;
 use stdClass;
 
 /**
+ * @implements Arrayable<string, mixed>
  * @implements IteratorAggregate<string, mixed>
  */
-abstract readonly class Payload implements IteratorAggregate, JsonSerializable
+abstract readonly class Payload implements Arrayable, IteratorAggregate, Jsonable, JsonSerializable
 {
     public function exists(string|array $keys): bool
     {
