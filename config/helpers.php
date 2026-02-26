@@ -1,7 +1,7 @@
 <?php
 
 use Webform\Form\Form;
-use Webform\Form\FormFactory;
+use Webform\Form\FormRepository;
 
 if (! function_exists('webform')) {
     /**
@@ -9,6 +9,6 @@ if (! function_exists('webform')) {
      */
     function webform(string $path): ?Form
     {
-        return FormFactory::instance()->createFromConfig($path);
+        return FormRepository::instance()->getByPath($path);
     }
 }

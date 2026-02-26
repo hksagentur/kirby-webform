@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
-use Webform\Form\FormFactory;
+use Webform\Form\FormRepository;
 use Webform\Http\Exception\NotFoundException;
 
 class SubstituteBindings extends Middleware
@@ -19,7 +19,7 @@ class SubstituteBindings extends Middleware
             throw new NotFoundException();
         }
 
-        $form = FormFactory::instance()->createFromConfig($path);
+        $form = FormRepository::instance()->getByPath($path);
 
         if (! $form) {
             throw new NotFoundException();

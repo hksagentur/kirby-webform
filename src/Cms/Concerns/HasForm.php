@@ -8,7 +8,7 @@ use Kirby\Toolkit\Str;
 use UnexpectedValueException;
 use Webform\Cms\Contracts\HasActions;
 use Webform\Form\Form;
-use Webform\Form\FormFactory;
+use Webform\Form\FormRepository;
 
 trait HasForm
 {
@@ -31,7 +31,7 @@ trait HasForm
         if (method_exists($this, $method)) {
             $form = $this->{$method}();
         } else {
-            $form = FormFactory::instance()->createFromConfig($id);
+            $form = FormRepository::instance()->getByPath($id);
         }
 
         if (! ($form instanceof Form)) {

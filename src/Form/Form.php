@@ -34,7 +34,7 @@ class Form extends ViewComponent
 
     public static function loadFromConfig(string $path): ?static
     {
-        return FormFactory::instance()->createFromConfig($path);
+        return FormRepository::instance()->getByPath($path);
     }
 
     public function getKey(): string

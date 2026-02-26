@@ -2,7 +2,7 @@
 
 namespace Webform\Form;
 
-class FormFactory
+class FormRepository
 {
     protected static ?self $instance = null;
 
@@ -18,7 +18,7 @@ class FormFactory
         return static::$instance ??= new static();
     }
 
-    public function createFromConfig(string $path): ?Form
+    public function getByPath(string $path): ?Form
     {
         return $this->forms[$path] ??= FormConfig::create($path)->read();
     }
