@@ -18,7 +18,7 @@ readonly class SubmissionEmail extends ViewModel
     ) {
     }
 
-    public static function from(Form $form, FormSubmission $submission): static
+    public static function create(Form $form, FormSubmission $submission): static
     {
         return new static($form, $submission);
     }

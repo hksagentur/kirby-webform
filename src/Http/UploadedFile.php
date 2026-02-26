@@ -12,7 +12,6 @@ use Kirby\Http\Request;
 use Kirby\Http\Request\Files;
 use Kirby\Toolkit\Str;
 use Stringable;
-use Throwable;
 use Webform\Http\Exception\FileUploadException;
 use Webform\Toolkit\Arrayable;
 use Webform\Toolkit\Jsonable;
@@ -27,6 +26,11 @@ class UploadedFile implements Arrayable, Jsonable, JsonSerializable, Stringable
         protected string $name,
         protected int $error = UPLOAD_ERR_OK,
     ) {
+    }
+
+    public static function create(string $path, string $name, int $error = UPLOAD_ERR_OK): static
+    {
+        return new static($path, $name, $error);
     }
 
     public static function from(string|array|self $file): static
@@ -46,15 +50,6 @@ class UploadedFile implements Arrayable, Jsonable, JsonSerializable, Stringable
                 'Invalid file input'
             ),
         };
-    }
-
-    public static function tryFrom(string|array|self $file): ?static
-    {
-        try {
-            return static::from($file);
-        } catch (Throwable) {
-            return null;
-        }
     }
 
     /** @return array<string, static[]> */

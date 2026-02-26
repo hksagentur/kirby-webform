@@ -2,12 +2,11 @@
 
 namespace Webform\Form\Concerns;
 
-use Webform\Form\FormContext;
 use Webform\Validation\Messages;
 
 trait HasErrors
 {
-    abstract public function getFormContext(): FormContext;
+    protected ?Messages $errors = null;
 
     public function isValid(): bool
     {
@@ -21,11 +20,11 @@ trait HasErrors
 
     public function hasErrors(): bool
     {
-        return $this->getFormContext()->hasErrors();
+        return $this->getErrors()->isNotEmpty();
     }
 
     public function getErrors(): Messages
     {
-        return $this->getFormContext()->getErrors();
+        return $this->errors ??= Messages::fromSession($this->getKey());
     }
 }

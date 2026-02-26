@@ -2,9 +2,9 @@
 
 namespace Webform\Form\Components\Concerns;
 
-use Kirby\Cms\S;
 use Kirby\Toolkit\A;
 use Webform\Form\Form;
+use Webform\Toolkit\Flash;
 
 trait HasValue
 {
@@ -43,7 +43,7 @@ trait HasValue
             return null;
         }
 
-        $data = S::get("webform.form.{$form}.input");
+        $data = Flash::get("webform.form.{$form}.input");
 
         if (! $data) {
             return null;

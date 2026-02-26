@@ -164,7 +164,7 @@ class Email extends Action
                     'site' => $site,
                     'user' => $user,
                     'form' => $form,
-                    ...SubmissionEmail::from($form, $submission),
+                    ...SubmissionEmail::create($form, $submission),
                 ],
                 ...$preset,
                 ...$options,

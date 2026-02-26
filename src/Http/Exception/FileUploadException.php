@@ -66,7 +66,7 @@ class FileUploadException extends Exception
     {
         return $this->uploadErrors->isNotEmpty()
             ? $this->uploadErrors
-            : Messages::fromString($this->getMessage());
+            : Messages::from(['upload' => $this->getMessage()]);
     }
 
     public function withUploadErrors(array|Messages $errors): static

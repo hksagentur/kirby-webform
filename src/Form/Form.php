@@ -21,9 +21,7 @@ class Form extends ViewComponent
     use Concerns\HasActions;
     use Concerns\HasChildren;
     use Concerns\HasConfig;
-    use Concerns\HasContext;
     use Concerns\HasErrors;
-    use Concerns\HasStatus;
 
     protected string $snippet = 'webform/form';
 

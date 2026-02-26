@@ -6,8 +6,8 @@ use Countable;
 use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
-use Throwable;
 use Webform\Toolkit\Arrayable;
+use Webform\Toolkit\Flash;
 use Webform\Toolkit\Jsonable;
 
 /**
@@ -25,40 +25,22 @@ class Messages implements Arrayable, Countable, Jsonable, JsonSerializable, Stri
         }
     }
 
-    public static function from(string|array|self $value): ?static
-    {
-        if ($value instanceof static) {
-            return $value;
-        }
-
-        if (is_array($value)) {
-            return static::fromArray($value);
-        }
-
-        return static::fromString((string) $value);
-    }
-
-    public static function tryFrom(string|null|array|self $value): ?static
-    {
-        if (empty($value)) {
-            return null;
-        }
-
-        try {
-            return static::from($value);
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    public static function fromString(string $message): static
-    {
-        return new static(['error' => $message]);
-    }
-
-    public static function fromArray(array $messages = []): static
+    public static function create(array $messages = []): static
     {
         return new static($messages);
+    }
+
+    public static function from(array|self $messages): static
+    {
+        return match (true) {
+            $messages instanceof static => $messages,
+            default => new static($messages),
+        };
+    }
+
+    public static function fromSession(string $channel = 'default'): static
+    {
+        return static::from(Flash::get("webform.form.{$channel}.errors", []));
     }
 
     public function isEmpty(): bool

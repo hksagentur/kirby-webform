@@ -4,7 +4,6 @@ namespace Webform\Validation;
 
 use JsonSerializable;
 use Stringable;
-use Throwable;
 use Webform\Toolkit\Arrayable;
 use Webform\Toolkit\Jsonable;
 
@@ -18,26 +17,17 @@ readonly class Message implements Arrayable, Jsonable, JsonSerializable, Stringa
     ) {
     }
 
-    public static function from(string|self $value): static
+    public static function create(string $text): static
     {
-        if ($value instanceof static) {
-            return $value;
-        }
-
-        return new static($value);
+        return new static($text);
     }
 
-    public static function tryFrom(string|null|self $value): ?static
+    public static function from(string|self $value): static
     {
-        if (empty($value)) {
-            return null;
-        }
-
-        try {
-            return static::from($value);
-        } catch (Throwable) {
-            return null;
-        }
+        return match (true) {
+            $value instanceof static => $value,
+            default => new static((string) $value),
+        };
     }
 
     public function text(): string

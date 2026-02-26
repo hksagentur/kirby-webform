@@ -94,22 +94,22 @@ class SubmissionController
     protected function failedValidation(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput(inputBag: $form->getKey())
-            ->withErrors(messages: $this->asMessageCollection($exception), errorBag: $form->getKey());
+            ->withInput(channel: $form->getKey())
+            ->withErrors(messages: $this->asMessageCollection($exception), channel: $form->getKey());
     }
 
     protected function failedSubmission(Form $form, Throwable $exception): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))
-            ->withInput(inputBag: $form->getKey())
-            ->withErrors(messages: $this->asMessageCollection($exception), errorBag: $form->getKey());
+            ->withInput(channel: $form->getKey())
+            ->withErrors(messages: $this->asMessageCollection($exception), channel: $form->getKey());
     }
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
         return (new RedirectResponse($this->getRedirectUrl()))->withStatus(
             message: I18n::translate('hksagentur.webform.status.message.success'),
-            messageBag: $form->getKey(),
+            channel: $form->getKey(),
         );
     }
 
@@ -118,7 +118,7 @@ class SubmissionController
         return match (true) {
             $exception instanceof ValidationException => $exception->getErrors(),
             $exception instanceof FileUploadException => $exception->getUploadErrors(),
-            default => Messages::fromString($exception->getMessage()),
+            default => Messages::from(['error' => $exception->getMessage()]),
         };
     }
 }

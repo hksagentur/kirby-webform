@@ -10,7 +10,15 @@ class A extends \Kirby\Toolkit\A
 {
     public static function collapse(array $array): array
     {
-        return array_merge([], ...array_values(array_filter($array, is_array(...))));
+        $results = [];
+
+        foreach ($array as $values) {
+            if (is_array($values)) {
+                $results[] = $values;
+            }
+        }
+
+        return array_merge([], ...$results);
     }
 
     public static function forget(array &$array, int|string|array $keys): void

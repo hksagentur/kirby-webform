@@ -13,6 +13,11 @@ readonly class ValidatedInput extends Payload
     ) {
     }
 
+    public static function create(array $input): static
+    {
+        return new static($input);
+    }
+
     public function isFilled(string|array $keys): bool
     {
         foreach (A::wrap($keys) as $key) {
