@@ -7,7 +7,7 @@ use Kirby\Session\SessionData;
 use Kirby\Toolkit\A;
 use stdClass;
 
-class FlashStore
+class Flashes
 {
     protected static ?self $instance = null;
 

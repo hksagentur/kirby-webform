@@ -3,7 +3,7 @@
 namespace Webform\Toolkit;
 
 use Kirby\Toolkit\Facade;
-use Webform\Session\FlashStore;
+use Webform\Session\Flashes;
 
 /**
  * @method static bool has(string $key)
@@ -15,12 +15,12 @@ use Webform\Session\FlashStore;
  * @method static static reflash()
  * @method static static clear()
  *
- * @see FlashStore
+ * @see Flashes
  */
 class Flash extends Facade
 {
-    public static function instance(): FlashStore
+    public static function instance(): Flashes
     {
-        return FlashStore::instance();
+        return Flashes::instance();
     }
 }
