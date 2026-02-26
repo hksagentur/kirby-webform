@@ -13,7 +13,7 @@
         <?php snippet('webform/message', [
             'id' => $form->getId().'-error',
             'type' => 'error',
-            'role' => 'alert',
+            'role' => 'status',
         ], slots: true) ?>
             <?= tc('hksagentur.webform.status.message.error', $form->getErrors()->count()) ?>
         <?php endsnippet() ?>
@@ -22,7 +22,7 @@
     <?php if ($status = $form->getStatus()) : ?>
         <?php snippet('webform/message', [
             'id' => $form->getId().'-status',
-            'type' => 'success',
+            'type' => $status->type(),
             'role' => 'status',
         ], slots: true) ?>
             <?= esc($status) ?>
