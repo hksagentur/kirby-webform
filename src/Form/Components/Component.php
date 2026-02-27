@@ -16,15 +16,6 @@ abstract class Component extends ViewComponent
     use Foundation\CanBeTraversed;
     use Foundation\EvaluatesClosures;
 
-    public function getPropertyValue(string $property, mixed $default = null): mixed
-    {
-        return match ($property) {
-            'id' => $this->getId(),
-            'key' => $this->getKey(),
-            default => $default,
-        };
-    }
-
     public function getEvaluationContext(): array
     {
         return [
@@ -43,5 +34,14 @@ abstract class Component extends ViewComponent
             'model' => $this->getForm()?->getModel(),
             'block' => $this->getForm()?->getBlock(),
         ];
+    }
+
+    public function getPropertyValue(string $name, mixed $default = null): mixed
+    {
+        return match ($name) {
+            'id' => $this->getId(),
+            'key' => $this->getKey(),
+            default => $default,
+        };
     }
 }

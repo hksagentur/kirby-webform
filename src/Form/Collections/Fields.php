@@ -9,9 +9,9 @@ use Webform\Validation\Messages;
  * @template TKey of array-key
  * @template-covariant TValue of Field
  *
- * @extends Components<TKey, TValue>
+ * @extends Collection<TKey, TValue>
  */
-class Fields extends Components
+class Fields extends Collection
 {
     /** @return string[] */
     public function fieldNames(): array
