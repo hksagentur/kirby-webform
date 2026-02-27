@@ -58,10 +58,12 @@ readonly class SubmissionEmail extends ViewModel
         $rows = [];
 
         foreach ($this->submission->all() as $key => $value) {
-            $rows[] = [
-                'label' => $this->getLabel($key),
-                'value' => $this->formatValue($value),
-            ];
+            if (! Str::startsWith($key, '_')) {
+                $rows[] = [
+                    'label' => $this->getLabel($key),
+                    'value' => $this->formatValue($value),
+                ];
+            }
         }
 
         return $rows;
