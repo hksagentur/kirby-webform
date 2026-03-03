@@ -13,7 +13,6 @@ class Form extends ViewComponent
 {
     use Concerns\BelongsToBlock;
     use Concerns\BelongsToModel;
-    use Concerns\CanBeTraversed;
     use Concerns\CanBeValidated;
     use Concerns\DispatchesEvents;
     use Concerns\EvaluatesClosures;

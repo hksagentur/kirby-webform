@@ -2,7 +2,7 @@
 
 namespace Webform\Form\Components;
 
-class Stack extends Component
+class Stack extends LayoutComponent
 {
     use Concerns\HasGap;
 

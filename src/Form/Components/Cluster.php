@@ -2,7 +2,7 @@
 
 namespace Webform\Form\Components;
 
-class Cluster extends Component
+class Cluster extends LayoutComponent
 {
     use Concerns\HasGap;
 

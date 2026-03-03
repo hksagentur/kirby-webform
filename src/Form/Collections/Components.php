@@ -10,6 +10,7 @@ use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
 use Webform\Form\Components\Component;
+use Webform\Form\Components\Contracts\HasChildren;
 use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\Field;
 use Webform\Form\Form;
@@ -279,11 +280,14 @@ class Components implements Arrayable, Countable, Htmlable, Jsonable, JsonSerial
         $components = [];
 
         foreach ($this->components as $component) {
-            $components = [
-                ...$components,
-                $component,
-                ...$component->getIndex(),
-            ];
+            $components[] = $component;
+
+            if ($component instanceof HasChildren) {
+                $components = [
+                    ...$components,
+                    ...$component->getChildren()->index(),
+                ];
+            }
         }
 
         return new static($components);

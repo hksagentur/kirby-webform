@@ -2,7 +2,7 @@
 
 namespace Webform\Form\Components;
 
-class Grid extends Component
+class Grid extends LayoutComponent
 {
     use Concerns\HasGap;
 

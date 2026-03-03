@@ -8,6 +8,8 @@ use Webform\Form\Components\Component;
 
 trait HasChildren
 {
+    use CanBeTraversed;
+
     protected array|Components|Closure|null $children = null;
 
     public function getChildren(): Components

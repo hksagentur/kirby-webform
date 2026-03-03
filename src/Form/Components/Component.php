@@ -2,19 +2,17 @@
 
 namespace Webform\Form\Components;
 
-use Webform\Form\Concerns as Foundation;
+use Webform\Form\Concerns\EvaluatesClosures;
 use Webform\Template\ViewComponent;
 
 abstract class Component extends ViewComponent
 {
     use Concerns\BelongsToForm;
     use Concerns\CanAllowHtml;
-    use Concerns\HasChildren;
     use Concerns\HasExtraAttributes;
     use Concerns\HasId;
     use Concerns\HasKey;
-    use Foundation\CanBeTraversed;
-    use Foundation\EvaluatesClosures;
+    use EvaluatesClosures;
 
     public function getEvaluationContext(): array
     {
