@@ -25,29 +25,38 @@ class RedirectResponse extends Response
         ]);
     }
 
-    public function withInput(?array $input = null, string $channel = 'default'): static
+    public function withInput(array|null|Arrayable $input = null, string $channel = 'default'): static
     {
-        $input = is_null($input)
-            ? App::instance()->request()->data()
-            : $input;
+        $input ??= App::instance()->request()->data();
+
+        if ($input instanceof Arrayable) {
+            $input = $input->toArray();
+        }
 
         Flash::put("webform.form.{$channel}.input", $input);
 
         return $this;
     }
 
-    public function withStatus(string|Stringable $message, string $channel = 'default'): static
+    public function withMessage(string|Stringable $text, string $type = 'success', string $channel = 'default'): static
     {
-        Flash::put("webform.form.{$channel}.message", $message);
+        if ($text instanceof Stringable) {
+            $text = (string) $text;
+        }
+
+        Flash::put("webform.form.{$channel}.message", [
+            'message' => $text,
+            'type' => $type,
+        ]);
 
         return $this;
     }
 
     public function withErrors(array|Arrayable $messages, string $channel = 'default'): static
     {
-        $messages = $messages instanceof Arrayable
-            ? $messages->toArray()
-            : $messages;
+        if ($messages instanceof Arrayable) {
+            $messages = $messages->toArray();
+        }
 
         Flash::put("webform.form.{$channel}.errors", $messages);
 

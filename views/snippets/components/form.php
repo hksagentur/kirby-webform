@@ -25,7 +25,7 @@
             'type' => $status->type(),
             'role' => 'status',
         ], slots: true) ?>
-            <?= esc($status) ?>
+            <?= Sane::sanitize($status->message(), 'html') ?>
         <?php endsnippet() ?>
     <?php endif ?>
 

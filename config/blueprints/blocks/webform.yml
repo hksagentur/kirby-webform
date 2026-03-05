@@ -102,3 +102,19 @@ tabs:
         counter: false
         when:
           action: webhook
+      lineMessages:
+        type: line
+      successMessage:
+        type: writer
+        label:
+          *: hksagentur.webform.blueprint.successMessage.label
+        help:
+          *: hksagentur.webform.blueprint.successMessage.help
+        icon: check
+      errorMessage:
+        type: writer
+        label:
+          *: hksagentur.webform.blueprint.errorMessage.label
+        help:
+          *: hksagentur.webform.blueprint.errorMessage.help
+        icon: cross

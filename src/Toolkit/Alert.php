@@ -39,11 +39,11 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
     {
         $message = Flash::get("webform.form.{$channel}.message");
 
-        if (! $message) {
-            return null;
-        }
-
-        return static::create($message);
+        return match (true) {
+            is_array($message) => new static($message['message'], $message['type'] ?? 'success'),
+            is_string($message) => new static($message),
+            default => null,
+        };
     }
 
     public function isSuccess(): bool
@@ -73,7 +73,7 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
 
     public function flash(string $channel = 'default'): void
     {
-        Flash::put("webform.form.{$channel}.message", $this->message);
+        Flash::put("webform.form.{$channel}.message", $this->toArray());
     }
 
     public function toString(): string
