@@ -55,19 +55,19 @@
     <?php endif ?>
 
     <div class="radio-group__options">
-        <?php foreach ($component->getOptions() as $optionValue => $optionLabel) : ?>
+        <?php foreach ($component->getOptions()->select($value) as $option) : ?>
             <label class="radio-group__option">
                 <input <?= attr([
                     'class' => 'radio-group__option-input',
                     'type' => 'radio',
                     'name' => $name,
-                    'value' => $optionValue,
+                    'value' => $option->value(),
+                    'checked' => $option->isSelected(),
                     'required' => $required,
-                    'checked' => $optionValue == $value,
                     'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="radio-group__option-label">
-                    <?= $component->isHtmlAllowed() ? $optionLabel : esc($optionLabel)  ?>
+                    <?= $component->isHtmlAllowed() ? $option->label() : esc($option->label())  ?>
                 </span>
             </label>
         <?php endforeach ?>

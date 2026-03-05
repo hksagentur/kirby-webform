@@ -22,11 +22,17 @@
         </svg>
 
         <ul class="inline-error__list" role="list">
-            <?php foreach ($messages as $message) : ?>
+            <?php if (isset($messages)) : ?>
+                <?php foreach ($messages as $message) : ?>
+                    <li class="inline-error__list-item">
+                        <?= $message ?>
+                    </li>
+                <?php endforeach ?>
+            <?php else : ?>
                 <li class="inline-error__list-item">
-                    <?= $message ?>
+                    <?= $slot ?>
                 </li>
-            <?php endforeach ?>
+            <?php endif ?>
         </ul>
     </div>
 <?php endif ?>

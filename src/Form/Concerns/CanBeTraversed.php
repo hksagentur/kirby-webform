@@ -16,9 +16,9 @@ trait CanBeTraversed
         return $this->getChildren()->count() > 0;
     }
 
-    public function hasFields(): bool
+    public function hasActions(): bool
     {
-        return $this->getFields()->count() > 0;
+        return $this->getActions()->count() > 0;
     }
 
     public function hasChallenges(): bool
@@ -26,19 +26,29 @@ trait CanBeTraversed
         return $this->getChallenges()->count() > 0;
     }
 
+    public function hasFields(): bool
+    {
+        return $this->getFields()->count() > 0;
+    }
+
     public function getIndex(): Components
     {
         return $this->getChildren()->index();
     }
 
-    public function getFields(): Fields
+    public function getActions(): Components
     {
-        return $this->getIndex()->fields();
+        return $this->getIndex()->actions();
     }
 
     public function getChallenges(): Challenges
     {
         return $this->getIndex()->challenges();
+    }
+
+    public function getFields(): Fields
+    {
+        return $this->getIndex()->fields();
     }
 
     public function find(string $key): ?Component

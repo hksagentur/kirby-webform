@@ -3,6 +3,7 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
+use Webform\Toolkit\Options;
 
 trait HasDatalist
 {
@@ -13,9 +14,11 @@ trait HasDatalist
         return $this->datalistOptions instanceof Closure;
     }
 
-    public function getDatalistOptions(): array
+    public function getDatalistOptions(): Options
     {
-        return $this->evaluate($this->datalistOptions) ?: [];
+        return Options::from(
+            $this->evaluate($this->datalistOptions) ?: []
+        );
     }
 
     public function datalist(array|Closure|null $options): static

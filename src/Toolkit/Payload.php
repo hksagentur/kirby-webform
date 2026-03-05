@@ -11,7 +11,7 @@ use stdClass;
  * @implements Arrayable<string, mixed>
  * @implements IteratorAggregate<string, mixed>
  */
-abstract readonly class Payload implements Arrayable, IteratorAggregate, Jsonable, JsonSerializable
+abstract class Payload implements Arrayable, IteratorAggregate, Jsonable, JsonSerializable
 {
     public function exists(string|array $keys): bool
     {
@@ -24,6 +24,11 @@ abstract readonly class Payload implements Arrayable, IteratorAggregate, Jsonabl
         }
 
         return true;
+    }
+
+    public function missing(string|array $keys): bool
+    {
+        return ! $this->exists($keys);
     }
 
     abstract public function all(?array $keys = null): array;
@@ -98,17 +103,6 @@ abstract readonly class Payload implements Arrayable, IteratorAggregate, Jsonabl
     public function __debugInfo(): array
     {
         return $this->all();
-    }
-
-    protected function isEmptyString(string $key): bool
-    {
-        $value = $this->data($key);
-
-        if (is_bool($value) || is_array($value) || trim((string) $value) !== '') {
-            return false;
-        }
-
-        return true;
     }
 
     abstract protected function data(?string $key = null, mixed $default = null): mixed;

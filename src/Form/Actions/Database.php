@@ -20,6 +20,11 @@ class Database extends Action
         return new static($table);
     }
 
+    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
+    {
+        return static::create(...$arguments)->execute($submission);
+    }
+
     public function getTable(): ?string
     {
         return $this->evaluate($this->table);
@@ -32,16 +37,18 @@ class Database extends Action
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(FormSubmission $submission): mixed
     {
-        $row = $this->applyFilters('save:before', [
+        $row = $this->apply('save:before', [
             'row' => $submission->all(),
         ], 'row');
 
-        DB::table($this->getTable())->insert($row);
+        $result = DB::table($this->getTable())->insert($row);
 
-        $this->fireEvent('save:after', [
+        $this->dispatch('save:after', [
             'row' => $row,
         ]);
+
+        return $result;
     }
 }

@@ -5,17 +5,12 @@ namespace Webform\Validation;
 use Kirby\Toolkit\A;
 use Webform\Toolkit\Payload;
 
-readonly class ValidatedInput extends Payload
+class ValidatedInput extends Payload
 {
     public function __construct(
         /** @var array<string, mixed> */
         protected array $input = [],
     ) {
-    }
-
-    public static function create(array $input): static
-    {
-        return new static($input);
     }
 
     public function isFilled(string|array $keys): bool
@@ -40,9 +35,9 @@ readonly class ValidatedInput extends Payload
         return true;
     }
 
-    public function input(?string $key = null, mixed $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
-        return A::get($this->input, $key, $default);
+        return $this->data($key, $default);
     }
 
     public function all(?array $keys = null): array
@@ -54,8 +49,19 @@ readonly class ValidatedInput extends Payload
         return $this->only($keys);
     }
 
+    protected function isEmptyString(string $key): bool
+    {
+        $value = $this->data($key);
+
+        if (is_bool($value) || is_array($value) || trim((string) $value) !== '') {
+            return false;
+        }
+
+        return true;
+    }
+
     protected function data(?string $key = null, mixed $default = null): mixed
     {
-        return $this->input($key, $default);
+        return A::get($this->input, $key, $default);
     }
 }

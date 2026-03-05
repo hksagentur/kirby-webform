@@ -4,18 +4,18 @@ namespace Webform\Form\Actions\Concerns;
 
 use Kirby\Cms\App;
 
-trait DispatchesEvents
+trait CanDispatchEvent
 {
-    public function applyFilters(string $name, array $arguments, string $modify): mixed
+    public function apply(string $name, array $arguments, string $modify): mixed
     {
         return App::instance()->apply("webform.{$name}", $arguments + [
             'action' => $this,
         ], $modify);
     }
 
-    public function fireEvent(string $name, array $arguments = []): void
+    public function dispatch(string $event, array $arguments = []): void
     {
-        App::instance()->trigger("webform.{$name}", $arguments + [
+        App::instance()->trigger("webform.{$event}", $arguments + [
             'action' => $this,
         ]);
     }

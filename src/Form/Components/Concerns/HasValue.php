@@ -37,13 +37,13 @@ trait HasValue
             return null;
         }
 
-        $form = $this->getForm()?->getKey();
+        $channel = $this->getForm()?->getKey();
 
-        if (! $form) {
+        if (! $channel) {
             return null;
         }
 
-        $data = Flash::get("webform.form.{$form}.input");
+        $data = Flash::get("webform.form.{$channel}.input");
 
         if (! $data) {
             return null;

@@ -2,14 +2,10 @@
 
 namespace Webform\Http\Controller;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Block;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
-use Kirby\Http\Request;
 use Kirby\Toolkit\I18n;
 use Throwable;
-use Webform\Cms\Contracts\HasActions;
 use Webform\Form\Form;
 use Webform\Http\Exception\FileUploadException;
 use Webform\Http\RedirectResponse;
@@ -18,32 +14,16 @@ use Webform\Validation\ValidationException;
 
 class SubmissionController
 {
-    public function __invoke(Request $request, Form $form): RedirectResponse
+    public function __invoke(Form $form, ?string $operation = null): RedirectResponse
     {
-        $page = $this->getReferrerPage() ?? $this->getPreviousPage();
-
-        if ($page instanceof Page) {
-            $form->model($page);
-        }
-
-        $block = $this->getParentBlock($page);
-
-        if ($block instanceof Block) {
-            $form->block($block);
-        }
-
-        if ($block instanceof HasActions) {
-            $form->actions($block->actions());
-        }
-
         try {
-            $input = $form->validate();
+            $validated = $form->validate();
         } catch (ValidationException $exception) {
             return $this->failedValidation($form, $exception);
         }
 
         try {
-            $form->submit($input);
+            $form->submit($validated, $operation);
         } catch (Throwable $exception) {
             return $this->failedSubmission($form, $exception);
         }
@@ -51,63 +31,35 @@ class SubmissionController
         return $this->processedSubmission($form);
     }
 
-    protected function getReferrerPage(): ?Page
+    protected function getRedirectUrl(Form $form): string
     {
-        return App::instance()->site()->find(
-            App::instance()->request()->get('_webform_referrer')
-        );
-    }
+        /** @var ?Page $referrer */
+        $referrer = $form->getContext()->page();
 
-    protected function getPreviousPage(): ?Page
-    {
-        return App::instance()->site()->find(
-            App::instance()->session()->get('webform.page.previous')
-        );
-    }
-
-    protected function getParentBlock(?Page $page): ?Block
-    {
-        $id = App::instance()->request()->get('_webform_block');
-
-        if (! $id || ! $page) {
-            return null;
+        if (! $referrer || ! $referrer->isAccessible()) {
+            return Url::home();
         }
 
-        return $page->block($id);
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        $id = App::instance()->request()->get('_webform_id');
-
-        if ($referrerPage = $this->getReferrerPage()) {
-            return $referrerPage->url().($id ? "#{$id}" : '');
-        }
-
-        if ($previousPage = $this->getPreviousPage()) {
-            return $previousPage->url().($id ? "#{$id}" : '');
-        }
-
-        return Url::home();
+        return sprintf('%s#%s', $referrer->url(), $form->getId());
     }
 
     protected function failedValidation(Form $form, Throwable $exception): RedirectResponse
     {
-        return (new RedirectResponse($this->getRedirectUrl()))
+        return (new RedirectResponse($this->getRedirectUrl($form)))
             ->withInput(channel: $form->getKey())
             ->withErrors(messages: $this->asMessageCollection($exception), channel: $form->getKey());
     }
 
     protected function failedSubmission(Form $form, Throwable $exception): RedirectResponse
     {
-        return (new RedirectResponse($this->getRedirectUrl()))
+        return (new RedirectResponse($this->getRedirectUrl($form)))
             ->withInput(channel: $form->getKey())
             ->withErrors(messages: $this->asMessageCollection($exception), channel: $form->getKey());
     }
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
-        return (new RedirectResponse($this->getRedirectUrl()))->withStatus(
+        return (new RedirectResponse($this->getRedirectUrl($form)))->withStatus(
             message: I18n::translate('hksagentur.webform.status.message.success'),
             channel: $form->getKey(),
         );

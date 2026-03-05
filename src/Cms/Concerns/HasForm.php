@@ -2,31 +2,30 @@
 
 namespace Webform\Cms\Concerns;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Block;
-use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Content\Content;
 use Kirby\Toolkit\Str;
 use UnexpectedValueException;
-use Webform\Cms\Contracts\HasActions;
 use Webform\Form\Form;
 use Webform\Form\FormRepository;
 
+/**
+ * @method Content content(string|null $languageCode = null)
+ */
 trait HasForm
 {
     protected ?Form $form = null;
 
-    public function formId(): string
-    {
-        return $this->content()->form()->value();
-    }
-
     public function form(): Form
     {
-        return $this->form ??= $this->createForm($this->formId());
+        return $this->form ??= $this->createForm($this->content()->form()->value());
     }
 
     public function createForm(string $id): Form
     {
-        $method = 'create'.Str::camel($id).'Form';
+        $method = 'create'.Str::studly($id).'Form';
 
         if (method_exists($this, $method)) {
             $form = $this->{$method}();
@@ -41,18 +40,23 @@ trait HasForm
             ));
         }
 
-        if ($this instanceof ModelWithContent) {
-            $form->model($this);
-        }
-
-        if ($this instanceof Block) {
-            $form->block($this);
-            $form->model($this->parent());
-        }
-
-        if ($this instanceof HasActions) {
-            $form->actions($this->actions());
-        }
+        $form->getContext()->add(match (true) {
+            $this instanceof Block => [
+                'kirby' => $this->parent()->kirby(),
+                'site' => $this->parent()->site(),
+                'page' => $this->parent(),
+                'block' => $this,
+            ],
+            $this instanceof Page => [
+                'kirby' => $this->kirby(),
+                'site' => $this->site(),
+                'page' => $this,
+            ],
+            default => [
+                'kirby' => App::instance(),
+                'site' => App::instance()->site(),
+            ],
+        });
 
         return $form;
     }

@@ -38,7 +38,7 @@ class RedirectResponse extends Response
 
     public function withStatus(string|Stringable $message, string $channel = 'default'): static
     {
-        Flash::put("webform.form.{$channel}.status", $message);
+        Flash::put("webform.form.{$channel}.message", $message);
 
         return $this;
     }

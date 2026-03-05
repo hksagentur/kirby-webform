@@ -3,7 +3,6 @@
 namespace Webform\Form\Actions;
 
 use Closure;
-use Kirby\Toolkit\Controller;
 use Webform\Form\FormSubmission;
 
 class Callback extends Action
@@ -18,6 +17,11 @@ class Callback extends Action
         return new static($callback);
     }
 
+    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
+    {
+        return static::create(...$arguments)->execute($submission);
+    }
+
     public function getCallback(): Closure
     {
         return $this->callback;
@@ -30,20 +34,18 @@ class Callback extends Action
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(FormSubmission $submission): mixed
     {
-        $this->fireEvent('callback:before');
+        $this->dispatch('callback:before');
 
-        $form = $this->getForm();
-        $callback = $this->getCallback();
-
-        $result = (new Controller($callback))->call(data: [
-            ...$form->resolveDefaultEvaluationData(),
-            'input' => $submission,
+        $result = $this->evaluate($this->getCallback(), [
+            'submission' => $submission,
         ]);
 
-        $this->fireEvent('callback:after', [
+        $this->dispatch('callback:after', [
             'result' => $result,
         ]);
+
+        return $result;
     }
 }

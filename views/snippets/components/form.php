@@ -32,7 +32,13 @@
     <?= $form->getChildren() ?>
 
     <input type="hidden" name="_webform_id" value="<?= $form->getId() ?>">
-    <input type="hidden" name="_webform_token" value="<?= $form->getCsrfToken() ?>">
-    <input type="hidden" name="_webform_block" value="<?= $form->getBlockId() ?>">
-    <input type="hidden" name="_webform_referrer" value="<?= $form->getModelId() ?>">
+    <input type="hidden" name="_webform_token" value="<?= $form->generateCsrfToken() ?>">
+
+    <?php if ($page = $form->getContext()->page()) : ?>
+        <input type="hidden" name="_webform_page" value="<?= $page->id() ?>">
+    <?php endif ?>
+
+    <?php if ($block = $form->getContext()->block()) : ?>
+        <input type="hidden" name="_webform_block" value="<?= $block->id() ?>">
+    <?php endif ?>
 </form>

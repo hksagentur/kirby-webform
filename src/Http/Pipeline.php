@@ -7,7 +7,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
+use Kirby\Toolkit\Controller;
 use Throwable;
+use Webform\Toolkit\Route;
 
 class Pipeline
 {
@@ -66,11 +68,20 @@ class Pipeline
         return $this->request ?? App::instance()->request();
     }
 
+    /**
+     * @todo Consider resolving only used bindings if used in other places as well.
+     */
     protected function prepareDestination(Closure $destination): Closure
     {
-        return function (Request $request, mixed ...$args) use ($destination): Response|array|false {
+        return function (Request $request) use ($destination): Response|array|false {
             try {
-                return $destination($request, ...$args);
+                return (new Controller($destination))->call(data: [
+                    'kirby' => App::instance(),
+                    'site' => App::instance()->site(),
+                    'route' => App::instance()->route(),
+                    'request' => $request,
+                    ...Route::resolveAll(),
+                ]);
             } catch (Throwable $exception) {
                 return $this->handleException($exception);
             }
@@ -80,17 +91,17 @@ class Pipeline
     protected function carry(): Closure
     {
         return function ($stack, $pipe) {
-            return function (Request $request, mixed ...$args) use ($stack, $pipe): Response|array|false {
+            return function (Request $request) use ($stack, $pipe): Response|array|false {
                 try {
                     if (is_callable($pipe)) {
-                        return $pipe($request, $stack, ...$args);
+                        return $pipe($request, $stack);
                     }
 
                     if (is_string($pipe)) {
                         $pipe = new $pipe();
                     }
 
-                    return $pipe->handle($request, $stack, ...$args);
+                    return $pipe->handle($request, $stack);
                 } catch (Throwable $exception) {
                     return $this->handleException($exception);
                 }

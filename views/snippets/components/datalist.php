@@ -1,10 +1,10 @@
-<?php if (! empty($options)) : ?>
-    <datalist <?= attr(['id' => $id ?? null, ...($attrs ?? [])]) ?>>
-        <?php foreach ($options as $key => $value) : ?>
-            <option <?= attr([
-                'value' => !array_is_list($options) ? $key : null,
-            ]) ?>>
-                <?= $value ?>
+<?php /** @var ?\Webform\Toolkit\Options $options */ ?>
+
+<?php if ($options?->isNotEmpty()) : ?>
+    <datalist <?= attr(['id' => $id ?? null, ...$attrs ?? []]) ?>>
+        <?php foreach ($options as $option) : ?>
+            <option <?= attr(['value' => $option->value()]) ?>>
+                <?= esc($option->label()) ?>
             </option>
         <?php endforeach ?>
     </datalist>

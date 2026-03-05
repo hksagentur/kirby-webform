@@ -29,15 +29,13 @@ trait CanBeValidated
         );
 
         /** @var Validator $validator */
-        $validator = App::instance()->apply('webform.validate:before', [
-            'form' => $this,
+        $validator = $this->apply('validate:before', [
             'validator' => $this->createValidator($input),
         ], 'validator');
 
         $validated = $validator->validate();
 
-        App::instance()->trigger('webform.validate:after', [
-            'form' => $this,
+        $this->dispatch('validate:after', [
             'validator' => $validator,
         ]);
 

@@ -50,26 +50,13 @@
                 <?php endif ?>
             </option>
 
-            <?php foreach ($component->getOptions() as $optionValue => $optionLabel) : ?>
-                <?php if (is_array($optionLabel)) : ?>
-                    <optgroup label="<?= esc($optionValue, 'attr') ?>">
-                        <?php foreach ($optionLabel as $groupedOptionValue => $groupedOptionLabel) : ?>
-                            <option <?= attr([
-                                'value' => $groupedOptionValue,
-                                'selected' => $groupedOptionValue == $value,
-                            ]) ?>>
-                                <?= $component->isHtmlAllowed() ? $groupedOptionLabel : esc($groupedOptionLabel) ?>
-                            </option>
-                        <?php endforeach ?>
-                    </optgroup>
-                <?php else : ?>
-                    <option <?= attr([
-                        'value' => $optionValue,
-                        'selected' => $optionValue == $value,
-                    ]) ?>>
-                        <?= $component->isHtmlAllowed() ? $optionLabel : esc($optionLabel)  ?>
-                    </option>
-                <?php endif ?>
+            <?php foreach ($component->getOptions()->select($value) as $option) : ?>
+                <option <?= attr([
+                    'value' => $option->value(),
+                    'selected' => $option->isSelected(),
+                ]) ?>>
+                    <?= $component->isHtmlAllowed() ? $option->label() : esc($option->label())  ?>
+                </option>
             <?php endforeach ?>
         </select>
         <svg class="select__caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false">

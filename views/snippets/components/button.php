@@ -1,15 +1,17 @@
 <?php /** @var \Webform\Form\Components\Button $component */ ?>
 
-<?php $id ??= $component->getId() ?>
-<?php $name ??= $component->getName() ?>
-
 <button <?= attr(A::merge($component->getExtraAttributes(), [
     'class' => 'button',
     'type' => $component->getType(),
-    'id' => $id,
-    'name' => $name,
-    'value' => $component->getValue(),
+    'id' => $component->getId(),
     'disabled' => $component->isDisabled(),
+    ...$component->hasAction() ? [
+        'name' => '_webform_operation',
+        'value' => $component->getName(),
+    ] : [
+        'name' => $component->getName(),
+        'value' => $component->getValue(),
+    ],
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <?= $component->isHtmlAllowed() ? $label : esc($label) ?>

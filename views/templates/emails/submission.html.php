@@ -6,7 +6,6 @@
  * @var \Kirby\Cms\App $kirby
  * @var \Kirby\Cms\Site $site
  * @var \Kirby\Cms\User $user
- * @var \Webform\Form\Form $form
  */
 
 $surfaceColor = $surfaceColor ?? '#ffffff';

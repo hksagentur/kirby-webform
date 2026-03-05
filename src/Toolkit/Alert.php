@@ -37,7 +37,7 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
 
     public static function fromSession(string $channel = 'default'): ?static
     {
-        $message = Flash::get("webform.form.{$channel}.status");
+        $message = Flash::get("webform.form.{$channel}.message");
 
         if (! $message) {
             return null;
@@ -73,7 +73,7 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
 
     public function flash(string $channel = 'default'): void
     {
-        Flash::put("webform.form.{$channel}.status", $this->message);
+        Flash::put("webform.form.{$channel}.message", $this->message);
     }
 
     public function toString(): string

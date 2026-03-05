@@ -4,6 +4,7 @@ namespace Webform\Form;
 
 use Kirby\Cms\Url;
 use Kirby\Toolkit\Str;
+use UnexpectedValueException;
 use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\FileUpload;
 use Webform\Template\ViewComponent;
@@ -11,15 +12,13 @@ use Webform\Validation\ValidatedInput;
 
 class Form extends ViewComponent
 {
-    use Concerns\BelongsToBlock;
-    use Concerns\BelongsToModel;
     use Concerns\CanBeValidated;
-    use Concerns\DispatchesEvents;
+    use Concerns\CanDispatchEvent;
+    use Concerns\CanGenerateCsrfTokens;
     use Concerns\EvaluatesClosures;
-    use Concerns\GeneratesCsrfTokens;
-    use Concerns\HasActions;
     use Concerns\HasChildren;
     use Concerns\HasConfig;
+    use Concerns\HasContext;
     use Concerns\HasErrors;
     use Concerns\HasStatus;
 
@@ -57,52 +56,61 @@ class Form extends ViewComponent
 
     public function getEvaluationContext(): array
     {
-        return [
+        return $this->getContext()->all() + [
             'form' => $this,
-            'model' => $this->getModel(),
-            'block' => $this->getBlock(),
         ];
     }
 
     public function getSnippetContext(): array
     {
-        return [
+        return $this->getContext()->all() + [
             'form' => $this,
-            'model' => $this->getModel(),
-            'block' => $this->getBlock(),
         ];
     }
 
-    public function submit(ValidatedInput $input): void
+    public function submit(ValidatedInput $validated, ?string $operation = null): void
     {
-        /** @var FormSubmission $submission */
-        $submission = $this->applyFilters('submit:before', [
-            'form' => $this,
-            'submission' => $this->createFormSubmission($input),
-        ], 'submission');
+        $action = $operation
+            ? $this->getActions()->find($operation)
+            : $this->getActions()->first();
 
-        foreach ($this->getActions() as $action) {
-            $action->execute($submission);
+        if (! $action) {
+            throw new UnexpectedValueException(sprintf(
+                'Invalid or missing form operation: %s',
+                is_string($operation) ? $operation : get_debug_type($operation),
+            ));
         }
 
-        $this->fireEvent('submit:after', [
+        /** @var FormSubmission $submission */
+        $submission = $this->apply('submit:before', [
+            'form' => $this,
+            'submission' => $this->createFormSubmission($validated),
+        ], 'submission');
+
+        if ($action->trigger(['submission' => $submission]) === false) {
+            return;
+        }
+
+        $this->dispatch('submit:after', [
             'form' => $this,
             'submission' => $submission,
         ]);
     }
 
-    protected function createFormSubmission(ValidatedInput $input): FormSubmission
+    protected function createFormSubmission(ValidatedInput $validated): FormSubmission
     {
-        $challengeFields = $this->getFields()->whereInstanceOf(ProvidesChallenge::class);
-        $uploadFields = $this->getFields()->whereInstanceOf(FileUpload::class);
+        $fields = $this->getFields();
 
-        $files = $input->only($uploadFields->fieldNames());
+        $challenges = $fields->whereInstanceOf(ProvidesChallenge::class);
+        $uploads = $fields->whereInstanceOf(FileUpload::class);
 
-        $data = $input->except([
-            ...$challengeFields->fieldNames(),
-            ...$uploadFields->fieldNames(),
+        $files = $validated->only($uploads->fieldNames());
+
+        $data = $validated->except([
+            ...$challenges->fieldNames(),
+            ...$uploads->fieldNames(),
         ]);
 
-        return new FormSubmission($data, $files);
+        return new FormSubmission($data, $files, $this);
     }
 }

@@ -36,13 +36,13 @@
 
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="i,j,l,id,ip,to" />
+      <property name="exceptions" value="i,j,l,a,b,id,ip,to" />
     </properties>
   </rule>
 
   <rule ref="rulesets/naming.xml/ShortMethodName">
     <properties>
-      <property name="exceptions" value="dd,id,in,ip,to" />
+      <property name="exceptions" value="id,in,ip,to" />
     </properties>
   </rule>
 </ruleset>

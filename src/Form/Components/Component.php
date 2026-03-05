@@ -16,30 +16,23 @@ abstract class Component extends ViewComponent
 
     public function getEvaluationContext(): array
     {
-        return [
-            'component' => $this,
-            'form' => $this->getForm(),
-            'model' => $this->getForm()?->getModel(),
-            'block' => $this->getForm()?->getBlock(),
-        ];
+        $context = $this->getForm()?->getEvaluationContext();
+
+        if (! $context) {
+            return ['component' => $this];
+        }
+
+        return $context + ['component' => $this];
     }
 
     public function getSnippetContext(): array
     {
-        return [
-            'component' => $this,
-            'form' => $this->getForm(),
-            'model' => $this->getForm()?->getModel(),
-            'block' => $this->getForm()?->getBlock(),
-        ];
-    }
+        $context = $this->getForm()?->getSnippetContext();
 
-    public function getPropertyValue(string $name, mixed $default = null): mixed
-    {
-        return match ($name) {
-            'id' => $this->getId(),
-            'key' => $this->getKey(),
-            default => $default,
-        };
+        if (! $context) {
+            return ['component' => $this];
+        }
+
+        return $context + ['component' => $this];
     }
 }

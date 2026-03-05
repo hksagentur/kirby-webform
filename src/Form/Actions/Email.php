@@ -33,6 +33,11 @@ class Email extends Action
         return new static($preset);
     }
 
+    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
+    {
+        return static::create(...$arguments)->execute($submission);
+    }
+
     public function getPreset(): array
     {
         $preset = $this->evaluate($this->preset);
@@ -144,27 +149,23 @@ class Email extends Action
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(FormSubmission $submission): mixed
     {
         $kirby = App::instance();
-        $site = App::instance()->site();
-        $user = App::instance()->user();
 
-        $form = $this->getForm();
         $preset = $this->getPreset();
         $template = $this->getTemplate();
 
         $options = $this->prepareEmailOptions($submission);
         $attachments = $this->prepareEmailAttachments($submission);
 
-        $preset = $this->applyFilters('email:before', [
+        $preset = $this->apply('email:before', [
             'preset' => [
                 'data' => [
                     'kirby' => $kirby,
-                    'site' => $site,
-                    'user' => $user,
-                    'form' => $form,
-                    ...SubmissionEmail::create($form, $submission),
+                    'site' => $kirby->site(),
+                    'user' => $kirby->user(),
+                    ...SubmissionEmail::create($submission),
                 ],
                 ...$preset,
                 ...$options,
@@ -175,10 +176,12 @@ class Email extends Action
 
         $email = $kirby->email($preset);
 
-        $this->fireEvent('email:after', [
+        $this->dispatch('email:after', [
             'preset' => $preset,
             'email' => $email,
         ]);
+
+        return $email->isSent();
     }
 
     protected function prepareEmailOptions(FormSubmission $submission): array

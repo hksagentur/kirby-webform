@@ -2,12 +2,17 @@
 
 namespace Webform\Form\Components;
 
-class ButtonGroup extends Component
+class ButtonGroup extends LayoutComponent
 {
     protected string $snippet = 'webform/button-group';
 
-    public static function create(): static
+    public function __construct(array $buttons)
     {
-        return new static();
+        $this->children($buttons);
+    }
+
+    public static function create(array $buttons): static
+    {
+        return new static($buttons);
     }
 }

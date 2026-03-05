@@ -51,20 +51,20 @@
     <?php endif ?>
 
     <div class="checkbox-group__options">
-        <?php foreach ($component->getOptions() as $optionValue => $optionLabel) : ?>
+        <?php foreach ($component->getOptions()->select($value) as $option) : ?>
             <label class="checkbox-group__option">
                 <input <?= attr([
                     'class' => 'checkbox-group__option-input',
                     'type' => 'checkbox',
                     'name' => $name . '[]',
-                    'value' => $optionValue,
+                    'value' => $option->value(),
+                    'checked' => $option->isSelected(),
                     'required' => $required,
-                    'checked' => in_array($optionValue, A::wrap($value)),
                     'aria-invalid' => $invalid ? 'true' : null,
                     'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="checkbox-group__option-label">
-                    <?= $component->isHtmlAllowed() ? $optionLabel : esc($optionLabel)  ?>
+                    <?= $component->isHtmlAllowed() ? $option->label() : esc($option->label())  ?>
                 </span>
             </label>
         <?php endforeach ?>

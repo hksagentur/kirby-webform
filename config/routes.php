@@ -4,8 +4,9 @@ use Kirby\Cms\App;
 use Kirby\Http\Request;
 use Webform\Form\Form;
 use Webform\Http\Controller\SubmissionController;
+use Webform\Http\Middleware\AddContext;
 use Webform\Http\Middleware\RateLimited;
-use Webform\Http\Middleware\SubstituteBindings;
+use Webform\Http\Middleware\RegisterRouteBindings;
 use Webform\Http\Middleware\VerifyChallenges;
 use Webform\Http\Middleware\VerifyCsrfToken;
 use Webform\Http\Pipeline;
@@ -16,24 +17,27 @@ return [
         'pattern' => 'webforms/(:all)',
         'method' => 'POST',
         'action' => function (): RedirectResponse {
-            $middlewares = App::instance()->option('hksagentur.webform.middleware', [
+            return (new Pipeline(option('hksagentur.webform.middleware', [
                 VerifyCsrfToken::class,
                 RateLimited::class,
-                SubstituteBindings::class,
+                RegisterRouteBindings::class,
+                AddContext::class,
                 VerifyChallenges::class,
-            ]);
+            ])))->then(function (App $kirby, Request $request, Form $form): RedirectResponse {
+                $operation = $request->get('_webform_operation');
 
-            return (new Pipeline($middlewares))->then(function (Request $request, Form $form): RedirectResponse {
                 /** @var callable $controller */
-                $controller = App::instance()->apply('webform.route:before', [
+                $controller = $kirby->apply('webform.route:before', [
                     'form' => $form,
+                    'operation' => $operation,
                     'controller' => new SubmissionController(),
                 ], 'controller');
 
-                $response = $controller($request, $form);
+                $response = $controller($form, $operation);
 
-                $response = App::instance()->apply('webform.route:after', [
+                $response = $kirby->apply('webform.route:after', [
                     'form' => $form,
+                    'operation' => $operation,
                     'response' => $response,
                 ], 'response');
 

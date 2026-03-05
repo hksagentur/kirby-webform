@@ -2,6 +2,7 @@
 
 namespace Webform\Cms\Concerns;
 
+use Kirby\Content\Content;
 use Kirby\Toolkit\Str;
 use UnexpectedValueException;
 use Webform\Form\Actions\Action;
@@ -9,20 +10,21 @@ use Webform\Form\Actions\Database;
 use Webform\Form\Actions\Email;
 use Webform\Form\Actions\Webhook;
 
-trait HasActions
+/**
+ * @method Content content(string|null $languageCode = null)
+ */
+trait HasAction
 {
-    protected ?array $actions = null;
+    protected ?Action $action = null;
 
-    public function actions(): array
+    public function action(): Action
     {
-        return $this->actions ??= [
-            $this->createAction($this->content()->action()->value()),
-        ];
+        return $this->action ??= $this->createAction($this->content()->action()->value());
     }
 
     protected function createAction(string $type): Action
     {
-        $method = 'create'.Str::camel($type).'Action';
+        $method = 'create'.Str::studly($type).'Action';
 
         if (! method_exists($this, $method)) {
             throw new UnexpectedValueException(sprintf(
@@ -59,7 +61,7 @@ trait HasActions
 
     protected function createEmailAction(): Email
     {
-        $action = new Email(preset: $this->formId());
+        $action = new Email(preset: $this->content()->form()->value() ?: null);
 
         if ($this->content()->emailSubject()->isNotEmpty()) {
             $action->subject($this->content()->emailSubject()->value());

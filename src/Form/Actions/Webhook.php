@@ -24,6 +24,11 @@ class Webhook extends Action
         return new static($url);
     }
 
+    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
+    {
+        return static::create(...$arguments)->execute($submission);
+    }
+
     public function getUrl(): ?string
     {
         return $this->evaluate($this->url);
@@ -80,7 +85,7 @@ class Webhook extends Action
         return $this->contentType('application/json');
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(FormSubmission $submission): mixed
     {
         $data = $submission->all();
 
@@ -90,7 +95,7 @@ class Webhook extends Action
             ? json_encode($data, JSON_UNESCAPED_SLASHES)
             : http_build_query($data, '', '&', PHP_QUERY_RFC3986);
 
-        $options = $this->applyFilters('webhook:before', [
+        $options = $this->apply('webhook:before', [
             'options' => [
                 'headers' => [
                     ...$this->getHeaders(),
@@ -103,8 +108,10 @@ class Webhook extends Action
 
         $response = Remote::request($url, $options);
 
-        $this->fireEvent('webhook:after', [
+        $this->dispatch('webhook:after', [
             'response' => $response,
         ]);
+
+        return $response->code() >= 200 && $response->code() < 300;
     }
 }

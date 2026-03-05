@@ -10,7 +10,8 @@ trait EvaluatesClosures
 {
     abstract public function getEvaluationContext(): array;
 
-    public function evaluate(mixed $value): mixed
+    /** @param array<string, mixed> $inject */
+    public function evaluate(mixed $value, array $inject = []): mixed
     {
         if ($value instanceof Closure) {
             return (new Controller($value))->call(
@@ -21,6 +22,7 @@ trait EvaluatesClosures
                     'route' => App::instance()->route(),
                     'request' => App::instance()->request(),
                     ...$this->getEvaluationContext(),
+                    ...$inject,
                 ],
             );
         }

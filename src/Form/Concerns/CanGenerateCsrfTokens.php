@@ -4,9 +4,9 @@ namespace Webform\Form\Concerns;
 
 use Kirby\Cms\App;
 
-trait GeneratesCsrfTokens
+trait CanGenerateCsrfTokens
 {
-    public function getCsrfToken(): string
+    public function generateCsrfToken(): string
     {
         return App::instance()->csrf();
     }

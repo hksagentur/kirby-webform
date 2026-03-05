@@ -7,15 +7,19 @@ use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Webform\Form\Form;
 use Webform\Http\Exception\ChallengeFailedException;
+use Webform\Toolkit\Route;
 
 class VerifyChallenges extends Middleware
 {
-    public function handle(Request $request, Closure $next, ?Form $form = null): Response|array|false
+    public function handle(Request $request, Closure $next): Response|array|false
     {
-        if ($form?->getChallenges()?->verifyAll() === false) {
+        /** @var Form $form */
+        $form = Route::get('form');
+
+        if ($form->getChallenges()?->verifyAll() === false) {
             throw new ChallengeFailedException();
         }
 
-        return $next($request, $form);
+        return $next($request);
     }
 }

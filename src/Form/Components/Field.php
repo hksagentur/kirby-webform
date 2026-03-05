@@ -40,15 +40,4 @@ class Field extends Component implements Contracts\CanBeRequired, Contracts\HasV
     {
         return $this->evaluate($this->label) ?? Str::ucfirst($this->getName());
     }
-
-    public function getPropertyValue(string $name, mixed $default = null): mixed
-    {
-        return match ($name) {
-            'id' => $this->getId(),
-            'key' => $this->getKey(),
-            'name' => $this->getName(),
-            'label' => $this->getLabel(),
-            default => $default,
-        };
-    }
 }
