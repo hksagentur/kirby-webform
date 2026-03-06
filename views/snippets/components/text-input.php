@@ -38,7 +38,7 @@
         'step' => $component->getStep(),
         'placeholder' => $component->getPlaceholder(),
         'autocomplete' => $component->getAutocomplete(),
-        'list' => $options ? "{$id}-datalist" : null,
+        'list' => $options->isNotEmpty() ? "{$id}-datalist" : null,
         'aria-invalid' => $invalid ? 'true' : null,
         'aria-describedby' => [
             ...$invalid ? ["{$id}-error"] : [],

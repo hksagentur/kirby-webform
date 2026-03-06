@@ -29,7 +29,7 @@
         'step' => $component->getStep(),
         'placeholder' => $component->getPlaceholder(),
         'autocomplete' => $component->getAutocomplete() ?? 'nope',
-        'list' => $options ? "{$id}-datalist" : null,
+        'list' => $options->isNotEmpty() ? "{$id}-datalist" : null,
         'aria-describedby' => $hint ? ["{$id}-hint"] : [],
     ])) ?>>
 
