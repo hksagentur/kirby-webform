@@ -1,10 +1,8 @@
 <?php /** @var \Webform\Form\Components\Cluster $component */ ?>
 
 <div <?= attr(A::merge($component->getExtraAttributes(), [
-    'class' => [
-        'cluster',
-        $component->hasGap() ? "cluster--{$component->getGap()}" : null,
-    ],
+    'class' => 'cluster',
+    'data-gap' => $component->getGap(),
 ])) ?>>
-    <?= $component->getChildren() ?>
+    <?= $children ?? $slot ?>
 </div>

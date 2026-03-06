@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
+use Webform\Form\Form;
 use Webform\Toolkit\Flash;
 use Webform\Toolkit\Route;
 

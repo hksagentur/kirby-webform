@@ -56,16 +56,17 @@ class Form extends ViewComponent
 
     public function getEvaluationContext(): array
     {
-        return $this->getContext()->all() + [
+        return array_merge($this->getContext()->all(), [
             'form' => $this,
-        ];
+        ]);
     }
 
     public function getSnippetContext(): array
     {
-        return $this->getContext()->all() + [
+        return array_merge($this->getContext()->all(), [
             'form' => $this,
-        ];
+            'children' => $this->getChildren()->visible(),
+        ]);
     }
 
     public function submit(ValidatedInput $validated, ?string $operation = null): void

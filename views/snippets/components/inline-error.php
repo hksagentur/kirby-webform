@@ -30,7 +30,7 @@
                 <?php endforeach ?>
             <?php else : ?>
                 <li class="inline-error__list-item">
-                    <?= $slot ?>
+                    <?= $message ?? $slot ?>
                 </li>
             <?php endif ?>
         </ul>

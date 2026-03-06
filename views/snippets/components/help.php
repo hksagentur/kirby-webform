@@ -6,5 +6,5 @@
     ],
     ...$attrs ?? [],
 ]) ?>>
-    <?= $slot ?>
+    <?= $children ?? $slot ?>
 </div>

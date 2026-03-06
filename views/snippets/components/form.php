@@ -29,7 +29,7 @@
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?= $form->getChildren() ?>
+    <?= $children ?? $slot ?>
 
     <input type="hidden" name="_webform_id" value="<?= $form->getId() ?>">
     <input type="hidden" name="_webform_token" value="<?= $form->generateCsrfToken() ?>">

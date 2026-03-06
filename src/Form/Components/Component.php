@@ -9,6 +9,7 @@ abstract class Component extends ViewComponent
 {
     use Concerns\BelongsToForm;
     use Concerns\CanAllowHtml;
+    use Concerns\CanBeHidden;
     use Concerns\HasExtraAttributes;
     use Concerns\HasId;
     use Concerns\HasKey;
@@ -22,7 +23,7 @@ abstract class Component extends ViewComponent
             return ['component' => $this];
         }
 
-        return $context + ['component' => $this];
+        return array_merge($context, ['component' => $this]);
     }
 
     public function getSnippetContext(): array
@@ -33,6 +34,6 @@ abstract class Component extends ViewComponent
             return ['component' => $this];
         }
 
-        return $context + ['component' => $this];
+        return array_merge($context, ['component' => $this]);
     }
 }

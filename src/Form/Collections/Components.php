@@ -55,6 +55,22 @@ class Components extends Collection implements Htmlable, Stringable
     }
 
     /**
+     * @return static<TKey, TValue>
+     */
+    public function visible(): static
+    {
+        return $this->filter(fn (Component $component) => $component->isVisible());
+    }
+
+    /**
+     * @return static<TKey, TValue>
+     */
+    public function hidden(): static
+    {
+        return $this->filter(fn (Component $component) => $component->isHidden());
+    }
+
+    /**
      * @return Components<TKey, Button>
      */
     public function actions(): Components

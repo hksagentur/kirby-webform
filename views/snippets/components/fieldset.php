@@ -12,6 +12,6 @@
     <?php endif ?>
 
     <div class="fieldset__content">
-        <?= $component->getChildren() ?>
+        <?= $children ?? $slot ?>
     </div>
 </fieldset>

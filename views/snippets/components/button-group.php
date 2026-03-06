@@ -6,5 +6,5 @@
         'cluster',
     ],
 ])) ?>>
-    <?= $component->getChildren() ?>
+    <?= $children ?? $slot ?>
 </div>

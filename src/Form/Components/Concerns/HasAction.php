@@ -28,7 +28,7 @@ trait HasAction
         return $this;
     }
 
-    public function actionFromModel(string $key): static
+    public function actionFromContext(string $key): static
     {
         return $this->action(static function (FormSubmission $submission) use ($key) {
             $model = $submission->getForm()?->getContext()->get($key);
@@ -43,5 +43,15 @@ trait HasAction
 
             return $model->action()->execute($submission);
         });
+    }
+
+    public function actionFromPage(): static
+    {
+        return $this->actionFromContext('page');
+    }
+
+    public function actionFromBlock(): static
+    {
+        return $this->actionFromContext('block');
     }
 }
