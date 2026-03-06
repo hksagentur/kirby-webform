@@ -8,7 +8,12 @@
 <?php $invalid ??= $component->isInvalid() ?>
 <?php $messages ??= $component->getErrors() ?>
 
-<?php snippet('webform/field', slots: true) ?>
+<?php snippet('webform/field', [
+    'class' => [
+        'file-upload',
+        ...$invalid ? ['file-upload--invalid'] : [],
+    ],
+], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
         <?php snippet('webform/label', ['for' => $id], slots: true) ?>
             <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
@@ -23,10 +28,7 @@
 
     <input <?= attr(A::merge($component->getExtraAttributes(), [
         'type' => 'file',
-        'class' => [
-            'file-upload',
-            ...$invalid ? ['file-upload--invalid'] : [],
-        ],
+        'class' => 'file-upload__input',
         'id' => $id,
         'name' => $component->isMultiple() ? $name.'[]' : $name,
         'required' => $component->isRequired(),
