@@ -7,7 +7,7 @@
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <legend class="fieldset__legend">
-            <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
+            <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         </legend>
     <?php endif ?>
 

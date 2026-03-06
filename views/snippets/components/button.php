@@ -14,6 +14,6 @@
     ],
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
-        <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
+        <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
     <?php endif ?>
 </button>

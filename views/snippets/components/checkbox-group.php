@@ -34,19 +34,19 @@
             'id' => "{$id}-label",
             'class' => 'checkbox-group__label',
         ]) ?>>
-            <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
+            <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         </legend>
     <?php endif ?>
 
     <?php if ($hint) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
-            <?= $component->isHtmlAllowed() ? $hint : esc($hint) ?>
+            <?= $component->isHtmlAllowed() ? kti($hint) : esc($hint) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
     <?php if ($help) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
-            <?= $component->isHtmlAllowed() ? $help : esc($help) ?>
+            <?= $component->isHtmlAllowed() ? kti($help) : esc($help) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
@@ -64,7 +64,7 @@
                     'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="checkbox-group__option-label">
-                    <?= $component->isHtmlAllowed() ? $option->label() : esc($option->label())  ?>
+                    <?= $component->isHtmlAllowed() ? kti($option->label()) : esc($option->label())  ?>
                 </span>
             </label>
         <?php endforeach ?>

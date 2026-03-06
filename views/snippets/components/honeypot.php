@@ -8,13 +8,13 @@
 <?php snippet('webform/field', ['class' => 'trojan-horse'], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
         <?php snippet('webform/label', ['for' => $id], slots: true) ?>
-            <?= $component->isHtmlAllowed() ? $label : esc($label) ?>
+            <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
     <?php if ($hint = $component->getHint()) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
-            <?= $component->isHtmlAllowed() ? $hint : esc($hint) ?>
+            <?= $component->isHtmlAllowed() ? kti($hint) : esc($hint) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
@@ -40,7 +40,7 @@
 
     <?php if ($help = $component->getHelp()) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
-            <?= $component->isHtmlAllowed() ? $help : esc($help) ?>
+            <?= $component->isHtmlAllowed() ? kti($help) : esc($help) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 <?php endsnippet() ?>
