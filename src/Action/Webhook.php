@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Form\Actions;
+namespace Webform\Action;
 
 use Closure;
 use Kirby\Http\Remote;

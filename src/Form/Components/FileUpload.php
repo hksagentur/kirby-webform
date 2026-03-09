@@ -3,6 +3,9 @@
 namespace Webform\Form\Components;
 
 use Closure;
+use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
+use Webform\Http\UploadedFile;
 
 class FileUpload extends Field
 {
@@ -17,6 +20,7 @@ class FileUpload extends Field
     protected int|Closure|null $maxFiles = null;
 
     protected array|Closure|null $acceptedFileTypes = null;
+    protected array|Closure|null $acceptedFileExtensions = null;
 
     public function isMultiple(): bool
     {
@@ -45,7 +49,30 @@ class FileUpload extends Field
 
     public function getAcceptedFileTypes(): ?array
     {
-        return $this->evaluate($this->acceptedFileTypes);
+        $mimeTypes = $this->evaluate($this->acceptedFileTypes);
+
+        if ($mimeTypes !== null) {
+            return $mimeTypes;
+        }
+
+        return array_map(
+            F::extensionToMime(...),
+            $this->evaluate($this->acceptedFileExtensions) ?? [],
+        );
+    }
+
+    public function getAcceptedFileExtensions(): ?array
+    {
+        $fileExtensions = $this->evaluate($this->acceptedFileExtensions);
+
+        if ($fileExtensions !== null) {
+            return $fileExtensions;
+        }
+
+        return array_map(
+            F::mimeToExtension(...),
+            $this->evaluate($this->acceptedFileTypes) ?? []
+        );
     }
 
     public function multiple(bool|Closure $condition = true): static
@@ -83,9 +110,16 @@ class FileUpload extends Field
         return $this;
     }
 
-    public function acceptedFileTypes(array|Closure $types): static
+    public function acceptedFileTypes(array|Closure|null $types): static
     {
         $this->acceptedFileTypes = $types;
+
+        return $this;
+    }
+
+    public function acceptedFileExtensions(array|Closure|null $extendsions): static
+    {
+        $this->acceptedFileExtensions = $extendsions;
 
         return $this;
     }
@@ -119,5 +153,17 @@ class FileUpload extends Field
         }
 
         return $rules;
+    }
+
+    public function getMessageContext(): array
+    {
+        return parent::getMessageContext() + [
+            'minFiles' => $this->getMinFiles() ?? 0,
+            'maxFiles' => $this->getMaxFiles() ?? 0,
+            'minSize' => F::niceSize($this->getMinSize() ?? 0),
+            'maxSize' => F::niceSize($this->getMaxSize() ?? UploadedFile::getMaxFileSize()),
+            'fileTypes' => A::join($this->getAcceptedFileTypes()),
+            'fileExtensions' => A::join($this->getAcceptedFileExtensions()),
+        ];
     }
 }

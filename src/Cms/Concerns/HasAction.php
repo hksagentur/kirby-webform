@@ -5,10 +5,10 @@ namespace Webform\Cms\Concerns;
 use Kirby\Content\Content;
 use Kirby\Toolkit\Str;
 use UnexpectedValueException;
-use Webform\Form\Actions\Action;
-use Webform\Form\Actions\Database;
-use Webform\Form\Actions\Email;
-use Webform\Form\Actions\Webhook;
+use Webform\Action\Action;
+use Webform\Action\Database;
+use Webform\Action\Email;
+use Webform\Action\Webhook;
 
 /**
  * @method Content content(string|null $languageCode = null)

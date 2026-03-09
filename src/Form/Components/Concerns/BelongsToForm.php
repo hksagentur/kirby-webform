@@ -13,7 +13,7 @@ trait BelongsToForm
         return $this->form;
     }
 
-    public function form(Form $form): static
+    public function form(?Form $form): static
     {
         $this->form = $form;
 

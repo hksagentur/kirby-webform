@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Form\Actions;
+namespace Webform\Action;
 
 use Closure;
 use Webform\Form\FormSubmission;
@@ -15,11 +15,6 @@ class Callback extends Action
     public static function create(Closure $callback): static
     {
         return new static($callback);
-    }
-
-    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
-    {
-        return static::create(...$arguments)->execute($submission);
     }
 
     public function getCallback(): Closure

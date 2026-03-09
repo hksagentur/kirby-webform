@@ -1,9 +1,8 @@
-<?php /** @var \Webform\Form\Components\Cluster $component */ ?>
+<?php /** @var \Webform\Form\Components\Container $component */ ?>
 
 <div <?= attr(A::merge($component->getExtraAttributes(), [
     'id' => $component->getId(),
-    'class' => 'cluster',
-    'data-gap' => $component->getGap(),
+    'class' => 'container',
 ])) ?>>
     <?= $children ?? $slot ?>
 </div>

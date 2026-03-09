@@ -1,6 +1,7 @@
 <?php /** @var \Webform\Form\Components\Fieldset $component */ ?>
 
 <fieldset <?= attr(A::merge($component->getExtraAttributes(), [
+    'id' => $component->getId(),
     'class' => 'fieldset',
     'disabled' => $component->isDisabled(),
     'role' => 'group',

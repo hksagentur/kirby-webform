@@ -2,14 +2,9 @@
 
 namespace Webform\Form\Components;
 
-class Stack extends LayoutComponent
+class Stack extends Container
 {
     use Concerns\HasGap;
 
     protected string $snippet = 'webform/stack';
-
-    public static function create(): static
-    {
-        return new static();
-    }
 }

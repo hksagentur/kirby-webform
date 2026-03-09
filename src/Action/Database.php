@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Form\Actions;
+namespace Webform\Action;
 
 use Closure;
 use Kirby\Database\Db;
@@ -18,11 +18,6 @@ class Database extends Action
     public static function create(string|Closure $table): static
     {
         return new static($table);
-    }
-
-    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
-    {
-        return static::create(...$arguments)->execute($submission);
     }
 
     public function getTable(): ?string

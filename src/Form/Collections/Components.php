@@ -3,11 +3,11 @@
 namespace Webform\Form\Collections;
 
 use Stringable;
-use Webform\Form\Components\Component;
-use Webform\Form\Components\Contracts\HasChildren;
-use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Components\Button;
+use Webform\Form\Components\Component;
+use Webform\Form\Components\Container;
 use Webform\Form\Components\Field;
+use Webform\Form\Components\Contracts\ProvidesChallenge;
 use Webform\Form\Form;
 use Webform\Toolkit\Collection;
 use Webform\Toolkit\Htmlable;
@@ -33,19 +33,6 @@ class Components extends Collection implements Htmlable, Stringable
     ) {
     }
 
-    public function form(Form $form): static
-    {
-        return $this->each(fn (Component $component) => $component->form($form));
-    }
-
-    /**
-     * @return ?TValue
-     */
-    public function find(string $key): ?Component
-    {
-        return $this->findBy('key', $key);
-    }
-
     /**
      * @return array<TKey, TValue>
      */
@@ -68,6 +55,14 @@ class Components extends Collection implements Htmlable, Stringable
     public function hidden(): static
     {
         return $this->filter(fn (Component $component) => $component->isHidden());
+    }
+
+    /**
+     * @return static<TKey, TValue>
+     */
+    public function index(): static
+    {
+        return $this->index ??= $this->flatten();
     }
 
     /**
@@ -113,23 +108,33 @@ class Components extends Collection implements Htmlable, Stringable
     /**
      * @return static<TKey, TValue>
      */
-    public function index(): static
+    public function flatten(): static
     {
-        return $this->index ??= $this->pipe(static function (self $collection) {
-            $components = [];
+        $components = [];
 
-            foreach ($collection as $component) {
-                $components[] = $component;
+        foreach ($this->components as $component) {
+            $components[] = $component;
 
-                if ($component instanceof HasChildren) {
-                    $components = [
-                        ...$components,
-                        ...$component->getChildren()->index(),
-                    ];
-                }
+            if ($component instanceof Container) {
+                $components = [
+                    ...$components,
+                    ...$component->getChildren()->index(),
+                ];
             }
+        }
 
-            return new static($components);
+        return new static($components);
+    }
+
+    public function attachTo(Form|Container $component): static
+    {
+        [$form, $container] = match (true) {
+            $component instanceof Container => [$component->getForm(), $component],
+            $component instanceof Form => [$component, null],
+        };
+
+        return $this->each(static function (Component $component) use ($form, $container) {
+            $component->form($form)->container($container);
         });
     }
 

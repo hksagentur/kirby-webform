@@ -26,6 +26,7 @@ Add a configuration file for a new form in `site/forms`.
 ```php
 <?php // site/forms/contact.php
 
+use Webform\Action\Email;
 use Webform\Form\Components\Button;
 use Webform\Form\Components\TextInput;
 use Webform\Form\Components\Textarea;
@@ -41,9 +42,14 @@ return Form::create()->children([
     ->required()
     ->maxLength(255)
     ->rows(8),
-  Button::create('Submit'),
+  Button::create('submit')
+    ->action(fn (FormSubmission $submission) => Email::create('contact')
+      ->subject('Contact Form')
+      ->from('no-reply@example.com')
+      ->to('info@example.org')
+      ->execute($submission)
+    ),
 ]);
-
 ```
 
 ## FAQ

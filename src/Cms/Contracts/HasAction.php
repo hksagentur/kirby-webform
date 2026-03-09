@@ -2,7 +2,7 @@
 
 namespace Webform\Cms\Contracts;
 
-use Webform\Form\Actions\Action;
+use Webform\Action\Action;
 
 interface HasAction
 {

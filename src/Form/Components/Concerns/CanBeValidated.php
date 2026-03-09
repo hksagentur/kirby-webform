@@ -12,13 +12,6 @@ trait CanBeValidated
     protected array $validationRules = [];
     protected array $validationMessages = [];
 
-    protected string|Closure|null $validationAttribute = null;
-
-    public function getValidationAttribute(): string
-    {
-        return $this->evaluate($this->validationAttribute) ?? lcfirst($this->getLabel());
-    }
-
     public function getValidationMessages(): array
     {
         $messages = [];
@@ -49,7 +42,7 @@ trait CanBeValidated
                 $rules['minLength'] = [$minLength];
             }
 
-            if ($maxLength = $this->getMinLength()) {
+            if ($maxLength = $this->getMaxLength()) {
                 $rules['maxLength'] = [$maxLength];
             }
         }
@@ -349,13 +342,6 @@ trait CanBeValidated
             ...$this->validationRules,
             ...array_map(static fn (string $rule) => [$rule, $condition], $rules)
         ];
-
-        return $this;
-    }
-
-    public function validationAttribute(string|Closure|null $label): static
-    {
-        $this->validationAttribute = $label;
 
         return $this;
     }

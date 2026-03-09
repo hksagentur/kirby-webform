@@ -3,7 +3,6 @@
 namespace Webform\Validation;
 
 use Closure;
-use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -17,21 +16,21 @@ class Validator
 
     protected array $data = [];
     protected array $rules = [];
+    protected array $placeholders = [];
 
     protected array $customMessages = [];
-    protected array $customAttributes = [];
 
     public function __construct(
         array $data,
         array $rules,
         array $messages = [],
-        array $attributes = [],
+        array $placeholders = [],
     ) {
         $this->data = $data;
         $this->rules = $rules;
+        $this->placeholders = $placeholders;
 
         $this->customMessages = $messages;
-        $this->customAttributes = $attributes;
     }
 
     public function isValidated(): bool
@@ -44,19 +43,24 @@ class Validator
         return ! $this->isValidated();
     }
 
-    public function getRules(): array
-    {
-        return $this->rules;
-    }
-
     public function getData(): array
     {
         return $this->data;
     }
 
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
     public function getValue(string $field, mixed $default = null): mixed
     {
         return A::get($this->data, $field, $default);
+    }
+
+    public function getMessageData(string $field, array $default = []): array
+    {
+        return A::get($this->placeholders, $field, $default);
     }
 
     public function valid(): array
@@ -239,28 +243,12 @@ class Validator
 
         $validator = $this->getValidator($rule);
 
-        $attribute = A::get(
-            array: $this->customAttributes,
-            key: $field,
-            default: Str::lower(Str::replace($field, ['-', '_'], ' ')),
+        $data = A::merge(
+            $this->getValidatorParameters($validator, $parameters),
+            $this->getMessageData($field),
         );
 
-        $data = A::merge($this->getValidatorParameters($validator, $parameters), [
-            'attribute' => $attribute,
-            'field' => $field,
-            'Attribute' => Str::ucwords($attribute),
-            'Field' => Str::ucwords($field),
-        ]);
-
-        $message = Str::template($message, $data, ['fallback' => '?']);
-
-        $message = preg_replace_callback(
-            pattern: '/(\d+)\s*bytes/i',
-            callback: fn (array $matches): string => F::niceSize((int) $matches[1]),
-            subject: $message,
-        );
-
-        return $message;
+        return Str::template($message, $data, ['fallback' => '?']);
     }
 
     protected function addMessage(string $field, string $rule, array $parameters = []): void

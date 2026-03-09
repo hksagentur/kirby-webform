@@ -146,6 +146,14 @@ abstract class Collection implements Arrayable, Countable, Jsonable, JsonSeriali
     /**
      * @return ?TValue
      */
+    public function find(string $key): mixed
+    {
+        return $this->findBy('key', $key);
+    }
+
+    /**
+     * @return ?TValue
+     */
     public function findBy(string $key, mixed $value): mixed
     {
         return $this->first(fn (array|object $item) => $this->getAttribute($item, $key) === $value);

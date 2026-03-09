@@ -1,12 +1,12 @@
 <?php
 
-namespace Webform\Form\Actions;
+namespace Webform\Action;
 
 use Closure;
 use InvalidArgumentException;
 use Webform\Form\FormSubmission;
 
-class Sequence
+class Sequence extends Action
 {
     public function __construct(
         /** @var (Action|Closure)[] */
@@ -38,14 +38,16 @@ class Sequence
         return $this;
     }
 
-    public function execute(FormSubmission $submission): void
+    public function execute(FormSubmission $submission): mixed
     {
         foreach ($this->actions as $action) {
             $this->call($action, $submission);
         }
+
+        return true;
     }
 
-    public function executeUntil(FormSubmission $submission): bool
+    public function executeUntil(FormSubmission $submission): mixed
     {
         foreach ($this->actions as $action) {
             if ($this->call($action, $submission) === false) {

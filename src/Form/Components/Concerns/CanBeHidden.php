@@ -3,7 +3,6 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
-use Webform\Form\Components\Contracts\HasChildren;
 
 trait CanBeHidden
 {
@@ -29,10 +28,10 @@ trait CanBeHidden
             return true;
         }
 
-        if ($this instanceof HasChildren) {
-            if ($this->getChildren()->visible()->isEmpty()) {
-                return true;
-            }
+        $container = $this->getContainer();
+
+        if ($container?->isHidden() === true) {
+            return true;
         }
 
         return false;

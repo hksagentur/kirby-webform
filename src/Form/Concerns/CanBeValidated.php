@@ -46,14 +46,14 @@ trait CanBeValidated
     {
         $rules = [];
         $messages = [];
-        $attributes = [];
+        $placeholders = [];
 
         foreach ($this->getFields() as $field) {
             $rules[$field->getName()] = $field->getValidationRules();
             $messages[$field->getName()] = $field->getValidationMessages();
-            $attributes[$field->getName()] = $field->getValidationAttribute();
+            $placeholders[$field->getName()] = $field->getMessageContext();
         }
 
-        return new Validator($input, $rules, $messages, $attributes);
+        return new Validator($input, $rules, $messages, $placeholders);
     }
 }

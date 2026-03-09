@@ -1,14 +1,29 @@
 <?php
 
-namespace Webform\Form\Concerns;
+namespace Webform\Action;
 
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Toolkit\Controller;
+use Webform\Form\FormSubmission;
 
-trait EvaluatesClosures
+abstract class Action
 {
-    abstract public function getEvaluationContext(): array;
+    abstract public function execute(FormSubmission $submission): mixed;
+
+    public function apply(string $name, array $arguments, string $modify): mixed
+    {
+        return App::instance()->apply("webform.{$name}", array_merge($arguments, [
+            'action' => $this,
+        ]), $modify);
+    }
+
+    public function dispatch(string $event, array $arguments = []): void
+    {
+        App::instance()->trigger("webform.{$event}", array_merge($arguments, [
+            'action' => $this,
+        ]));
+    }
 
     /** @param array<string, mixed> $inject */
     public function evaluate(mixed $value, array $inject = []): mixed
@@ -21,7 +36,6 @@ trait EvaluatesClosures
                     'page' => App::instance()->site()->page(),
                     'route' => App::instance()->route(),
                     'request' => App::instance()->request(),
-                    ...$this->getEvaluationContext(),
                     ...$inject,
                 ],
             );

@@ -4,7 +4,7 @@ namespace Webform\Form\Components;
 
 use Closure;
 
-class Fieldset extends LayoutComponent
+class Fieldset extends Container
 {
     use Concerns\CanBeDisabled;
     use Concerns\HasLabel;

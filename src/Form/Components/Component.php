@@ -2,38 +2,37 @@
 
 namespace Webform\Form\Components;
 
-use Webform\Form\Concerns\EvaluatesClosures;
 use Webform\Template\ViewComponent;
 
 abstract class Component extends ViewComponent
 {
     use Concerns\BelongsToForm;
+    use Concerns\BelongsToContainer;
     use Concerns\CanAllowHtml;
     use Concerns\CanBeHidden;
     use Concerns\HasExtraAttributes;
     use Concerns\HasId;
     use Concerns\HasKey;
-    use EvaluatesClosures;
+
+    public const ALIAS = 'component';
 
     public function getEvaluationContext(): array
     {
-        $context = $this->getForm()?->getEvaluationContext();
-
-        if (! $context) {
-            return ['component' => $this];
-        }
-
-        return array_merge($context, ['component' => $this]);
+        return array_merge([
+            'container' => $this->getContainer(),
+            'form' => $this->getForm(),
+            'block' => $this->getForm()?->getContext()->block(),
+            'page' => $this->getForm()?->getContext()->page(),
+        ], parent::getEvaluationContext());
     }
 
     public function getSnippetContext(): array
     {
-        $context = $this->getForm()?->getSnippetContext();
-
-        if (! $context) {
-            return ['component' => $this];
-        }
-
-        return array_merge($context, ['component' => $this]);
+        return array_merge([
+            'container' => $this->getContainer(),
+            'form' => $this->getForm(),
+            'block' => $this->getForm()?->getContext()->block(),
+            'page' => $this->getForm()?->getContext()->page(),
+        ], parent::getSnippetContext());
     }
 }

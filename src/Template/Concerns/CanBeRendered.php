@@ -11,7 +11,7 @@ trait CanBeRendered
     protected string|Closure|null $defaultSnippet = null;
     protected string $snippet;
 
-    protected array $snippetData = [];
+    protected array|Closure $snippetData = [];
 
     public function getDefaultSnippet(): ?string
     {
@@ -56,19 +56,16 @@ trait CanBeRendered
         return $this->snippetData($data);
     }
 
-    public function getSnippetData(): array
-    {
-        return $this->snippetData;
-    }
-
     abstract public function getSnippetContext(): array;
 
-    public function snippetData(array $data): static
+    public function getSnippetData(): array
     {
-        $this->snippetData = [
-            ...$this->snippetData,
-            ...$data,
-        ];
+        return $this->evaluate($this->snippetData);
+    }
+
+    public function snippetData(array|Closure $data): static
+    {
+        $this->snippetData = $data;
 
         return $this;
     }

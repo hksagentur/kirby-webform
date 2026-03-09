@@ -13,9 +13,7 @@ use Webform\Validation\ValidatedInput;
 class Form extends ViewComponent
 {
     use Concerns\CanBeValidated;
-    use Concerns\CanDispatchEvent;
     use Concerns\CanGenerateCsrfTokens;
-    use Concerns\EvaluatesClosures;
     use Concerns\HasChildren;
     use Concerns\HasConfig;
     use Concerns\HasContext;
@@ -56,22 +54,31 @@ class Form extends ViewComponent
 
     public function getEvaluationContext(): array
     {
-        return array_merge($this->getContext()->all(), [
-            'form' => $this,
-        ]);
+        return array_merge([
+            'block' => $this->getContext()->block(),
+            'page' => $this->getContext()->page(),
+        ], parent::getEvaluationContext());
     }
 
     public function getSnippetContext(): array
     {
-        return array_merge($this->getContext()->all(), [
-            'form' => $this,
+        return array_merge([
+            'block' => $this->getContext()->block(),
+            'page' => $this->getContext()->page(),
             'children' => $this->getChildren()->visible(),
-        ]);
+        ], parent::getSnippetContext());
+    }
+
+    public function getMessageContext(): array
+    {
+        return [
+            'form' => $this->getName(),
+        ];
     }
 
     public function submit(ValidatedInput $validated, ?string $operation = null): void
     {
-        $action = $operation
+        $action = ($operation !== null)
             ? $this->getActions()->find($operation)
             : $this->getActions()->first();
 

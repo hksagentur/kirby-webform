@@ -2,14 +2,9 @@
 
 namespace Webform\Form\Components;
 
-class Grid extends LayoutComponent
+class Grid extends Container
 {
     use Concerns\HasGap;
 
     protected string $snippet = 'webform/grid';
-
-    public static function create(): static
-    {
-        return new static();
-    }
 }

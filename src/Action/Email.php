@@ -1,6 +1,6 @@
 <?php
 
-namespace Webform\Form\Actions;
+namespace Webform\Action;
 
 use Closure;
 use Kirby\Cms\App;
@@ -31,11 +31,6 @@ class Email extends Action
     public static function create(string|array|Closure|null $preset = null): static
     {
         return new static($preset);
-    }
-
-    public static function handle(FormSubmission $submission, mixed ...$arguments): mixed
-    {
-        return static::create(...$arguments)->execute($submission);
     }
 
     public function getPreset(): array

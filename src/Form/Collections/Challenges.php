@@ -15,16 +15,16 @@ class Challenges extends Components
 {
     public function valid(): static
     {
-        return $this->filter(fn (ProvidesChallenge $challenge) => $challenge->verify());
+        return $this->filter(fn (Component&ProvidesChallenge $challenge) => $challenge->verify());
     }
 
     public function invalid(): static
     {
-        return $this->reject(fn (ProvidesChallenge $challenge) => $challenge->verify());
+        return $this->reject(fn (Component&ProvidesChallenge $challenge) => $challenge->verify());
     }
 
     public function verifyAll(): bool
     {
-        return ! $this->some(fn (ProvidesChallenge $challenge) => ! $challenge->verify());
+        return ! $this->some(fn (Component&ProvidesChallenge $challenge) => ! $challenge->verify());
     }
 }
