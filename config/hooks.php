@@ -11,11 +11,4 @@ return [
 
         return $data;
     },
-    'page.render:after' => function (string $contentType, array $data, string $html, Page $page): string {
-        if ($contentType === 'html') {
-            Flash::put('webform.page.previous', $page->url());
-        }
-
-        return $html;
-    },
 ];

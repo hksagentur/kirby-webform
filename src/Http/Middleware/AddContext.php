@@ -7,8 +7,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
 use Webform\Form\Form;
-use Webform\Toolkit\Flash;
 use Webform\Toolkit\Route;
 
 class AddContext extends Middleware
@@ -50,13 +50,20 @@ class AddContext extends Middleware
 
     protected function getPreviousPage(): ?Page
     {
-        $id = Flash::get('webform.page.previous');
+        $url = Url::last();
 
-        if ($id === null) {
+        if (! $url) {
             return null;
         }
 
-        $page = App::instance()->site()->find($id);
+        $home = App::instance()->url(object: true);
+        $uri = Url::toObject($url);
+
+        if ($uri->domain() !== $home->domain()) {
+            return null;
+        }
+
+        $page = App::instance()->site()->find($uri->path());
 
         if (! $page || ! $page->isAccessible()) {
             return null;

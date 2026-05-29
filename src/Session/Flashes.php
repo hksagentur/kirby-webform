@@ -11,13 +11,12 @@ class Flashes
 {
     protected static ?self $instance = null;
 
-    protected SessionData $session;
-    protected string $sessionKey;
-
-    public function __construct(?SessionData $session = null, string $sessionKey = 'webform.flashes')
-    {
-        $this->session = $session ?? App::instance()->session()->data();
+    public function __construct(
+        protected string $sessionKey = 'webform.flashes',
+        protected ?SessionData $session = null
+    ) {
         $this->sessionKey = $sessionKey;
+        $this->session = $session;
     }
 
     public static function instance(?self $instance = null): ?static
@@ -34,6 +33,17 @@ class Flashes
         return static::instance()->$method(...$arguments);
     }
 
+    public function isSessionActive(): bool
+    {
+        $cookieName = App::instance()->option('session.cookieName', 'kirby_session');
+
+        if (! isset($_COOKIE[$cookieName])) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function has(string $key): bool
     {
         $value = $this->get(
@@ -46,12 +56,12 @@ class Flashes
 
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->session->get($key, $default);
+        return $this->session()->get($key, $default);
     }
 
     public function put(string $key, mixed $value): static
     {
-        $this->session->set($key, $value);
+        $this->session()->set($key, $value);
 
         $this->pushKey('new', $key);
         $this->removeKey('old', $key);
@@ -75,7 +85,7 @@ class Flashes
 
     public function now(string $key, mixed $value): static
     {
-        $this->session->set($key, $value);
+        $this->session()->set($key, $value);
 
         $this->pushKey('old', $key);
 
@@ -102,7 +112,11 @@ class Flashes
 
     public function clear(): static
     {
-        $this->session->remove($this->getKeys('old'));
+        if (! $this->isSessionActive()) {
+            return $this;
+        }
+
+        $this->session()->remove($this->getKeys('old'));
 
         $this->updateKeys('old', $this->getKeys('new'));
         $this->clearKeys('new');
@@ -112,12 +126,12 @@ class Flashes
 
     protected function getKeys(string $collection): array
     {
-        return $this->session->get("{$this->sessionKey}.{$collection}", []);
+        return $this->session()->get("{$this->sessionKey}.{$collection}", []);
     }
 
     protected function updateKeys(string $collection, array $keys): void
     {
-        $this->session->set("{$this->sessionKey}.{$collection}", $keys);
+        $this->session()->set("{$this->sessionKey}.{$collection}", $keys);
     }
 
     protected function mergeKeys(string $collection, array $keys): void
@@ -154,5 +168,10 @@ class Flashes
         $keys = array_diff($this->getKeys($collection), [$key]);
 
         $this->updateKeys($collection, $keys);
+    }
+
+    protected function session(): SessionData
+    {
+        return $this->session ??= App::instance()->session()->data();
     }
 }
