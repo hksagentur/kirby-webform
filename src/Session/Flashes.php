@@ -37,7 +37,7 @@ class Flashes
     {
         $cookieName = App::instance()->option('session.cookieName', 'kirby_session');
 
-        if (! isset($_COOKIE[$cookieName])) {
+        if (isset($_COOKIE[$cookieName])) {
             return true;
         }
 
