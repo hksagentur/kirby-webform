@@ -41,7 +41,7 @@ class AddContext extends Middleware
     {
         $page = App::instance()->site()->find($id);
 
-        if (! $page || ! $page->isAccessible()) {
+        if (! $page || ! $page->isPublished()) {
             return null;
         }
 
@@ -65,7 +65,7 @@ class AddContext extends Middleware
 
         $page = App::instance()->site()->find($uri->path());
 
-        if (! $page || ! $page->isAccessible()) {
+        if (! $page || ! $page->isPublished()) {
             return null;
         }
 

@@ -104,6 +104,14 @@ tabs:
           action: webhook
       lineMessages:
         type: line
+      successPage:
+        type: pages
+        label:
+          *: hksagentur.webform.blueprint.successPage.label
+        help:
+          *: hksagentur.webform.blueprint.successPage.help
+        icon: page
+        multiple: false
       successMessage:
         type: writer
         label:

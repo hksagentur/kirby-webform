@@ -34,11 +34,22 @@ class SubmissionController
         /** @var ?Page $referrer */
         $referrer = $form->getContext()->page();
 
-        if (! $referrer || ! $referrer->isAccessible()) {
+        if (! $referrer || ! $referrer->isPublished()) {
             return Url::home();
         }
 
         return sprintf('%s#%s', $referrer->url(), $form->getId());
+    }
+
+    protected function getSuccessPage(Form $form): ?Page
+    {
+        $page = $form->getContext()?->block()?->successPage()->toPage();
+
+        if (! $page || ! $page->isPublished()) {
+            return null;
+        }
+
+        return $page;
     }
 
     protected function getSuccessMessage(Form $form): ?string
@@ -77,6 +88,10 @@ class SubmissionController
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
+        if ($page = $this->getSuccessPage($form)) {
+            return new RedirectResponse($page->url());
+        }
+
         $url = $this->getRedirectUrl($form);
         $message = $this->getSuccessMessage($form);
 
