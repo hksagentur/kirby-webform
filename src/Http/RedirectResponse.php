@@ -6,8 +6,10 @@ use Kirby\Cms\App;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Stringable;
+use Webform\Form\FormInput;
+use Webform\Form\FormStatus;
+use Webform\Form\FormStatusType;
 use Webform\Toolkit\Arrayable;
-use Webform\Toolkit\Flash;
 
 class RedirectResponse extends Response
 {
@@ -27,38 +29,21 @@ class RedirectResponse extends Response
 
     public function withInput(array|null|Arrayable $input = null, string $channel = 'default'): static
     {
-        $input ??= App::instance()->request()->data();
-
-        if ($input instanceof Arrayable) {
-            $input = $input->toArray();
-        }
-
-        Flash::put("webform.form.{$channel}.input", $input);
+        FormInput::create($channel, $input ?? App::instance()->request()->data())->flash();
 
         return $this;
     }
 
-    public function withMessage(string|Stringable $text, string $type = 'success', string $channel = 'default'): static
+    public function withMessage(string|Stringable $text, FormStatusType|string $type = FormStatusType::Success, string $channel = 'default'): static
     {
-        if ($text instanceof Stringable) {
-            $text = (string) $text;
-        }
-
-        Flash::put("webform.form.{$channel}.message", [
-            'message' => $text,
-            'type' => $type,
-        ]);
+        FormStatus::create($channel, $type, $text)->flash();
 
         return $this;
     }
 
     public function withErrors(array|Arrayable $messages, string $channel = 'default'): static
     {
-        if ($messages instanceof Arrayable) {
-            $messages = $messages->toArray();
-        }
-
-        Flash::put("webform.form.{$channel}.errors", $messages);
+        FormStatus::create($channel, FormStatusType::Invalid, errors: $messages)->flash();
 
         return $this;
     }

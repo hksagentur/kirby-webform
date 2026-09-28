@@ -6,8 +6,8 @@ use Countable;
 use JsonSerializable;
 use Kirby\Toolkit\A;
 use Stringable;
+use Webform\Form\FormStatus;
 use Webform\Toolkit\Arrayable;
-use Webform\Toolkit\Flash;
 use Webform\Toolkit\Jsonable;
 
 /**
@@ -30,17 +30,20 @@ class Messages implements Arrayable, Countable, Jsonable, JsonSerializable, Stri
         return new static($messages);
     }
 
-    public static function from(array|self $messages): static
+    public static function from(Arrayable|array|null $messages): static
     {
         return match (true) {
-            $messages instanceof static => $messages,
-            default => new static($messages),
+            $messages instanceof Arrayable => new static($messages->toArray()),
+            default => new static($messages ?? []),
         };
     }
 
+    /**
+     * @deprecated 3.2.0 Use `webformstatus()?->getErrors()` instead.
+     */
     public static function fromSession(string $channel = 'default'): static
     {
-        return static::from(Flash::get("webform.form.{$channel}.errors", []));
+        return FormStatus::fromSession($channel)?->getErrors() ?? new static();
     }
 
     public function isEmpty(): bool

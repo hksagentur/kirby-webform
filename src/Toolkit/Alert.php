@@ -2,11 +2,14 @@
 
 namespace Webform\Toolkit;
 
+use Webform\Form\FormStatus;
+use Webform\Form\FormStatusType;
 use JsonSerializable;
 use Kirby\Cms\App;
 use Stringable;
 
 /**
+ * @deprecated 3.2.0 Use `webformstatus()` to read and `RedirectResponse::withMessage()` to set messages.
  * @implements Arrayable<string, string>
  */
 class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringable
@@ -37,13 +40,13 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
 
     public static function fromSession(string $channel = 'default'): ?static
     {
-        $message = Flash::get("webform.form.{$channel}.message");
+        $status = FormStatus::fromSession($channel);
 
-        return match (true) {
-            is_array($message) => new static($message['message'], $message['type'] ?? 'success'),
-            is_string($message) => new static($message),
-            default => null,
-        };
+        if (! $status || $status->hasErrors()) {
+            return null;
+        }
+
+        return new static($status->getMessage(), $status->getType()->slug());
     }
 
     public function isSuccess(): bool
@@ -73,7 +76,9 @@ class Alert implements Arrayable, Htmlable, Jsonable, JsonSerializable, Stringab
 
     public function flash(string $channel = 'default'): void
     {
-        Flash::put("webform.form.{$channel}.message", $this->toArray());
+        $type = FormStatusType::of($this->type) ?? FormStatusType::Success;
+
+        FormStatus::create($channel, $type, $this->message)->flash();
     }
 
     public function toString(): string

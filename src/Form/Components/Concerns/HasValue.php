@@ -2,9 +2,8 @@
 
 namespace Webform\Form\Components\Concerns;
 
-use Kirby\Toolkit\A;
 use Webform\Form\Form;
-use Webform\Toolkit\Flash;
+use Webform\Form\FormInput;
 
 trait HasValue
 {
@@ -43,12 +42,6 @@ trait HasValue
             return null;
         }
 
-        $data = Flash::get("webform.form.{$channel}.input");
-
-        if (! $data) {
-            return null;
-        }
-
-        return A::get($data, $key);
+        return FormInput::fromSession($channel)?->get($key);
     }
 }

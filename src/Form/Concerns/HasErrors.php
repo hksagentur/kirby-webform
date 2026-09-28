@@ -2,6 +2,7 @@
 
 namespace Webform\Form\Concerns;
 
+use Webform\Form\FormStatus;
 use Webform\Validation\Messages;
 
 trait HasErrors
@@ -25,6 +26,6 @@ trait HasErrors
 
     public function getErrors(): Messages
     {
-        return $this->errors ??= Messages::fromSession($this->getKey());
+        return $this->errors ??= FormStatus::fromSession($this->getKey())?->getErrors() ?? new Messages();
     }
 }

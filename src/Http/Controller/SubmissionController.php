@@ -7,6 +7,7 @@ use Kirby\Cms\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
 use Webform\Form\Form;
+use Webform\Form\FormStatusType;
 use Webform\Http\RedirectResponse;
 use Webform\Validation\ValidationException;
 
@@ -38,7 +39,7 @@ class SubmissionController
             return Url::home();
         }
 
-        return sprintf('%s#%s', $referrer->url(), $form->getId());
+        return $referrer->url();
     }
 
     protected function getSuccessPage(Form $form): ?Page
@@ -81,25 +82,20 @@ class SubmissionController
             ->withInput(channel: $form->getKey())
             ->withMessage(
                 text: $message ?: I18n::translate('hksagentur.webform.status.message.error'),
-                type: 'error',
+                type: FormStatusType::Error,
                 channel: $form->getKey()
             );
     }
 
     protected function processedSubmission(Form $form): RedirectResponse
     {
-        if ($page = $this->getSuccessPage($form)) {
-            return new RedirectResponse($page->url());
-        }
-
-        $url = $this->getRedirectUrl($form);
+        $url = $this->getSuccessPage($form)?->url() ?? $this->getRedirectUrl($form);
         $message = $this->getSuccessMessage($form);
 
-        return (new RedirectResponse($url))
-            ->withMessage(
-                text: $message ?: I18n::translate('hksagentur.webform.status.message.success'),
-                type: 'success',
-                channel: $form->getKey(),
-            );
+        return (new RedirectResponse($url))->withMessage(
+            text: $message ?: I18n::translate('hksagentur.webform.status.message.success'),
+            type: FormStatusType::Success,
+            channel: $form->getKey(),
+        );
     }
 }

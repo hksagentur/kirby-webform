@@ -66,6 +66,7 @@ class Form extends ViewComponent
             'block' => $this->getContext()->block(),
             'page' => $this->getContext()->page(),
             'children' => $this->getChildren()->visible(),
+            'status' => FormStatus::fromSession($this->getKey()),
         ], parent::getSnippetContext());
     }
 
