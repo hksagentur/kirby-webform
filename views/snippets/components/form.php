@@ -1,4 +1,5 @@
 <?php /** @var \Webform\Form\Form $form */ ?>
+<?php /** @var ?\Webform\Form\FormStatus $status */ ?>
 
 <form <?= attr([
     'class' => 'form',
@@ -8,26 +9,9 @@
     'method' => 'POST',
     'enctype' => 'multipart/form-data',
     'novalidate' => true,
+    'data-webform-status' => $status?->getType()->slug(),
 ]) ?>>
-    <?php if ($form->hasErrors()) : ?>
-        <?php snippet('webform/message', [
-            'id' => $form->getId().'-error',
-            'type' => 'error',
-            'role' => 'status',
-        ], slots: true) ?>
-            <?= tc('hksagentur.webform.status.message.error', $form->getErrors()->count()) ?>
-        <?php endsnippet() ?>
-    <?php endif ?>
-
-    <?php if ($status = $form->getStatus()) : ?>
-        <?php snippet('webform/message', [
-            'id' => $form->getId().'-status',
-            'type' => $status->type(),
-            'role' => 'status',
-        ], slots: true) ?>
-            <?= Sane::sanitize($status->message(), 'html') ?>
-        <?php endsnippet() ?>
-    <?php endif ?>
+    <?= $status?->toHtml($form) ?>
 
     <?= $children ?? $slot ?>
 

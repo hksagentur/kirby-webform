@@ -1,7 +1,6 @@
 <?php /** @var \Webform\Cms\FormBlock $block */ ?>
 
 <div <?= attr([
-    'id' => $block->form()->getId(),
     'class' => [
         'webform',
         'webform--'.$block->form()->getId(),
