@@ -168,7 +168,7 @@ class Options implements Countable, Htmlable, IteratorAggregate, Jsonable, JsonS
         }
 
         if ($this->sort instanceof Closure) {
-            uasort($options, $this->sort);
+            usort($options, $this->sort);
         }
 
         return $options;
