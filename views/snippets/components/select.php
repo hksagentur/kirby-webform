@@ -4,17 +4,24 @@
 <?php $name ??= $component->getName() ?>
 <?php $value ??= $component->getValue() ?>
 
+<?php $label ??= $component->getLabel() ?>
+<?php $hint ??= $component->getHint() ?>
+<?php $help ??= $component->getHelp() ?>
+
 <?php $invalid ??= $component->isInvalid() ?>
 <?php $messages ??= $component->getErrors() ?>
 
 <?php snippet('webform/field', slots: true) ?>
-    <?php if ($label = $component->getLabel()) : ?>
-        <?php snippet('webform/label', ['for' => $id], slots: true) ?>
+    <?php if ($label) : ?>
+        <?php snippet('webform/label', [
+            'for' => $id,
+            'marker' => $component->getLabelMarker(),
+        ], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?php if ($hint = $component->getHint()) : ?>
+    <?php if ($hint) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($hint) : esc($hint) ?>
         <?php endsnippet() ?>
@@ -37,6 +44,7 @@
             'aria-describedby' => [
                 ...$invalid ? ["{$id}-error"] : [],
                 ...$hint ? ["{$id}-hint"] : [],
+                ...$help ? ["{$id}-help"] : [],
             ],
         ])) ?>>
             <option <?= attr([
@@ -59,9 +67,10 @@
                 </option>
             <?php endforeach ?>
         </select>
-        <svg class="select__caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M23.468,2.984a2,2,0,0,0-1.742-1.018H2.274A2,2,0,0,0,.563,5L10.289,21.07a2,2,0,0,0,3.422,0L23.437,5A2,2,0,0,0,23.468,2.984Z"/>
-        </svg>
+        <?php snippet('webform/icon', [
+            'name' => 'caret',
+            'class' => 'select__caret',
+        ]) ?>
     </div>
 
     <?php snippet('webform/inline-error', [
@@ -69,7 +78,7 @@
         'messages' => $messages,
     ]) ?>
 
-    <?php if ($help = $component->getHelp()) : ?>
+    <?php if ($help) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($help) : esc($help) ?>
         <?php endsnippet() ?>
