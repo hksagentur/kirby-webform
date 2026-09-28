@@ -3,6 +3,7 @@
 namespace Webform\Form\Components\Concerns;
 
 use Closure;
+use Kirby\Cms\App;
 
 trait CanBeRequired
 {
@@ -23,5 +24,19 @@ trait CanBeRequired
         $this->isRequired = $isRequired;
 
         return $this;
+    }
+
+    public function hasLabelMarker(): bool
+    {
+        return $this->getLabelMarker() !== null;
+    }
+
+    public function getLabelMarker(): ?string
+    {
+        return match (App::instance()->option('hksagentur.webform.labelMarker', 'optional')) {
+            'optional' => $this->isOptional() ? 'optional' : null,
+            'required' => $this->isRequired() ? 'required' : null,
+            default => null,
+        };
     }
 }

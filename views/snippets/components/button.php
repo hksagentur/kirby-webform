@@ -4,7 +4,10 @@
     'class' => 'button',
     'type' => $component->getType(),
     'id' => $component->getId(),
-    'disabled' => $component->isDisabled(),
+    ...$component->isDisabled() ? [
+        'disabled' => true,
+        'aria-disabled' => 'true',
+    ] : [],
     ...$component->hasAction() ? [
         'name' => '_webform_operation',
         'value' => $component->getName(),

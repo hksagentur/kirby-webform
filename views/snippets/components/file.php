@@ -15,7 +15,10 @@
     ],
 ], slots: true) ?>
     <?php if ($label = $component->getLabel()) : ?>
-        <?php snippet('webform/label', ['for' => $id], slots: true) ?>
+        <?php snippet('webform/label', [
+            'for' => $id,
+            'marker' => $component->getLabelMarker(),
+        ], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         <?php endsnippet() ?>
     <?php endif ?>
@@ -39,6 +42,7 @@
         'aria-describedby' => [
             ...$invalid ? ["{$id}-error"] : [],
             ...$hint ? ["{$id}-hint"] : [],
+            ...$component->getHelp() ? ["{$id}-help"] : [],
         ],
     ])) ?>>
 

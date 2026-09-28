@@ -4,7 +4,6 @@
     'id' => $component->getId(),
     'class' => 'fieldset',
     'disabled' => $component->isDisabled(),
-    'role' => 'group',
 ])) ?>>
     <?php if ($label = $component->getLabel()) : ?>
         <legend class="fieldset__legend">

@@ -7,4 +7,8 @@
     ...$attrs ?? [],
 ]) ?>>
     <?= $slot ?>
+
+    <?php snippet('webform/label-marker', [
+        'marker' => $marker ?? null,
+    ]) ?>
 </label>

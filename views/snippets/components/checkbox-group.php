@@ -19,15 +19,12 @@
         'checkbox-group',
         ...$invalid ? ['checkbox-group--invalid'] : [],
     ],
-    'aria-labelledby' => [
-        ...$label ? ["{$id}-label"] : [],
-    ],
     'aria-describedby' => [
         ...$invalid ? ["{$id}-error"] : [],
         ...$hint ? ["{$id}-hint"] : [],
+        ...$help ? ["{$id}-help"] : [],
     ],
     'disabled' => $disabled,
-    'role' => 'group',
 ])) ?>>
     <?php if ($label) : ?>
         <legend <?= attr([
@@ -35,6 +32,10 @@
             'class' => 'checkbox-group__label',
         ]) ?>>
             <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
+
+            <?php snippet('webform/label-marker', [
+                'marker' => $component->getLabelMarker(),
+            ]) ?>
         </legend>
     <?php endif ?>
 
@@ -51,17 +52,16 @@
     <?php endif ?>
 
     <div class="checkbox-group__options">
-        <?php foreach ($component->getOptions()->select($value) as $option) : ?>
+        <?php foreach ($component->getOptions()->select($value) as $index => $option) : ?>
             <label class="checkbox-group__option">
                 <input <?= attr([
+                    'id' => $index === 0 ? $id : "{$id}-" . ($index + 1),
                     'class' => 'checkbox-group__option-input',
                     'type' => 'checkbox',
                     'name' => $name . '[]',
                     'value' => $option->value(),
                     'checked' => $option->isSelected(),
-                    'required' => $required,
                     'aria-invalid' => $invalid ? 'true' : null,
-                    'aria-labelledby' => $label ? ["{$id}-label"] : [],
                 ]) ?>>
                 <span class="checkbox-group__option-label">
                     <?= $component->isHtmlAllowed() ? kti($option->label()) : esc($option->label())  ?>
