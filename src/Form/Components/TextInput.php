@@ -6,9 +6,11 @@ use Closure;
 
 class TextInput extends Field implements Contracts\CanBeLengthConstrained
 {
+    use Concerns\CanBeAutocapitalized;
     use Concerns\CanBeAutocompleted;
     use Concerns\CanBeLengthConstrained;
     use Concerns\CanBeReadOnly;
+    use Concerns\CanBeSpellchecked;
     use Concerns\HasDatalist;
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;

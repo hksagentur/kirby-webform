@@ -8,6 +8,7 @@ class Textarea extends Field
 {
     use Concerns\CanBeLengthConstrained;
     use Concerns\CanBeReadOnly;
+    use Concerns\CanBeSpellchecked;
     use Concerns\HasPlaceholder;
 
     protected string $snippet = 'webform/textarea';

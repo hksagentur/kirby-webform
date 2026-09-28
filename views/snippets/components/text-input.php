@@ -3,19 +3,26 @@
 <?php $id ??= $component->getId() ?>
 <?php $name ??= $component->getName() ?>
 
+<?php $label ??= $component->getLabel() ?>
+<?php $hint ??= $component->getHint() ?>
+<?php $help ??= $component->getHelp() ?>
+
 <?php $options ??= $component->getDatalistOptions() ?>
 
 <?php $invalid ??= $component->isInvalid() ?>
 <?php $messages ??= $component->getErrors() ?>
 
 <?php snippet('webform/field', slots: true) ?>
-    <?php if ($label = $component->getLabel()) : ?>
-        <?php snippet('webform/label', ['for' => $id], slots: true) ?>
+    <?php if ($label) : ?>
+        <?php snippet('webform/label', [
+            'for' => $id,
+            'marker' => $component->getLabelMarker(),
+        ], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($label) : esc($label) ?>
         <?php endsnippet() ?>
     <?php endif ?>
 
-    <?php if ($hint = $component->getHint()) : ?>
+    <?php if ($hint) : ?>
         <?php snippet('webform/hint', ['id' => "{$id}-hint"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($hint) : esc($hint) ?>
         <?php endsnippet() ?>
@@ -38,11 +45,15 @@
         'step' => $component->getStep(),
         'placeholder' => $component->getPlaceholder(),
         'autocomplete' => $component->getAutocomplete(),
+        'inputmode' => $component->getInputMode(),
+        'spellcheck' => $component->getSpellcheck(),
+        'autocapitalize' => $component->getAutocapitalize(),
         'list' => $options->isNotEmpty() ? "{$id}-datalist" : null,
         'aria-invalid' => $invalid ? 'true' : null,
         'aria-describedby' => [
             ...$invalid ? ["{$id}-error"] : [],
             ...$hint ? ["{$id}-hint"] : [],
+            ...$help ? ["{$id}-help"] : [],
         ],
     ])) ?>>
 
@@ -56,7 +67,7 @@
         'messages' => $messages,
     ]) ?>
 
-    <?php if ($help = $component->getHelp()) : ?>
+    <?php if ($help) : ?>
         <?php snippet('webform/help', ['id' => "{$id}-help"], slots: true) ?>
             <?= $component->isHtmlAllowed() ? kti($help) : esc($help) ?>
         <?php endsnippet() ?>
