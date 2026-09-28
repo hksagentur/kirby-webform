@@ -20,8 +20,8 @@ abstract class ViewComponent implements Htmlable, Stringable
     {
         $reflection = new ReflectionClass(static::class);
 
-        if ($alias = $reflection->getConstant('ALIAS')) {
-            return $alias;
+        if ($reflection->hasConstant('ALIAS')) {
+            return $reflection->getConstant('ALIAS');
         }
 
         return Str::camel($reflection->getShortName());
