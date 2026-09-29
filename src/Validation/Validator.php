@@ -109,11 +109,11 @@ class Validator
                         continue;
                     }
                 } elseif ($rule === 'requiredIf') {
-                    if ($filled || V::notEmpty(...$parameters)) {
+                    if ($filled || ! $this->isConditionMet(...$parameters)) {
                         continue;
                     }
                 } elseif ($rule === 'requiredUnless') {
-                    if ($filled || V::empty(...$parameters)) {
+                    if ($filled || $this->isConditionMet(...$parameters)) {
                         continue;
                     }
                 } elseif (A::has(['file', 'mimeType', 'minFileSize', 'maxFileSize', 'image', 'document', 'video'], $rule)) {
@@ -259,5 +259,13 @@ class Validator
             rule: $rule,
             parameters: $parameters,
         ));
+    }
+
+    /**
+     * Whether the condition of a `requiredIf` or `requiredUnless` rule is met.
+     */
+    protected function isConditionMet(mixed $condition = null): bool
+    {
+        return $condition !== false && V::notEmpty($condition);
     }
 }
