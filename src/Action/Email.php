@@ -194,7 +194,7 @@ class Email extends Action
             default => null,
         });
 
-        return $options;
+        return array_filter($options);
     }
 
     protected function prepareEmailAttachments(FormSubmission $submission): array
