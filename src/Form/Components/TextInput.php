@@ -115,8 +115,6 @@ class TextInput extends Field implements Contracts\CanBeLengthConstrained
     {
         $this->isTel = $condition;
 
-        $this->rule('tel', $condition);
-
         return $this;
     }
 
