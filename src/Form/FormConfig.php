@@ -2,6 +2,7 @@
 
 namespace Webform\Form;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
@@ -58,7 +59,13 @@ class FormConfig
 
     public function read(): ?Form
     {
-        $form = F::load($this->file, allowOutput: false);
+        try {
+            $file = F::realpath($this->file, $this->root);
+        } catch (Exception) {
+            return null;
+        }
+
+        $form = F::load($file, allowOutput: false);
 
         if (! ($form instanceof Form)) {
             return null;
