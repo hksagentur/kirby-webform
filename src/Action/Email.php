@@ -181,7 +181,7 @@ class Email extends Action
 
     protected function prepareEmailOptions(FormSubmission $submission): array
     {
-        $format = fn (?string $value): string => Str::template($value, $submission->all());
+        $format = fn (?string $value): string => Str::template($value, $submission->all(), ['fallback' => '']);
 
         $options = A::map([
             'subject' => $this->getSubject(),
