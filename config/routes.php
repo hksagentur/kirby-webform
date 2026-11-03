@@ -18,10 +18,10 @@ return [
         'method' => 'POST',
         'action' => function (): RedirectResponse {
             return (new Pipeline(option('hksagentur.webform.middleware', [
-                VerifyCsrfToken::class,
                 RateLimited::class,
                 RegisterRouteBindings::class,
                 AddContext::class,
+                VerifyCsrfToken::class,
                 VerifyChallenges::class,
             ])))->then(function (App $kirby, Request $request, Form $form): RedirectResponse {
                 $operation = $request->get('_webform_operation');

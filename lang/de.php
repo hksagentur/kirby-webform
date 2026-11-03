@@ -75,6 +75,7 @@ return [
     'hksagentur.webform.validation.message.uuid' => '{{ field }} muss ein UUID sein.',
     'hksagentur.webform.status.message.success' => 'Das Formular wurde erfolgreich bearbeitet. Vielen Dank für deine Anfrage.',
     'hksagentur.webform.status.message.error' => 'Das Formular konnte leider nicht gesendet werden. Bitte versuche es später noch einmal.',
+    'hksagentur.webform.status.message.expired' => 'Deine Sitzung ist abgelaufen. Bitte sende das Formular noch einmal.',
     'hksagentur.webform.status.message.invalid' => 'Das Formular enthält Fehler. Bitte überprüfe deine Angaben.',
     'hksagentur.webform.status.message.warning' => 'Bitte beachte die folgenden Hinweise.',
     'hksagentur.webform.status.title.success' => 'Vielen Dank',

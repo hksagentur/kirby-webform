@@ -75,6 +75,7 @@ return [
     'hksagentur.webform.validation.message.uuid' => 'The {{ field }} field must be a valid UUID.',
     'hksagentur.webform.status.message.success' => 'Form submission processed successfully. Thank you for your enquiry.',
     'hksagentur.webform.status.message.error' => 'The form could not be sent. Please try again later.',
+    'hksagentur.webform.status.message.expired' => 'Your session has expired. Please submit the form again.',
     'hksagentur.webform.status.message.invalid' => 'The form contains errors. Please check your details.',
     'hksagentur.webform.status.message.warning' => 'Please note the following information.',
     'hksagentur.webform.status.title.success' => 'Thank you',
