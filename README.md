@@ -73,6 +73,20 @@ echo $kirby->render();
 ```
 </details>
 
+<details>
+<summary>How can I customize the header and footer of the submission email?</summary>
+The HTML email renders the snippets `webform/emails/header` and `webform/emails/footer`. The header shows the site title by default, the footer the `footerLinks` and `footerLines` of the email data or a copyright line. Override either with a snippet of the same name in your site, e.g. to show a logo. Prefer PNG over SVG, since Outlook and Gmail don’t display SVG, and keep the `alt` text meaningful for clients that block images:
+
+```php
+<?php // site/snippets/webform/emails/header.php ?>
+<a href="<?= $site->url() ?>" target="_blank">
+  <img src="<?= asset('assets/images/email-logo.png')->url() ?>" alt="<?= $site->title()->esc('attr') ?>" width="240" height="64" style="display:block;border:0;">
+</a>
+```
+
+Both snippets receive `$site`, `$kirby` and the theme colours of the template (`$headingColor`, `$accentColor`, `$textColor`, …); the footer also receives `$footerLinks` and `$footerLines`.
+</details>
+
 ## License
 
 ISC License. Please see [License File](LICENSE.txt) for more information.

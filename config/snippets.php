@@ -2,6 +2,8 @@
 
 return [
     'blocks/webform' => dirname(__DIR__) . '/views/snippets/blocks/webform.php',
+    'webform/emails/header' => dirname(__DIR__) . '/views/snippets/emails/header.php',
+    'webform/emails/footer' => dirname(__DIR__) . '/views/snippets/emails/footer.php',
     'webform/button-group' => dirname(__DIR__) . '/views/snippets/components/button-group.php',
     'webform/button' => dirname(__DIR__) . '/views/snippets/components/button.php',
     'webform/checkbox-group' => dirname(__DIR__) . '/views/snippets/components/checkbox-group.php',

@@ -8,12 +8,23 @@
  * @var \Kirby\Cms\User $user
  */
 
-$surfaceColor = $surfaceColor ?? '#ffffff';
-$backgroundColor = $backgroundColor ?? '#f2f4f6';
-$textColor = $textColor ?? '#374151';
-$accentColor = $accentColor ?? '#004d9d';
-$headingColor = $headingColor ?? '#111827';
-$footerColor = $footerColor ?? '#6b7280';
+use Webform\Toolkit\Html;
+
+$surfaceColor ??= '#ffffff';
+$backgroundColor ??= '#f2f4f6';
+$textColor ??= '#374151';
+$accentColor ??= '#004d9d';
+$headingColor ??= '#111827';
+$footerColor ??= '#6b7280';
+
+$theme = compact(
+    'headingColor',
+    'textColor',
+    'accentColor',
+    'footerColor',
+    'surfaceColor',
+    'backgroundColor',
+);
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="<?= $language ?? kirby()->language()?->code() ?>">
@@ -67,15 +78,6 @@ $footerColor = $footerColor ?? '#6b7280';
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             color: <?= esc($textColor, 'attr') ?>;
             background-color: <?= esc($surfaceColor, 'attr') ?>;
-        }
-
-        .logo {
-            display: block;
-            width: auto;
-            height: 48px;
-            outline: none;
-            border: none;
-            text-decoration: none;
         }
 
         .content {
@@ -139,22 +141,17 @@ $footerColor = $footerColor ?? '#6b7280';
         <table class="main" align="center" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-spacing:0;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';color:<?= esc($textColor, 'attr') ?>;background-color:<?= esc($surfaceColor, 'attr') ?>;">
             <tr>
                 <td style="padding:0;">
-                    <?php if ($logo = $site->logo()->toFile()) : ?>
-                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:32px;margin-bottom:32px;">
-                            <tr>
-                                <td align="center">
-                                    <a href="<?= $site->url() ?>" target="_blank" style="display:inline-block;">
-                                        <img
-                                            src="<?= $logo->url() ?>"
-                                            title="<?= $site->title()->esc('attr') ?>"
-                                            alt="<?= $logo->alt()->or($site->title())->esc('attr') ?>"
-                                            style="display:block;width:auto;height:64px;outline:none;border:none;text-decoration:none;"
-                                        />
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                    <?php endif ?>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:32px;margin-bottom:32px;">
+                        <tr>
+                            <td align="center">
+                                <?php snippet('webform/emails/header', [
+                                    ...$theme,
+                                    'kirby' => $kirby,
+                                    'site' => $site,
+                                ]) ?>
+                            </td>
+                        </tr>
+                    </table>
 
                     <div class="content" style="padding:32px;">
                         <?php if (! empty($greeting)) : ?>
@@ -219,28 +216,13 @@ $footerColor = $footerColor ?? '#6b7280';
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td class="footer" style="text-align:center;padding:20px 0;font-size:12px;color:<?= esc($footerColor, 'attr') ?>;">
-                    <?php if (!empty($footerLinks)) : ?>
-                        <nav class="nav" style="margin-bottom:12px;">
-                            <?php foreach ($footerLinks as $index => ['title' => $title, 'url' => $url]) : ?>
-                                <?= $index > 0 ? '|' : '' ?>
-                                <a href="<?= esc($url, 'attr') ?>" class="link" target="_blank" style="margin:0 8px;font-size:13px;text-decoration:underline;color:<?= esc($footerColor, 'attr') ?>;">
-                                    <?= esc($title) ?>
-                                </a>
-                            <?php endforeach ?>
-                        </nav>
-                    <?php endif ?>
-
-                    <?php if (! empty($footerLines)) : ?>
-                        <?php foreach ($footerLines as $footerLine) : ?>
-                            <p style="font-size:12px;line-height:18px;margin:8px 0;color:<?= esc($footerColor, 'attr') ?>;">
-                                <?= esc($footerLine) ?>
-                            </p>
-                        <?php endforeach ?>
-                    <?php else : ?>
-                        <p style="font-size:12px;line-height:18px;margin:8px 0;color:<?= esc($footerColor, 'attr') ?>;">
-                            &copy; <?= date('Y') ?> <?= $site->title()->esc() ?>
-                        </p>
-                    <?php endif ?>
+                    <?php snippet('webform/emails/footer', [
+                        ...$theme,
+                        'kirby' => $kirby,
+                        'site' => $site,
+                        'footerLinks' => $footerLinks ?? [],
+                        'footerLines' => $footerLines ?? [],
+                    ]) ?>
                 </td>
             </tr>
         </table>
