@@ -44,13 +44,13 @@ $theme = compact(
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            color: <?= esc($textColor, 'attr') ?>;
-            background-color: <?= esc($backgroundColor, 'attr') ?>;
+            color: <?= Html::css($textColor) ?>;
+            background-color: <?= Html::css($backgroundColor) ?>;
         }
 
         h2 {
             margin: 0 0 24px;
-            color: <?= esc($headingColor, 'attr') ?>;
+            color: <?= Html::css($headingColor) ?>;
             font-size: 24px;
             font-weight: 700;
             line-height: 32px;
@@ -67,7 +67,7 @@ $theme = compact(
             width: 100%;
             padding-top: 40px;
             padding-bottom: 40px;
-            background-color: <?= esc($backgroundColor, 'attr') ?>;
+            background-color: <?= Html::css($backgroundColor) ?>;
         }
 
         .main {
@@ -76,8 +76,8 @@ $theme = compact(
             border-spacing: 0;
             margin: 40px auto;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            color: <?= esc($textColor, 'attr') ?>;
-            background-color: <?= esc($surfaceColor, 'attr') ?>;
+            color: <?= Html::css($textColor) ?>;
+            background-color: <?= Html::css($surfaceColor) ?>;
         }
 
         .content {
@@ -87,14 +87,14 @@ $theme = compact(
         .button {
             display: inline-block;
             padding: 12px 34px;
-            border: 2px solid <?= esc($accentColor, 'attr') ?>;
+            border: 2px solid <?= Html::css($accentColor) ?>;
             border-radius: 9999px;
             font-size: 14px;
             font-weight: 500;
             line-height: 100%;
             text-decoration: none;
             color: #fff;
-            background-color: <?= esc($accentColor, 'attr') ?>;
+            background-color: <?= Html::css($accentColor) ?>;
         }
 
         .nav {
@@ -103,7 +103,7 @@ $theme = compact(
 
         .link {
             margin: 0 8px;
-            color: <?= esc($footerColor, 'attr') ?>;
+            color: <?= Html::css($footerColor) ?>;
             font-size: 13px;
             text-decoration: underline;
         }
@@ -124,13 +124,13 @@ $theme = compact(
 
         .data-table th {
             width: 30%;
-            color: <?= esc($headingColor, 'attr') ?>;
+            color: <?= Html::css($headingColor) ?>;
             font-weight: 600;
         }
 
         .footer {
             padding: 20px 0;
-            color: <?= esc($footerColor, 'attr') ?>;
+            color: <?= Html::css($footerColor) ?>;
             font-size: 12px;
             text-align: center;
         }
