@@ -9,42 +9,42 @@
 ?>
 
 <?php if (! empty($greeting)) : ?>
-<?= esc($greeting)."\n" ?>
+<?= $greeting."\n" ?>
 <?php endif ?>
 
 <?php if (! empty($introLines)) : ?>
 <?php foreach ($introLines as $introLine) : ?>
-<?= esc($introLine)."\n" ?>
+<?= $introLine."\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 
 <?php foreach ($rows as ['label' => $label, 'value' => $value]) : ?>
-<?= esc($label) ?>:
-<?= esc($value)."\n\n" ?>
+<?= $label ?>:
+<?= $value."\n\n" ?>
 <?php endforeach ?>
 
 <?php if (! empty($actionText)) : ?>
-[<?= esc($actionText) ?>](<?= esc($actionUrl ?? $site->url()) ?>)
+[<?= $actionText ?>](<?= $actionUrl ?? $site->url() ?>)
 <?php endif ?>
 
 <?php if (! empty($outroLines)) : ?>
 <?php foreach ($outroLines as $outroLine) : ?>
-<?= esc($outroLine)."\n" ?>
+<?= $outroLine."\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 
 <?php if (! empty($salutation)) : ?>
-<?= esc($salutation)."\n" ?>
+<?= $salutation."\n" ?>
 <?php endif ?>
 
 <?php if (! empty($footerLinks)) : ?>
 <?php foreach ($footerLinks as ['title' => $title, 'url' => $url]) : ?>
-[<?= esc($title) ?>](<?= esc($url) ?>)<?= "\n" ?>
+[<?= $title ?>](<?= $url ?>)<?= "\n" ?>
 <?php endforeach ?>
 <?php endif ?>
 
 <?php if (! empty($footerLines)) : ?>
 <?php foreach ($footerLines as $footerLine) : ?>
-<?= esc($footerLine)."\n" ?>
+<?= $footerLine."\n" ?>
 <?php endforeach ?>
 <?php endif ?>

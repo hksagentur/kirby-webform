@@ -176,7 +176,7 @@ $theme = compact(
                                             <?= esc($label) ?>
                                         </th>
                                         <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top;">
-                                            <?= esc($value) ?>
+                                            <?= nl2br(esc($value)) ?>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
