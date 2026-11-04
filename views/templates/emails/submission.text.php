@@ -1,10 +1,6 @@
 <?php
 /**
  * E-Mail Template for Webform Submissions
- *
- * @var \Kirby\Cms\App $kirby
- * @var \Kirby\Cms\Site $site
- * @var \Kirby\Cms\User $user
  */
 ?>
 
@@ -18,13 +14,13 @@
 <?php endforeach ?>
 <?php endif ?>
 
-<?php foreach ($rows as ['label' => $label, 'value' => $value]) : ?>
+<?php foreach ($rows ?? [] as ['label' => $label, 'value' => $value]) : ?>
 <?= $label ?>:
 <?= $value."\n\n" ?>
 <?php endforeach ?>
 
 <?php if (! empty($actionText)) : ?>
-[<?= $actionText ?>](<?= $actionUrl ?? $site->url() ?>)
+[<?= $actionText ?>](<?= $actionUrl ?? site()->url() ?>)
 <?php endif ?>
 
 <?php if (! empty($outroLines)) : ?>

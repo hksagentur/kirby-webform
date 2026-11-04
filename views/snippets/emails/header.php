@@ -1,13 +1,11 @@
-<?php /** @var \Kirby\Cms\Site $site */ ?>
-
-<?php $headingColor ??= '#111827' ?>
+<?php /** @var \Webform\Template\EmailTheme $theme */ ?>
 
 <a <?= attr([
     'class' => 'email-logo',
-    'href' => $site->url(),
+    'href' => site()->url(),
     'target' => '_blank',
     'style' => sprintf(
         'color:%s;font-size:20px;font-weight:700;line-height:28px;text-decoration:none;',
-        $headingColor,
+        $theme->headingColor,
     ),
-]) ?>><?= $site->title()->esc() ?></a>
+]) ?>><?= site()->title()->esc() ?></a>

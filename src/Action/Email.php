@@ -8,6 +8,7 @@ use Kirby\Filesystem\File;
 use Kirby\Toolkit\Str;
 use Webform\Form\FormSubmission;
 use Webform\Toolkit\A;
+use Webform\Template\EmailTheme;
 use Webform\Template\SubmissionEmail;
 
 class Email extends Action
@@ -16,6 +17,8 @@ class Email extends Action
     protected string|array|null|Closure $to = null;
 
     protected string|null|Closure $template = 'webform/submission';
+
+    protected string|array|EmailTheme|Closure $theme = [];
 
     protected string|null|Closure $subject = null;
     protected string|null|Closure $from = null;
@@ -59,6 +62,35 @@ class Email extends Action
     public function template(string|Closure $template): static
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function getTheme(): EmailTheme
+    {
+        $actionColors = $this->evaluate($this->theme);
+
+        if ($actionColors instanceof EmailTheme) {
+            return $actionColors;
+        }
+
+        $presetColors = A::get($this->getPreset(), 'data.theme', []);
+
+        $themeName = match (true) {
+            is_string($actionColors) => $actionColors,
+            is_string($presetColors) => $presetColors,
+            default => null,
+        };
+
+        return EmailTheme::create(name: $themeName, colors: [
+            ...is_array($presetColors) ? $presetColors : [],
+            ...is_array($actionColors) ? $actionColors : [],
+        ]);
+    }
+
+    public function theme(string|array|EmailTheme|Closure $theme): static
+    {
+        $this->theme = $theme;
 
         return $this;
     }
@@ -150,23 +182,30 @@ class Email extends Action
 
         $preset = $this->getPreset();
         $template = $this->getTemplate();
+        $theme = $this->getTheme();
 
         $options = $this->prepareEmailOptions($submission);
         $attachments = $this->prepareEmailAttachments($submission);
 
         $preset = $this->apply('email:before', [
-            'preset' => [
-                'data' => [
-                    'kirby' => $kirby,
-                    'site' => $kirby->site(),
-                    'user' => $kirby->user(),
-                    ...SubmissionEmail::create($submission),
+            'preset' => A::merge(
+                [
+                    'data' => [
+                        'kirby' => $kirby,
+                        'site' => $kirby->site(),
+                        'user' => $kirby->user(),
+                        ...SubmissionEmail::create($submission),
+                    ],
                 ],
-                ...$preset,
-                ...$options,
-                ...$template ? ['template' => $template] : [],
-                ...$attachments ? ['attachments' => $attachments] : [],
-            ],
+                $preset,
+                [
+                    ...$options,
+                    ...$template ? ['template' => $template] : [],
+                    ...$attachments ? ['attachments' => $attachments] : [],
+                    'data' => ['theme' => $theme],
+                ],
+                A::MERGE_REPLACE,
+            ),
         ], 'preset');
 
         $email = $kirby->email($preset);

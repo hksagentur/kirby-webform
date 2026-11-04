@@ -84,7 +84,25 @@ The HTML email renders the snippets `webform/emails/header` and `webform/emails/
 </a>
 ```
 
-Both snippets receive `$site`, `$kirby` and the theme colours of the template (`$headingColor`, `$accentColor`, `$textColor`, …); the footer also receives `$footerLinks` and `$footerLines`.
+Both snippets receive `$site`, `$kirby` and the colours of the template as `$theme` (`$theme->headingColor`, `$theme->accentColor`, …); the footer also receives `$footerLinks` and `$footerLines`.
+</details>
+
+<details>
+<summary>How can I change the colours of the submission email?</summary>
+Emails use the theme named in the option `hksagentur.webform.email.theme` (`light` by default) from the option `hksagentur.webform.email.themes`; colours you leave out keep their default:
+
+```php
+// site/config/config.php
+return [
+    'hksagentur.webform.email.themes' => [
+        'light' => [
+            'accentColor' => '#c00000',
+        ],
+    ],
+];
+```
+
+The colours are `textColor`, `accentColor` and `backgroundColor`, plus `surfaceColor` (defaults to `backgroundColor`), `headingColor` and `footerColor` (both default to `textColor`). Add further themes next to `light`, make one the default with `'hksagentur.webform.email.theme' => 'campaign'`, or choose one per email with `theme` in the `data` of its preset, e.g. `'data' => ['theme' => 'campaign']`, or with `->theme('campaign')` on its `Email` action. Both also take an array of colours that replace single colours, e.g. `->theme(['accentColor' => '#00aa00'])`. The name `dark` is reserved for a future dark mode.
 </details>
 
 ## License

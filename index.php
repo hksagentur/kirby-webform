@@ -3,6 +3,17 @@
 Kirby::plugin('hksagentur/webform', [
     'options' => [
         'cache.ratelimiter' => true,
+        'email.theme' => 'light',
+        'email.themes' => [
+            'light' => [
+                'headingColor' => '#111827',
+                'textColor' => '#374151',
+                'accentColor' => '#004d9d',
+                'surfaceColor' => '#ffffff',
+                'backgroundColor' => '#f2f4f6',
+                'footerColor' => '#6b7280',
+            ],
+        ],
     ],
     'blockModels' => require __DIR__ . '/config/models/block.php',
     'blueprints' => require __DIR__ . '/config/blueprints.php',
