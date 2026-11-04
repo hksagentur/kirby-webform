@@ -44,7 +44,7 @@ class Email extends Action
         return A::wrap($preset);
     }
 
-    public function preset(string|Closure|null $preset): static
+    public function preset(string|array|Closure|null $preset): static
     {
         $this->preset = $preset;
 
