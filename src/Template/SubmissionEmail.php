@@ -2,6 +2,7 @@
 
 namespace Webform\Template;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
@@ -44,13 +45,19 @@ readonly class SubmissionEmail extends ViewModel
 
     protected function formatLabel(string $key): string
     {
-        $field = $this->submission->getForm()?->getFields()->find($key) ?? null;
+        $field = $this->submission->getForm()
+            ?->getFields()
+            ->find($key);
 
-        if ($field !== null) {
-            return $field->getLabel() ?? Str::studly($key);
+        if (! $field || ! $field->getLabel()) {
+            return Str::studly($key);
         }
 
-        return Str::studly($key);
+        if ($field->isHtmlAllowed()) {
+            return $this->formatInlineText($field->getLabel());
+        }
+
+        return $field->getLabel();
     }
 
     protected function formatValue(mixed $value): string
@@ -65,5 +72,12 @@ readonly class SubmissionEmail extends ViewModel
             is_a($value, UploadedFile::class) => $value->getName(),
             default => (string) $value,
         };
+    }
+
+    protected function formatInlineText(string $text): string
+    {
+        return Str::unhtml(App::instance()->kirbytext($text, [
+            'markdown' => ['inline' => true],
+        ]));
     }
 }
